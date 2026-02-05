@@ -1,0 +1,50 @@
+ import React from "react";
+ 
+ interface FormInputProps {
+   label: string;
+   name: string;
+   value: string;
+   onChange: (value: string) => void;
+   type?: "text" | "number" | "email" | "tel";
+   placeholder?: string;
+   suffix?: string;
+   required?: boolean;
+ }
+ 
+ const FormInput: React.FC<FormInputProps> = ({
+   label,
+   name,
+   value,
+   onChange,
+   type = "text",
+   placeholder = "",
+   suffix,
+   required = false,
+ }) => {
+   return (
+     <div className="form-field">
+       <label htmlFor={name} className="form-label">
+         {label}
+         {required && <span className="text-destructive ml-1">*</span>}
+       </label>
+       <div className="relative">
+         <input
+           type={type}
+           id={name}
+           name={name}
+           value={value}
+           onChange={(e) => onChange(e.target.value)}
+           placeholder={placeholder}
+           className={`form-input ${suffix ? "pr-14" : ""}`}
+         />
+         {suffix && (
+           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">
+             {suffix}
+           </span>
+         )}
+       </div>
+     </div>
+   );
+ };
+ 
+ export default FormInput;
