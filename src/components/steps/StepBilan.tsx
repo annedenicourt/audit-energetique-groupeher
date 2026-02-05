@@ -42,13 +42,10 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Bilan & Classe énergétique
         </h2>
-        <p className="text-muted-foreground">
-          Situation actuelle et analyse des postes énergétiques
-        </p>
       </div>
 
       {/* Situation actuelle */}
@@ -215,7 +212,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
           value={data.notes}
           onChange={(v) => onChange("notes", v)}
           placeholder="Ajoutez ici toutes les observations importantes..."
-          rows={4}
+          rows={12}
         />
       </SectionCard>
     </div>

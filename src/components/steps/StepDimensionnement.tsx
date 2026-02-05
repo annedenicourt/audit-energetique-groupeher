@@ -14,23 +14,24 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-          Dimensionnement solaire et photovoltaïque
+          Dimensionnement thermique & solaire
         </h2>
-        <p className="text-muted-foreground">
-          Propositions de travaux et dimensionnement des équipements
-        </p>
       </div>
 
 
       {/* Dimensionnement thermique */}
       <SectionCard title="Dimensionnement thermique (chauffage / ECS)" icon={Thermometer}>
-        <div className="bg-muted/50 p-4 rounded-lg mb-4">
-          <p className="text-sm text-muted-foreground">
-            Résultat de la note de dimensionnement fabricant
-          </p>
-        </div>
+        <FormInput
+          label="Résultat de la note de dimensionnement fabricant"
+          name="dimensionnementFabricant"
+          value={data.puissanceThermique}
+          onChange={(v) => onChange("dimensionnementFabricant", v)}
+          type="number"
+          placeholder="12"
+          suffix=""
+        />
         <FormInput
           label="Puissance thermique recommandée"
           name="puissanceThermique"

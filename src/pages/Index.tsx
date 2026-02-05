@@ -8,7 +8,7 @@ import StepScenarios from "@/components/steps/StepScenarios";
 import StepAides from "@/components/steps/StepAides";
 import StepFinancement from "@/components/steps/StepFinancement";
 import StepSynthese from "@/components/steps/StepSynthese";
-import { DimensionnementData, FormData, initialFormData, ScenarioData } from "@/types/formData";
+import { DimensionnementData, ExponentielData, FormData, initialFormData, ScenarioData } from "@/types/formData";
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
@@ -22,7 +22,7 @@ const STEPS = [
   { id: 3, label: "Evolution de la facture énergétique", shortLabel: "Evolution" },
   { id: 4, label: "Scénarios", shortLabel: "Scénarios" },
   { id: 5, label: "Dimensionnement", shortLabel: "Dimensionnement" },
-  { id: 6, label: "Re-exponentiel", shortLabel: "Re-exponentiel" },
+  { id: 6, label: "Projection", shortLabel: "Projection" },
   { id: 7, label: "Aides", shortLabel: "Aides" },
   { id: 8, label: "Financement", shortLabel: "Financement" },
   { id: 9, label: "Synthèse", shortLabel: "Synthèse" },
@@ -50,10 +50,6 @@ const Index: React.FC = () => {
     }
   };
 
-  const updateCurrentStep = (stepId) => {
-    setCurrentStep(stepId)
-  }
-
   // Handlers génériques pour mettre à jour les différentes sections
   const updateClient = (field: keyof FormData["client"], value: string) => {
     setFormData((prev) => ({
@@ -62,24 +58,10 @@ const Index: React.FC = () => {
     }));
   };
 
-  /*  const updateHabitation = (field: keyof FormData["habitation"], value: string) => {
-     setFormData((prev) => ({
-       ...prev,
-       habitation: { ...prev.habitation, [field]: value },
-     }));
-   }; */
-
-  /* const updateFactures = (field: keyof FormData["factures"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      factures: { ...prev.factures, [field]: value },
-    }));
-  }; */
-
   const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
     setFormData((prev) => ({
       ...prev,
-      factures: { ...prev.factures, [field]: value },
+      evolution: { ...prev.evolution, [field]: value },
     }));
   };
 
@@ -100,7 +82,13 @@ const Index: React.FC = () => {
   const updateDimensionnement = (field: keyof FormData["dimensionnement"] | string, value: string | DimensionnementData) => {
     setFormData((prev) => ({
       ...prev,
-      scenarios: { ...prev.scenarios, [field]: value },
+      dimensionnement: { ...prev.dimensionnement, [field]: value },
+    }));
+  };
+  const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) => {
+    setFormData((prev) => ({
+      ...prev,
+      exponentiel: { ...prev.exponentiel, [field]: value },
     }));
   };
 
@@ -134,7 +122,7 @@ const Index: React.FC = () => {
       case 5:
         return <StepDimensionnement data={formData.dimensionnement} onChange={updateDimensionnement} />;
       case 6:
-        return <StepExponentiel data={formData.dimensionnement} onChange={updateDimensionnement} />;
+        return <StepExponentiel data={formData.exponentiel} onChange={updateExponentiel} />;
       case 7:
         return <StepAides data={formData.aides} onChange={updateAides} />;
       case 8:

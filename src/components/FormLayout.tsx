@@ -33,11 +33,11 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-sky-950 py-4 px-6 shadow-lg">
+      <header className="py-4 px-6 shadow-lg">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary-foreground/20 flex items-center justify-center">
-              <Leaf className="w-6 h-6 text-primary-foreground" />
+          <div className="w-full flex items-center justify-between gap-3">
+            <div className="w-52">
+              <img className="object-contain" src="/images/logo-blanc-her-enr-.webp" alt="logo groupe HER" />
             </div>
             <div>
               <h1 className="text-xl font-display font-bold text-primary-foreground">
@@ -47,9 +47,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 Devis & Audit Énergétique
               </p>
             </div>
-          </div>
-          <div className="text-right text-primary-foreground/80 text-sm">
-            <span className="font-medium">Étape {currentStep}</span> sur {totalSteps}
           </div>
         </div>
       </header>
@@ -64,7 +61,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 <div className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => setCurrentStep(step.id)}>
                   <div
                     className={`step-indicator ${currentStep === step.id
-                      ? "bg-orange-500 shadow-xl text-white"
+                      ? "step-indicator--active bg-orange-500 text-white"
                       : currentStep > step.id
                         ? "bg-orange-500"
                         : "step-indicator--pending"
@@ -118,7 +115,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
       </div>
 
       {/* Main content */}
-      <main className="max-w-4xl mx-auto px-4 py-8">
+      <main className="max-w-5xl mx-auto px-4 py-8">
         <div className="animate-fade-in">{children}</div>
       </main>
 

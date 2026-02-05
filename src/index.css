@@ -12,7 +12,7 @@
 @layer base {
   :root {
     --background: 150 20% 98%;
-    --foreground: 160 30% 15%;
+    --foreground: 217 69% 23%;
 
     --card: 0 0% 100%;
     --card-foreground: 160 30% 15%;
@@ -20,7 +20,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 160 30% 15%;
 
-    --primary: 152 58% 38%;
+    --primary: 217 69% 23%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 170 35% 92%;
@@ -107,6 +107,7 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, sans-serif;
+    color: #122F62;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -116,6 +117,10 @@
 }
 
 @layer components {
+  header {
+    background-color: #122F62;
+  }
+
   .form-field {
     @apply space-y-2;
   }
@@ -146,10 +151,11 @@
            text-sm font-semibold transition-all duration-300;
   }
 
-  /* .step-indicator--active {
-    @apply bg-primary text-primary-foreground;
-    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
-  } */
+  .step-indicator--active {
+    /* @apply bg-primary text-primary-foreground;
+    box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2); */
+    box-shadow: 0 0 0 4px hsl(32 100% 50% / 0.35);    
+  }
 
   /* .step-indicator--complete {
     background-color: hsl(var(--step-complete));

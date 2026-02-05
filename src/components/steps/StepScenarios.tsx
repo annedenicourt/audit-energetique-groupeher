@@ -36,15 +36,6 @@ const ScenarioCard: React.FC<{
         placeholder="Ex: Pompe à chaleur + isolation"
       />
       <FormInput
-        label="Économie annuelle estimée"
-        name={`${title}-economie`}
-        value={scenario.economieAnnuelle}
-        onChange={(v) => onChange("economieAnnuelle", v)}
-        type="number"
-        placeholder="800"
-        suffix="€"
-      />
-      <FormInput
         label="Plus-value du logement"
         name={`${title}-plusvalue`}
         value={scenario.plusValueLogement}
@@ -87,13 +78,10 @@ const StepScenarios: React.FC<StepScenariosProps> = ({ data, onChange }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Scénarios
         </h2>
-        <p className="text-muted-foreground">
-          Propositions de travaux et dimensionnement des équipements
-        </p>
       </div>
 
       {/* Scénarios proposés */}

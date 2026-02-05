@@ -3,6 +3,7 @@ import { Banknote, LineChart, CheckCircle2 } from "lucide-react";
 import FormInput from "../FormInput";
 import SectionCard from "../SectionCard";
 import { FinancementData } from "@/types/formData";
+import Chronologie from "../Chronologie";
 
 interface StepFinancementProps {
   data: FinancementData;
@@ -10,6 +11,19 @@ interface StepFinancementProps {
 }
 
 const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => {
+
+  /* const [values, setValues] = useState({
+    mois_demande: "",
+    mois_metre: "",
+    mois_pose: "",
+    mois_m1: "",
+    mois_m2: "",
+    mpr: "",
+    cee: "",
+    reinject_m1: "",
+    reinject_m2: "",
+  }); */
+
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -22,56 +36,8 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => 
         </p>
       </div>
 
-      {/* Projection des coûts - AVANT travaux */}
-      <SectionCard title="Projection d'évolution des coûts (AVANT travaux)" icon={LineChart}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput
-            label="Facture aujourd'hui"
-            name="factureAujourdhui"
-            value={data.factureAujourdhui}
-            onChange={(v) => onChange("factureAujourdhui", v)}
-            type="number"
-            placeholder="2500"
-            suffix="€/an"
-          />
-          <FormInput
-            label="Estimation + 5 ans"
-            name="facture5Ans"
-            value={data.facture5Ans}
-            onChange={(v) => onChange("facture5Ans", v)}
-            type="number"
-            placeholder="3350"
-            suffix="€/an"
-          />
-          <FormInput
-            label="Estimation + 10 ans"
-            name="facture10Ans"
-            value={data.facture10Ans}
-            onChange={(v) => onChange("facture10Ans", v)}
-            type="number"
-            placeholder="4480"
-            suffix="€/an"
-          />
-        </div>
-        <p className="text-xs text-muted-foreground mt-3">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
-        </p>
-      </SectionCard>
 
-      {/* Projection APRÈS travaux */}
-      <SectionCard title="Projection APRÈS travaux" icon={LineChart}>
-        <FormInput
-          label="Facture énergétique après travaux"
-          name="factureApresTravaux"
-          value={data.factureApresTravaux}
-          onChange={(v) => onChange("factureApresTravaux", v)}
-          type="number"
-          placeholder="1200"
-          suffix="€/an"
-        />
-      </SectionCard>
-
-
+      {/*  <Chronologie values={null} setValue={undefined} /> */}
       {/* Transfert de charge */}
       <SectionCard title="Transfert de charge" icon={Banknote}>
         <div className="space-y-4">
@@ -86,7 +52,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => 
               suffix="€"
             />
             <FormInput
-              label="- Économies moyennes mensuelles"
+              label="Économies moyennes mensuelles"
               name="economiesMoyennesMensuelles"
               value={data.economiesMoyennesMensuelles}
               onChange={(v) => onChange("economiesMoyennesMensuelles", v)}
@@ -96,7 +62,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => 
             />
             <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
               <label className="form-label text-primary mb-2 block">
-                = Mensualité - économies
+                Mensualité - économies
               </label>
               <FormInput
                 label=""

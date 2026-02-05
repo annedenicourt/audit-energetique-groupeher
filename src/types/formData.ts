@@ -136,6 +136,11 @@
    montantElecDomestique: string;
    // Énergie actuelle
    energieActuelle: string;
+   // Projection cout NRJ
+     coutNrjAujourdhui: "",
+     coutNrj5Ans: "",
+     coutNrj10Ans: "",
+     depenseTotal10ans: ""
    // Notes
    notes: string;
  }
@@ -162,6 +167,18 @@
    puissancePVRecommandee: string;
    productionPVEstimee: string;
  }
+
+ export interface ExponentielData {
+   consommation10AnsSansTravaux: string;
+   consommation10AnsApresTravaux: string;
+   economiesRealisees10Ans: string;
+   economiesAnnuellesMoyennes: string;
+   economiesMensuellesMoyennes: string;
+   // Projection
+   factureAujourdhui: string;
+   facture5Ans: string;
+   facture10Ans: string;
+ }
  
  export interface AidesData {
    // Plafonds
@@ -183,29 +200,15 @@
    mensualiteConfort: string;
    economiesMoyennesMensuelles: string;
    mensualiteMoinsEconomies: string;
-   
-   // Projection
-   factureAujourdhui: string;
-   facture5Ans: string;
-   facture10Ans: string;
-   
-   // Après travaux
-   factureApresTravaux: string;
-   consommation10AnsSansTravaux: string;
-   consommation10AnsApresTravaux: string;
-   economiesRealisees10Ans: string;
-   economiesAnnuellesMoyennes: string;
-   economiesMensuellesMoyennes: string;
  }
  
  export interface FormData {
    client: ClientData;
-   habitation: HabitationData;
-   factures: FacturesData;
    bilan: BilanData;
    evolution: EvolutionData;
    scenarios: ScenariosData;
    dimensionnement: DimensionnementData,
+   exponentiel: ExponentielData,
    aides: AidesData;
    financement: FinancementData;
  }
@@ -250,35 +253,6 @@
      aidesAutre: "",
      montantAides: "",
    },
-   habitation: {
-     anneeConstruction: "",
-     proprietaireDepuis: "",
-     surfaceHabitable: "",
-     nbrePiecesChaufees: "",
-     nbrePersonnes: "",
-     dontEnfants: "",
-     typeChauffage: "",
-     ageChauffage: "",
-     coutAnnuelChauffage: "",
-     temperatureJour: "",
-     temperatureNuit: "",
-     typeEauChaude: "",
-     ageEauChaude: "",
-     typeAeration: "",
-     ageAeration: "",
-   },
-   factures: {
-     factureElecAnnuelle: "",
-     factureElecMensuelle: "",
-     factureEnergieAnnuelle: "",
-     factureEnergieMensuelle: "",
-     travauxRealises: "",
-     montantTravaux: "",
-     aidesMaPrimeRenov: "",
-     aidesCEE: "",
-     aidesAutre: "",
-     montantAides: "",
-   },
    bilan: {
      classeEnergetique: "",
      consommationActuelle: "",
@@ -302,6 +276,11 @@
      montantECS: "",
      montantElecDomestique: "",
      energieActuelle: "",
+     // Projection cout NRJ
+     coutNrjAujourdhui: "",
+     coutNrj5Ans: "",
+     coutNrj10Ans: "",
+     depenseTotal10ans: "",
      notes: "",
    },
    scenarios: {
@@ -314,6 +293,17 @@
      consommationElecAnnuelle: "",
      puissancePVRecommandee: "",
      productionPVEstimee: "",
+   },
+   exponentiel: {
+     consommation10AnsSansTravaux: "",
+     consommation10AnsApresTravaux: "",
+     economiesRealisees10Ans: "",
+     economiesAnnuellesMoyennes: "",
+     economiesMensuellesMoyennes: "",
+     // Projection après travaux
+     factureAujourdhui: "",
+     facture5Ans: "",
+     facture10Ans: "",  
    },
    aides: {
      nbrePersonnesFoyer: "",
@@ -330,14 +320,5 @@
      mensualiteConfort: "",
      economiesMoyennesMensuelles: "",
      mensualiteMoinsEconomies: "",
-     factureAujourdhui: "",
-     facture5Ans: "",
-     facture10Ans: "",
-     factureApresTravaux: "",
-     consommation10AnsSansTravaux: "",
-     consommation10AnsApresTravaux: "",
-     economiesRealisees10Ans: "",
-     economiesAnnuellesMoyennes: "",
-     economiesMensuellesMoyennes: "",
    },
  };

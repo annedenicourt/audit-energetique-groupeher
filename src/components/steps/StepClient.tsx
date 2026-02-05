@@ -48,19 +48,23 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Fiche découverte client
         </h2>
-        <p className="text-muted-foreground">
-          Informations personnelles et coordonnées du client
-        </p>
       </div>
 
       {/* Coordonnées */}
       <SectionCard title="Infos Client" icon={User}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
+            <FormInput
+              label="Accompagnateur"
+              name="accompagnateur"
+              value={data.accompagnateur}
+              onChange={(v) => onChange("accompagnateur", v)}
+              placeholder="Nom de l'accompagnateur"
+            />
             <FormInput
               label="Nom / Prénom"
               name="nom"
@@ -70,6 +74,15 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               required
             />
           </div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormInput
+            label="Département"
+            name="departement"
+            value={data.departement}
+            onChange={(v) => onChange("departement", v)}
+            placeholder="75"
+          />
           <FormInput
             label="Téléphone"
             name="telephone"
@@ -79,13 +92,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="06 12 34 56 78"
             required
           />
-          <FormInput
-            label="Accompagnateur"
-            name="accompagnateur"
-            value={data.accompagnateur}
-            onChange={(v) => onChange("accompagnateur", v)}
-            placeholder="Nom de l'accompagnateur"
-          />
+
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
@@ -114,13 +121,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="Paris"
             required
           />
-          <FormInput
-            label="Département"
-            name="departement"
-            value={data.departement}
-            onChange={(v) => onChange("departement", v)}
-            placeholder="75"
-          />
+
         </div>
       </SectionCard>
 
@@ -161,16 +162,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
           />
         </div>
       </SectionCard>
-
-      {/* Page title */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-          Informations sur l'habitation
-        </h2>
-        <p className="text-muted-foreground">
-          Caractéristiques du logement et des équipements
-        </p>
-      </div>
 
       {/* Habitation */}
       <SectionCard title="Habitation" icon={Home}>
