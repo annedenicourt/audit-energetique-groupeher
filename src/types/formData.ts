@@ -17,6 +17,47 @@
    // Accompagnateur
    accompagnateur: string;
    departement: string;
+
+   // Habitation
+   anneeConstruction: string;
+   proprietaireDepuis: string;
+   surfaceHabitable: string;
+   nbrePiecesChaufees: string;
+   nbrePersonnes: string;
+   dontEnfants: string;
+   
+   // Chauffage
+   typeChauffage: string;
+   ageChauffage: string;
+   coutAnnuelChauffage: string;
+   temperatureJour: string;
+   temperatureNuit: string;
+   
+   // Eau chaude
+   typeEauChaude: string;
+   ageEauChaude: string;
+   
+   // Aération
+   typeAeration: string;
+   ageAeration: string;
+
+   // Facture électricité
+   factureElecAnnuelle: string;
+   factureElecMensuelle: string;
+   
+   // Facture énergétique globale
+   factureEnergieAnnuelle: string;
+   factureEnergieMensuelle: string;
+   
+   // Travaux réalisés
+   travauxRealises: string;
+   montantTravaux: string;
+   
+   // Aides perçues
+   aidesMaPrimeRenov: string;
+   aidesCEE: string;
+   aidesAutre: string;
+   montantAides: string;
  }
  
  export interface HabitationData {
@@ -84,14 +125,17 @@
    ventilation: string;
    ventilationCommentaire: string;
    
-   // Répartition facture
+   // Notes
+   notes: string;
+ }
+
+ export interface EvolutionData {
+  // Répartition facture
    montantChauffage: string;
    montantECS: string;
    montantElecDomestique: string;
-   
    // Énergie actuelle
    energieActuelle: string;
-   
    // Notes
    notes: string;
  }
@@ -108,10 +152,11 @@
    scenario1: ScenarioData;
    scenario2: ScenarioData;
    scenario3: ScenarioData;
-   
+ }
+
+ export interface DimensionnementData {
    // Dimensionnement thermique
    puissanceThermique: string;
-   
    // Dimensionnement solaire
    consommationElecAnnuelle: string;
    puissancePVRecommandee: string;
@@ -158,7 +203,9 @@
    habitation: HabitationData;
    factures: FacturesData;
    bilan: BilanData;
+   evolution: EvolutionData;
    scenarios: ScenariosData;
+   dimensionnement: DimensionnementData,
    aides: AidesData;
    financement: FinancementData;
  }
@@ -177,6 +224,31 @@
      ageConjoint2: "",
      accompagnateur: "",
      departement: "",
+     anneeConstruction: "",
+     proprietaireDepuis: "",
+     surfaceHabitable: "",
+     nbrePiecesChaufees: "",
+     nbrePersonnes: "",
+     dontEnfants: "",
+     typeChauffage: "",
+     ageChauffage: "",
+     coutAnnuelChauffage: "",
+     temperatureJour: "",
+     temperatureNuit: "",
+     typeEauChaude: "",
+     ageEauChaude: "",
+     typeAeration: "",
+     ageAeration: "",
+     factureElecAnnuelle: "",
+     factureElecMensuelle: "",
+     factureEnergieAnnuelle: "",
+     factureEnergieMensuelle: "",
+     travauxRealises: "",
+     montantTravaux: "",
+     aidesMaPrimeRenov: "",
+     aidesCEE: "",
+     aidesAutre: "",
+     montantAides: "",
    },
    habitation: {
      anneeConstruction: "",
@@ -222,7 +294,10 @@
      eauChaudeSanitaire: "",
      eauChaudeSanitaireCommentaire: "",
      ventilation: "",
-     ventilationCommentaire: "",
+     ventilationCommentaire: "",  
+     notes: "",
+   },
+   evolution: {
      montantChauffage: "",
      montantECS: "",
      montantElecDomestique: "",
@@ -233,7 +308,9 @@
      scenario1: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
      scenario2: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
      scenario3: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
-     puissanceThermique: "",
+   },
+   dimensionnement: {
+    puissanceThermique: "",
      consommationElecAnnuelle: "",
      puissancePVRecommandee: "",
      productionPVEstimee: "",

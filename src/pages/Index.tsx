@@ -8,24 +8,30 @@ import StepScenarios from "@/components/steps/StepScenarios";
 import StepAides from "@/components/steps/StepAides";
 import StepFinancement from "@/components/steps/StepFinancement";
 import StepSynthese from "@/components/steps/StepSynthese";
-import { FormData, initialFormData, ScenarioData } from "@/types/formData";
+import { DimensionnementData, FormData, initialFormData, ScenarioData } from "@/types/formData";
+import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
+import StepDimensionnement from "@/components/steps/StepDimensionnement";
+import StepExponentiel from "@/components/steps/StepExponentiel";
 
 // Définition des étapes du formulaire
 const STEPS = [
-  { id: 1, label: "Fiche Client", shortLabel: "Client" },
-  { id: 2, label: "Habitation", shortLabel: "Habitation" },
-  { id: 3, label: "Factures & Travaux", shortLabel: "Factures" },
-  { id: 4, label: "Bilan Énergétique", shortLabel: "Bilan" },
-  { id: 5, label: "Scénarios", shortLabel: "Scénarios" },
-  { id: 6, label: "Aides", shortLabel: "Aides" },
-  { id: 7, label: "Financement", shortLabel: "Financement" },
-  { id: 8, label: "Synthèse", shortLabel: "Synthèse" },
+  { id: 1, label: "Fiche Découverte", shortLabel: "Client" },
+  /*   { id: 2, label: "Habitation", shortLabel: "Habitation" },
+   */
+  { id: 2, label: "Bilan Énergétique", shortLabel: "Bilan" },
+  { id: 3, label: "Evolution de la facture énergétique", shortLabel: "Evolution" },
+  { id: 4, label: "Scénarios", shortLabel: "Scénarios" },
+  { id: 5, label: "Dimensionnement", shortLabel: "Dimensionnement" },
+  { id: 6, label: "Re-exponentiel", shortLabel: "Re-exponentiel" },
+  { id: 7, label: "Aides", shortLabel: "Aides" },
+  { id: 8, label: "Financement", shortLabel: "Financement" },
+  { id: 9, label: "Synthèse", shortLabel: "Synthèse" },
 ];
 
 const Index: React.FC = () => {
   // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  
+
   // État pour la navigation entre les étapes
   const [currentStep, setCurrentStep] = useState(1);
 
@@ -44,6 +50,10 @@ const Index: React.FC = () => {
     }
   };
 
+  const updateCurrentStep = (stepId) => {
+    setCurrentStep(stepId)
+  }
+
   // Handlers génériques pour mettre à jour les différentes sections
   const updateClient = (field: keyof FormData["client"], value: string) => {
     setFormData((prev) => ({
@@ -52,14 +62,21 @@ const Index: React.FC = () => {
     }));
   };
 
-  const updateHabitation = (field: keyof FormData["habitation"], value: string) => {
+  /*  const updateHabitation = (field: keyof FormData["habitation"], value: string) => {
+     setFormData((prev) => ({
+       ...prev,
+       habitation: { ...prev.habitation, [field]: value },
+     }));
+   }; */
+
+  /* const updateFactures = (field: keyof FormData["factures"], value: string) => {
     setFormData((prev) => ({
       ...prev,
-      habitation: { ...prev.habitation, [field]: value },
+      factures: { ...prev.factures, [field]: value },
     }));
-  };
+  }; */
 
-  const updateFactures = (field: keyof FormData["factures"], value: string) => {
+  const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
     setFormData((prev) => ({
       ...prev,
       factures: { ...prev.factures, [field]: value },
@@ -74,6 +91,13 @@ const Index: React.FC = () => {
   };
 
   const updateScenarios = (field: keyof FormData["scenarios"] | string, value: string | ScenarioData) => {
+    setFormData((prev) => ({
+      ...prev,
+      scenarios: { ...prev.scenarios, [field]: value },
+    }));
+  };
+
+  const updateDimensionnement = (field: keyof FormData["dimensionnement"] | string, value: string | DimensionnementData) => {
     setFormData((prev) => ({
       ...prev,
       scenarios: { ...prev.scenarios, [field]: value },
@@ -99,19 +123,23 @@ const Index: React.FC = () => {
     switch (currentStep) {
       case 1:
         return <StepClient data={formData.client} onChange={updateClient} />;
+      /* case 2:
+        return <StepHabitation data={formData.habitation} onChange={updateHabitation} />; */
       case 2:
-        return <StepHabitation data={formData.habitation} onChange={updateHabitation} />;
-      case 3:
-        return <StepFactures data={formData.factures} onChange={updateFactures} />;
-      case 4:
         return <StepBilan data={formData.bilan} onChange={updateBilan} />;
-      case 5:
+      case 3:
+        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} />;
+      case 4:
         return <StepScenarios data={formData.scenarios} onChange={updateScenarios} />;
+      case 5:
+        return <StepDimensionnement data={formData.dimensionnement} onChange={updateDimensionnement} />;
       case 6:
-        return <StepAides data={formData.aides} onChange={updateAides} />;
+        return <StepExponentiel data={formData.dimensionnement} onChange={updateDimensionnement} />;
       case 7:
-        return <StepFinancement data={formData.financement} onChange={updateFinancement} />;
+        return <StepAides data={formData.aides} onChange={updateAides} />;
       case 8:
+        return <StepFinancement data={formData.financement} onChange={updateFinancement} />;
+      case 9:
         return <StepSynthese data={formData} />;
       default:
         return null;
@@ -121,6 +149,7 @@ const Index: React.FC = () => {
   return (
     <FormLayout
       currentStep={currentStep}
+      setCurrentStep={setCurrentStep}
       totalSteps={STEPS.length}
       steps={STEPS}
       onPrevious={goToPreviousStep}

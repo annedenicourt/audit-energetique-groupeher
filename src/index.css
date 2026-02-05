@@ -146,15 +146,15 @@
            text-sm font-semibold transition-all duration-300;
   }
 
-  .step-indicator--active {
+  /* .step-indicator--active {
     @apply bg-primary text-primary-foreground;
     box-shadow: 0 0 0 4px hsl(var(--primary) / 0.2);
-  }
+  } */
 
-  .step-indicator--complete {
+  /* .step-indicator--complete {
     background-color: hsl(var(--step-complete));
     @apply text-primary-foreground;
-  }
+  } */
 
   .step-indicator--pending {
     background-color: hsl(var(--step-pending));
