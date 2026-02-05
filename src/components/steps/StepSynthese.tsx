@@ -18,52 +18,41 @@ const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }
 const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
   return (
     <div className="space-y-6">
+
+      {/* Message de confirmation */}
+      <div className="p-2 bg-primary/10 border border-primary/20 rounded-xl text-center">
+        <FileCheck size="40" className=" text-primary mx-auto mb-3" />
+        <h3 className="text-lg font-semibold text-foreground mb-2">
+          Audit énergétique terminé
+        </h3>
+      </div>
+
       {/* Page title */}
       <div className="mb-8">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Synthèse du dossier
         </h2>
-        <p className="text-muted-foreground">
-          Récapitulatif complet de l'audit énergétique
-        </p>
-      </div>
-
-      {/* Message de confirmation */}
-      <div className="p-6 bg-primary/10 border border-primary/20 rounded-xl text-center">
-        <FileCheck className="w-12 h-12 text-primary mx-auto mb-3" />
-        <h3 className="text-lg font-semibold text-foreground mb-2">
-          Audit énergétique terminé
-        </h3>
-        <p className="text-muted-foreground">
-          Voici le récapitulatif des informations saisies
-        </p>
       </div>
 
       {/* Client */}
       <SectionCard title="Client" icon={User}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <SummaryRow label="Accompagnateur" value={data.client.accompagnateur} />
+          <SummaryRow label="Département" value={data.client.departement} />
           <SummaryRow label="Nom" value={data.client.nom} />
           <SummaryRow label="Téléphone" value={data.client.telephone} />
           <SummaryRow label="Adresse" value={`${data.client.adresse}, ${data.client.codePostal} ${data.client.ville}`} />
-          <SummaryRow label="Accompagnateur" value={data.client.accompagnateur} />
-        </div>
-      </SectionCard>
-
-      {/* Habitation */}
-      <SectionCard title="Habitation" icon={Home}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <SummaryRow label="Conjoint 1" value={`${data.client.situationConjoint1}—${data.client.ageConjoint1}`} />
+          <SummaryRow label="Conjoint 2" value={`${data.client.situationConjoint2}—${data.client.ageConjoint2}`} />
           <SummaryRow label="Année de construction" value={data.client.anneeConstruction} />
           <SummaryRow label="Surface habitable" value={data.client.surfaceHabitable ? `${data.client.surfaceHabitable} m²` : ""} />
+          <SummaryRow label="Propriétaire depuis" value={data.client.proprietaireDepuis} />
+          <SummaryRow label="Nombre de pièces chauffées" value={data.client.nbrePiecesChaufees} />
           <SummaryRow label="Nombre de personnes" value={data.client.nbrePersonnes} />
+          <SummaryRow label="Dont enfants" value={data.client.dontEnfants} />
           <SummaryRow label="Type de chauffage" value={data.client.typeChauffage} />
           <SummaryRow label="Eau chaude" value={data.client.typeEauChaude} />
           <SummaryRow label="Ventilation" value={data.client.typeAeration} />
-        </div>
-      </SectionCard>
-
-      {/* Factures */}
-      <SectionCard title="Factures" icon={Receipt}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <SummaryRow label="Facture électricité annuelle" value={data.client.factureElecAnnuelle ? `${data.client.factureElecAnnuelle} €` : ""} />
           <SummaryRow label="Facture énergie annuelle" value={data.client.factureEnergieAnnuelle ? `${data.client.factureEnergieAnnuelle} €` : ""} />
           <SummaryRow label="Travaux réalisés" value={data.client.travauxRealises} />
@@ -73,6 +62,16 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
 
       {/* Bilan énergétique */}
       <SectionCard title="Bilan énergétique" icon={BarChart3}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <SummaryRow label="Classe DPE" value={data.bilan.classeEnergetique} />
+          <SummaryRow label="Consommation" value={data.bilan.consommationActuelle ? `${data.bilan.consommationActuelle} kWh/m²/an` : ""} />
+          <SummaryRow label="Énergie actuelle" value={data.evolution.energieActuelle} />
+          <SummaryRow label="Isolation combles" value={data.bilan.isolationCombles} />
+        </div>
+      </SectionCard>
+
+      {/* Evolution */}
+      <SectionCard title="Évolution" icon={BarChart3}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
           <SummaryRow label="Classe DPE" value={data.bilan.classeEnergetique} />
           <SummaryRow label="Consommation" value={data.bilan.consommationActuelle ? `${data.bilan.consommationActuelle} kWh/m²/an` : ""} />
@@ -111,6 +110,26 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
               </p>
             </div>
           )}
+        </div>
+      </SectionCard>
+
+      {/* Dimensionnement */}
+      <SectionCard title="Dimensionnement thermique & solaire" icon={Wallet}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <SummaryRow label="Coût total installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
+          <SummaryRow label="Prime CEE" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
+          <SummaryRow label="MaPrimeRénov'" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
+          <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
+        </div>
+      </SectionCard>
+
+      {/* Projection */}
+      <SectionCard title="Projection" icon={Wallet}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <SummaryRow label="Coût total installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
+          <SummaryRow label="Prime CEE" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
+          <SummaryRow label="MaPrimeRénov'" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
+          <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
         </div>
       </SectionCard>
 

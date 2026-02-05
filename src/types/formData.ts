@@ -59,52 +59,6 @@
    aidesAutre: string;
    montantAides: string;
  }
- 
- export interface HabitationData {
-   // Habitation
-   anneeConstruction: string;
-   proprietaireDepuis: string;
-   surfaceHabitable: string;
-   nbrePiecesChaufees: string;
-   nbrePersonnes: string;
-   dontEnfants: string;
-   
-   // Chauffage
-   typeChauffage: string;
-   ageChauffage: string;
-   coutAnnuelChauffage: string;
-   temperatureJour: string;
-   temperatureNuit: string;
-   
-   // Eau chaude
-   typeEauChaude: string;
-   ageEauChaude: string;
-   
-   // Aération
-   typeAeration: string;
-   ageAeration: string;
- }
- 
- export interface FacturesData {
-   // Facture électricité
-   factureElecAnnuelle: string;
-   factureElecMensuelle: string;
-   
-   // Facture énergétique globale
-   factureEnergieAnnuelle: string;
-   factureEnergieMensuelle: string;
-   
-   // Travaux réalisés
-   travauxRealises: string;
-   montantTravaux: string;
-   
-   // Aides perçues
-   aidesMaPrimeRenov: string;
-   aidesCEE: string;
-   aidesAutre: string;
-   montantAides: string;
- }
- 
  export interface BilanData {
    // Situation actuelle
    classeEnergetique: string;

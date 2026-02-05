@@ -61,7 +61,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 <div className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => setCurrentStep(step.id)}>
                   <div
                     className={`step-indicator ${currentStep === step.id
-                      ? "step-indicator--active bg-orange-500 text-white"
+                      ? "step-indicator--active bg-orange-500 text-white font-bold"
                       : currentStep > step.id
                         ? "bg-orange-500"
                         : "step-indicator--pending"

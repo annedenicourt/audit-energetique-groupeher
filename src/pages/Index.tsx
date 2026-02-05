@@ -134,6 +134,8 @@ const Index: React.FC = () => {
     }
   };
 
+  console.log("formData", formData)
+
   return (
     <FormLayout
       currentStep={currentStep}

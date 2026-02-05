@@ -269,6 +269,57 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
         </div>
       </SectionCard>
 
+      {/* Chauffage d'appoint */}
+      <SectionCard title="Chauffage d'appoint" icon={Flame}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormSelect
+            label="Type de chauffage"
+            name="typeChauffage"
+            value={data.typeChauffage}
+            onChange={(v) => onChange("typeChauffage", v)}
+            options={typeChauffageOptions}
+          />
+          <FormInput
+            label="Âge de l'installation"
+            name="ageChauffage"
+            value={data.ageChauffage}
+            onChange={(v) => onChange("ageChauffage", v)}
+            type="number"
+            placeholder="15"
+            suffix="ans"
+          />
+          <FormInput
+            label="Coût annuel estimé"
+            name="coutAnnuelChauffage"
+            value={data.coutAnnuelChauffage}
+            onChange={(v) => onChange("coutAnnuelChauffage", v)}
+            type="number"
+            placeholder="1500"
+            suffix="€"
+          />
+          <div className="grid grid-cols-2 gap-4">
+            <FormInput
+              label="Température jour"
+              name="temperatureJour"
+              value={data.temperatureJour}
+              onChange={(v) => onChange("temperatureJour", v)}
+              type="number"
+              placeholder="20"
+              suffix="°C"
+            />
+            <FormInput
+              label="Température nuit"
+              name="temperatureNuit"
+              value={data.temperatureNuit}
+              onChange={(v) => onChange("temperatureNuit", v)}
+              type="number"
+              placeholder="17"
+              suffix="°C"
+            />
+          </div>
+        </div>
+      </SectionCard>
+
       {/* Eau chaude */}
       <SectionCard title="Eau chaude sanitaire" icon={Droplets}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
