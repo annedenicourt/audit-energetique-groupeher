@@ -117,7 +117,7 @@
 }
 
 @layer components {
-  header {
+  header, .head_pdf {
     background-color: #122F62;
   }
 
@@ -190,4 +190,36 @@
     @apply bg-secondary text-secondary-foreground hover:bg-secondary/80
            focus:ring-secondary;
   }
+
+  .page-break {
+  page-break-after: always;
+  break-after: page;
+}
+
+.avoid-break {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
+ .a4-page{
+  width: 210mm;         /* A4 */
+  height: 297mm;
+  padding: 10mm;
+  margin: auto;
+  box-sizing: border-box;
+  background: white;
+  overflow: hidden;
+  display: flow-root;
+}
+.a4-page > :first-child { margin-top: 0; }
+.a4-page:last-child{
+  break-after: auto;
+}
+.only-pdf {
+  display: none;
+}
+
+/* Pendant l’export : on l’affiche */
+.exporting .only-pdf {
+  display: block;
+}
 }
