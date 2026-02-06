@@ -4,37 +4,14 @@ import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { AidesData } from "@/types/formData";
+import { plafondsData, nbrePersonnesOptions, categorieOptions } from "@/utils/handleForm";
 
 interface StepAidesProps {
   data: AidesData;
   onChange: (field: keyof AidesData, value: string) => void;
 }
 
-const categorieOptions = [
-  { value: "tres_modestes", label: "Très modestes (bleu)" },
-  { value: "modestes", label: "Modestes (jaune)" },
-  { value: "intermediaires", label: "Intermédiaires (violet)" },
-  { value: "superieurs", label: "Supérieurs (rose)" },
-];
 
-const nbrePersonnesOptions = [
-  { value: "1", label: "1 personne" },
-  { value: "2", label: "2 personnes" },
-  { value: "3", label: "3 personnes" },
-  { value: "4", label: "4 personnes" },
-  { value: "5", label: "5 personnes" },
-  { value: "6", label: "6 personnes ou plus" },
-];
-
-// Tableau des plafonds de ressources (à titre indicatif)
-const plafondsData = [
-  { personnes: "1", tresModestes: "17 363 €", modestes: "22 259 €", intermediaires: "31 185 €", superieurs: "31 185 €" },
-  { personnes: "2", tresModestes: "25 393 €", modestes: "32 553 €", intermediaires: "45 842 €", superieurs: "45 842 €" },
-  { personnes: "3", tresModestes: "30 540 €", modestes: "39 148 €", intermediaires: "55 196 €", superieurs: "55 196 €" },
-  { personnes: "4", tresModestes: "35 676 €", modestes: "45 735 €", intermediaires: "64 550 €", superieurs: "64 550 €" },
-  { personnes: "5", tresModestes: "40 835 €", modestes: "52 348 €", intermediaires: "73 907 €", superieurs: "73 907 €" },
-  { personnes: "Par personne supplémentaire", tresModestes: "+ 5 151 €", modestes: "+ 6 598 €", intermediaires: "+ 9 357 €", superieurs: "+ 9 357 €" },
-];
 
 const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
   return (

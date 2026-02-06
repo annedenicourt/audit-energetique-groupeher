@@ -64,6 +64,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.accompagnateur}
               onChange={(v) => onChange("accompagnateur", v)}
               placeholder="Nom de l'accompagnateur"
+              className="mb-4"
             />
             <FormInput
               label="Nom / Prénom"
@@ -72,6 +73,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               onChange={(v) => onChange("nom", v)}
               placeholder="Jean Dupont"
               required
+              className="mb-4"
             />
           </div>
         </div>
@@ -82,6 +84,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.departement}
             onChange={(v) => onChange("departement", v)}
             placeholder="75"
+            className="mb-4"
           />
           <FormInput
             label="Téléphone"
@@ -91,6 +94,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             type="tel"
             placeholder="06 12 34 56 78"
             required
+            className="mb-4"
           />
 
         </div>
@@ -438,40 +442,65 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
       {/* Aides perçues */}
       <SectionCard title="Aides perçues (5 dernières années)" icon={HandCoins}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            label="Ma Prime Rénov'"
-            name="aidesMaPrimeRenov"
-            value={data.aidesMaPrimeRenov}
-            onChange={(v) => onChange("aidesMaPrimeRenov", v)}
-            type="number"
-            placeholder="2000"
-            suffix="€"
-          />
-          <FormInput
-            label="CEE (Certificats d'économie d'énergie)"
-            name="aidesCEE"
-            value={data.aidesCEE}
-            onChange={(v) => onChange("aidesCEE", v)}
-            type="number"
-            placeholder="500"
-            suffix="€"
-          />
-          <FormInput
-            label="Autres aides"
-            name="aidesAutre"
-            value={data.aidesAutre}
-            onChange={(v) => onChange("aidesAutre", v)}
-            placeholder="Aides locales, ANAH..."
-          />
-          <FormInput
-            label="Montant total des aides"
-            name="montantAides"
-            value={data.montantAides}
-            onChange={(v) => onChange("montantAides", v)}
-            type="number"
-            placeholder="2500"
-            suffix="€"
-          />
+          <div>
+            <FormInput
+              label="Plafond maximum Ma Prime Rénov (sur 5 ans)'"
+              name="aidesMaPrimeRenov"
+              value={"20000"}
+              type="number"
+              placeholder="2000"
+              suffix="€"
+              readonly={true}
+            />
+            <FormInput
+              label="Aide disponible Ma Prime Rénov'"
+              name="aidesMaPrimeRenov"
+              value={data.aidesMaPrimeRenov}
+              onChange={(v) => onChange("aidesMaPrimeRenov", v)}
+              type="number"
+              placeholder="2000"
+              suffix="€"
+              className="my-4"
+            />
+            <FormInput
+              label="Ma Prime Rénov'"
+              name="aidesMaPrimeRenov"
+              value={data.aidesMaPrimeRenov}
+              onChange={(v) => onChange("aidesMaPrimeRenov", v)}
+              type="number"
+              placeholder="2000"
+              suffix="€"
+            />
+          </div>
+          <div>
+            <FormInput
+              label="CEE (Certificats d'économie d'énergie)"
+              name="aidesCEE"
+              value={data.aidesCEE}
+              onChange={(v) => onChange("aidesCEE", v)}
+              type="number"
+              placeholder="500"
+              suffix="€"
+            />
+            <FormInput
+              label="Autres aides"
+              name="aidesAutre"
+              value={data.aidesAutre}
+              onChange={(v) => onChange("aidesAutre", v)}
+              placeholder="Aides locales, ANAH..."
+              className="my-4"
+            />
+            <FormInput
+              label="Montant total des aides"
+              name="montantAides"
+              value={data.montantAides}
+              onChange={(v) => onChange("montantAides", v)}
+              type="number"
+              placeholder="2500"
+              suffix="€"
+            />
+          </div>
+
         </div>
       </SectionCard>
     </div>

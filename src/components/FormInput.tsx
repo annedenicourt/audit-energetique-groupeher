@@ -1,21 +1,24 @@
+import { read } from "fs";
 import React from "react";
 
 interface FormInputProps {
   label: string;
   name: string;
   value: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   type?: "text" | "number" | "email" | "tel";
   placeholder?: string;
   suffix?: string;
   required?: boolean;
   className?: string;
+  readonly?: boolean
 }
 
 const FormInput: React.FC<FormInputProps> = ({
   label,
   name,
   value,
+  readonly,
   onChange,
   type = "text",
   placeholder = "",
@@ -38,6 +41,8 @@ const FormInput: React.FC<FormInputProps> = ({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className={`form-input ${suffix ? "pr-14" : ""}`}
+          readOnly={readonly}
+          step={1}
         />
         {suffix && (
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">

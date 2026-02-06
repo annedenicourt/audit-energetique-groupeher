@@ -53,11 +53,6 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
         </h2>
       </div>
 
-
-      {/* <button onClick={() => { requestAnimationFrame(() => downloadPdf()); }}>
-        Télécharger PDF Client
-      </button> */}
-
       <div className="mt-8 flex items-center">
         <div className={`p-4 rounded-t-lg cursor-pointer ${pdfMode === "commercial" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("commercial") }}>
           Aperçu commercial
@@ -74,19 +69,6 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
         ) : (
           <PreviewClient data={data} downloadPdf={downloadPdf} />
         )}
-      </div>
-
-
-
-      {/* Bouton d'action (placeholder) */}
-      <div className="flex justify-center pt-6">
-        <button
-          onClick={() => alert("Fonctionnalité à implémenter : export PDF, envoi par email, etc.")}
-          className="nav-button nav-button--primary text-lg px-8"
-        >
-          <FileCheck className="w-5 h-5" />
-          Valider le dossier
-        </button>
       </div>
     </div>
   );

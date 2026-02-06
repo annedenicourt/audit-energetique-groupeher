@@ -4,19 +4,12 @@ import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { ScenariosData, ScenarioData } from "@/types/formData";
+import { lettreOptions } from "@/utils/handleForm";
 
 interface StepScenariosProps {
   data: ScenariosData;
   onChange: (field: keyof ScenariosData | string, value: string | ScenarioData) => void;
 }
-
-const lettreOptions = [
-  { value: "A", label: "A" },
-  { value: "B", label: "B" },
-  { value: "C", label: "C" },
-  { value: "D", label: "D" },
-  { value: "E", label: "E" },
-];
 
 // Composant pour un scénario individuel
 const ScenarioCard: React.FC<{

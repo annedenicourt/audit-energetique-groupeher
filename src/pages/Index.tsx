@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FormLayout from "@/components/FormLayout";
 import StepClient from "@/components/steps/StepClient";
 import StepHabitation from "@/components/steps/StepHabitation";
@@ -12,28 +12,33 @@ import { DimensionnementData, ExponentielData, FormData, initialFormData, Scenar
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
-
-// Définition des étapes du formulaire
-const STEPS = [
-  { id: 1, label: "Fiche Découverte", shortLabel: "Client" },
-  /*   { id: 2, label: "Habitation", shortLabel: "Habitation" },
-   */
-  { id: 2, label: "Bilan Énergétique", shortLabel: "Bilan" },
-  { id: 3, label: "Evolution de la facture énergétique", shortLabel: "Evolution" },
-  { id: 4, label: "Scénarios", shortLabel: "Scénarios" },
-  { id: 5, label: "Dimensionnement", shortLabel: "Dimensionnement" },
-  { id: 6, label: "Projection", shortLabel: "Projection" },
-  { id: 7, label: "Aides", shortLabel: "Aides" },
-  { id: 8, label: "Financement", shortLabel: "Financement" },
-  { id: 9, label: "Synthèse", shortLabel: "Synthèse" },
-];
+import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans } from "@/utils/energyCalculation";
+import { STEPS } from "@/utils/handleForm";
 
 const Index: React.FC = () => {
   // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
-
   // État pour la navigation entre les étapes
   const [currentStep, setCurrentStep] = useState(1);
+
+  const STORAGE_KEY = "simulation_form";
+
+  useEffect(() => {
+    const stored = sessionStorage.getItem(STORAGE_KEY);
+
+    if (stored) {
+      try {
+        setFormData(JSON.parse(stored));
+      } catch (e) {
+        console.warn("Données sessionStorage invalides", e);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
+
 
   // Handlers pour la navigation
   const goToNextStep = () => {
@@ -58,12 +63,35 @@ const Index: React.FC = () => {
     }));
   };
 
-  const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
+  /* const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
     setFormData((prev) => ({
       ...prev,
       evolution: { ...prev.evolution, [field]: value },
     }));
+  }; */
+
+
+
+  const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
+    setFormData((prev) => {
+      const updatedEvolution = {
+        ...prev.evolution,
+        [field]: value,
+      };
+
+      return {
+        ...prev,
+        evolution: {
+          ...updatedEvolution,
+          totalFactureNRJ: computeTotalNrj(updatedEvolution),
+          coutNrj5Ans: computeCoutNrj5ans(updatedEvolution),
+          coutNrj10Ans: computeCoutNrj10ans(updatedEvolution),
+          depenseTotal10ans: computeDepenseTotale10ans(updatedEvolution)
+        },
+      };
+    });
   };
+
 
   const updateBilan = (field: keyof FormData["bilan"], value: string) => {
     setFormData((prev) => ({
@@ -85,11 +113,28 @@ const Index: React.FC = () => {
       dimensionnement: { ...prev.dimensionnement, [field]: value },
     }));
   };
+
   const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) => {
-    setFormData((prev) => ({
-      ...prev,
-      exponentiel: { ...prev.exponentiel, [field]: value },
-    }));
+    setFormData((prev) => {
+      const updatedExponentiel = {
+        ...prev.exponentiel,
+        [field]: value,
+      };
+
+      return {
+        ...prev,
+        exponentiel: {
+          ...updatedExponentiel,
+          facture5Ans: computefacture5Ans(updatedExponentiel),
+          facture10Ans: computefacture10Ans(updatedExponentiel),
+          consommation10AnsSansTravaux: formData.evolution.depenseTotal10ans,
+          consommation10AnsApresTravaux: computeFactureTotale10ans(updatedExponentiel),
+          economiesRealisees10Ans: computeEcoTotal10ans(updatedExponentiel),
+          economiesAnnuellesMoyennes: computeEcoAnnuellesMoy(updatedExponentiel),
+          economiesMensuellesMoyennes: computeEcoMensuellesMoy(updatedExponentiel),
+        },
+      };
+    });
   };
 
   const updateAides = (field: keyof FormData["aides"], value: string) => {
@@ -122,7 +167,7 @@ const Index: React.FC = () => {
       case 5:
         return <StepDimensionnement data={formData.dimensionnement} onChange={updateDimensionnement} />;
       case 6:
-        return <StepExponentiel data={formData.exponentiel} onChange={updateExponentiel} />;
+        return <StepExponentiel data={formData.exponentiel} consommation10AnsSansTravaux={formData.evolution.depenseTotal10ans} onChange={updateExponentiel} />;
       case 7:
         return <StepAides data={formData.aides} onChange={updateAides} />;
       case 8:
@@ -133,8 +178,6 @@ const Index: React.FC = () => {
         return null;
     }
   };
-
-  console.log("formData", formData)
 
   return (
     <FormLayout
@@ -153,3 +196,4 @@ const Index: React.FC = () => {
 };
 
 export default Index;
+

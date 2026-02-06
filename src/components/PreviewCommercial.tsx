@@ -36,7 +36,7 @@ const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf }) =
       </div>
       <div className="fixed -left-[10000px] top-0">
         <div id="pdf-content">
-          <div className="a4-page cover only-pdf">
+          <div className="a4-page">
             MA PAGE DE COUV
           </div>
           <PdfContentCommercial data={data} />

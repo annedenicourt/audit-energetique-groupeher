@@ -88,13 +88,14 @@
    montantChauffage: string;
    montantECS: string;
    montantElecDomestique: string;
+   totalFactureNRJ: string;
    // Énergie actuelle
    energieActuelle: string;
    // Projection cout NRJ
-     coutNrjAujourdhui: "",
-     coutNrj5Ans: "",
-     coutNrj10Ans: "",
-     depenseTotal10ans: ""
+     coutNrjAujourdhui: string,
+     coutNrj5Ans: string,
+     coutNrj10Ans: string,
+     depenseTotal10ans: string,
    // Notes
    notes: string;
  }
@@ -229,6 +230,7 @@
      montantChauffage: "",
      montantECS: "",
      montantElecDomestique: "",
+    totalFactureNRJ: "",
      energieActuelle: "",
      // Projection cout NRJ
      coutNrjAujourdhui: "",

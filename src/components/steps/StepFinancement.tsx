@@ -36,8 +36,6 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => 
         </p>
       </div>
 
-
-      {/*  <Chronologie values={null} setValue={undefined} /> */}
       {/* Transfert de charge */}
       <SectionCard title="Transfert de charge" icon={Banknote}>
         <div className="space-y-4">

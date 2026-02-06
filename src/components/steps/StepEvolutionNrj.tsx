@@ -15,6 +15,7 @@ import {
   BarChart,
   Cell
 } from "recharts";
+import { energieOptions } from "@/utils/handleForm";
 
 
 interface StepEvolutionProps {
@@ -22,14 +23,7 @@ interface StepEvolutionProps {
   onChange: (field: keyof EvolutionData, value: string) => void;
 }
 
-const energieOptions = [
-  { value: "electricite", label: "Électricité" },
-  { value: "fioul", label: "Fioul" },
-  { value: "gaz_ville", label: "Gaz de ville" },
-  { value: "propane", label: "Propane" },
-  { value: "bois", label: "Bois" },
-  { value: "autre", label: "Autre" },
-];
+
 const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
 
   const ChartData = [
@@ -48,7 +42,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
       </div>
       {/* Répartition facture */}
       <SectionCard title="Répartition de la facture énergétique" icon={Zap}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <FormInput
             label="Chauffage"
             name="montantChauffage"
@@ -76,6 +70,15 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             placeholder="800"
             suffix="€/an"
           />
+          <FormInput
+            label="Total"
+            name="totalFactureNRJ"
+            value={data.totalFactureNRJ}
+            type="number"
+            placeholder="800"
+            suffix="€/an"
+            readonly={true}
+          />
         </div>
         <div className="mt-4">
           <FormSelect
@@ -88,33 +91,8 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         </div>
       </SectionCard>
 
-      {/* Projection des coûts - APRES travaux */}
-      <SectionCard title="Projection d'évolution des coûts de l'énergie" icon={ChartLine}>
-
-        {/* <div style={{ width: "100%", height: 200, overflow: "visible" }}>
-          <ResponsiveContainer>
-            <LineChart data={ChartData} margin={{ left: 24, right: 10, top: 10, bottom: 0 }}
-            >
-              <XAxis
-                dataKey="name"
-                tick={{ fontSize: 12 }}
-                axisLine
-                tickLine={false}
-                padding={{ left: 16, right: 16 }}
-                interval={0}
-              />
-              <YAxis hide />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#2563eb"
-                strokeWidth={3}
-                dot={false}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div> */}
-
+      {/* Projection évolution des coûts - avant travaux */}
+      <SectionCard title="Projection d'évolution des coûts de l'énergie (avant travaux)" icon={ChartLine}>
         <div className="w-3/5 mx-auto">
           <div className="h-[200px] w-full -ml-8">
             <ResponsiveContainer>
@@ -150,26 +128,26 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
               value={data.coutNrjAujourdhui}
               onChange={(v) => onChange("coutNrjAujourdhui", v)}
               type="number"
-              placeholder="2500"
+              placeholder="0"
               suffix="€/an"
             />
             <FormInput
               label="Estimation + 5 ans"
               name="coutNrj5Ans"
               value={data.coutNrj5Ans}
-              onChange={(v) => onChange("coutNrj5Ans", v)}
-              type="number"
-              placeholder="3350"
+              type="text"
+              placeholder="0"
               suffix="€/an"
+              readonly={true}
             />
             <FormInput
               label="Estimation + 10 ans"
               name="coutNrj10Ans"
               value={data.coutNrj10Ans}
-              onChange={(v) => onChange("coutNrj10Ans", v)}
-              type="number"
-              placeholder="4480"
+              type="text"
+              placeholder="0"
               suffix="€/an"
+              readonly={true}
             />
           </div>
 
@@ -178,11 +156,11 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
           label="Dépense totale cumulée sur 10 ans"
           name="depenseTotal10ans"
           value={data.depenseTotal10ans}
-          onChange={(v) => onChange("depenseTotal10ans", v)}
-          type="number"
-          placeholder="16000"
+          type="text"
+          placeholder="0"
           suffix="€"
           className="mt-6"
+          readonly={true}
         />
 
         <p className="mt-3 font-bold text-center text-xs text-muted-foreground">
@@ -201,11 +179,6 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
           rows={12}
         />
       </SectionCard>
-
-
-
-
-
     </div>
   );
 };

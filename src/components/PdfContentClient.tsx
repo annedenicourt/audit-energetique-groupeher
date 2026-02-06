@@ -45,6 +45,7 @@ const PdfContentClient: React.FC<PdfContentClientProps> = ({ data }) => {
             <SummaryRow label="Aides perçues" value={data.client.montantAides ? `${data.client.montantAides} €` : ""} />
           </div>
         </SectionCard>
+        <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
       </div>
     </div>
   );

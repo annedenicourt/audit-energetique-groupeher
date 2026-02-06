@@ -5,38 +5,12 @@ import FormSelect from "../FormSelect";
 import FormTextarea from "../FormTextarea";
 import SectionCard from "../SectionCard";
 import { BilanData } from "@/types/formData";
+import { classeOptions, etatOptions } from "@/utils/handleForm";
 
 interface StepBilanProps {
   data: BilanData;
   onChange: (field: keyof BilanData, value: string) => void;
 }
-
-const classeOptions = [
-  { value: "A", label: "A - Très performant" },
-  { value: "B", label: "B - Performant" },
-  { value: "C", label: "C - Assez performant" },
-  { value: "D", label: "D - Moyennement performant" },
-  { value: "E", label: "E - Peu performant" },
-  { value: "F", label: "F - Passoire énergétique" },
-  { value: "G", label: "G - Passoire énergétique" },
-];
-
-const etatOptions = [
-  { value: "bon", label: "Bon état" },
-  { value: "moyen", label: "État moyen" },
-  { value: "mauvais", label: "Mauvais état" },
-  { value: "a_renover", label: "À rénover" },
-  { value: "non_existant", label: "Non existant" },
-];
-
-const energieOptions = [
-  { value: "electricite", label: "Électricité" },
-  { value: "fioul", label: "Fioul" },
-  { value: "gaz_ville", label: "Gaz de ville" },
-  { value: "propane", label: "Propane" },
-  { value: "bois", label: "Bois" },
-  { value: "autre", label: "Autre" },
-];
 
 const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
   return (

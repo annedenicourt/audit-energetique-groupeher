@@ -19,8 +19,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           Dimensionnement thermique & solaire
         </h2>
       </div>
-
-
       {/* Dimensionnement thermique */}
       <SectionCard title="Dimensionnement thermique (chauffage / ECS)" icon={Thermometer}>
         <FormInput
@@ -73,6 +71,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             placeholder="6500"
             suffix="kWh/an"
           />
+        </div>
+        <div className="mt-6 text-sm font-bold">
+          <a href="https://drive.google.com/drive/u/1/folders/1nc7A9KeNsI7zjV8xkcOSaaTM_6T4R6wv" target="_blank">Voir Produits</a>
         </div>
       </SectionCard>
     </div>
