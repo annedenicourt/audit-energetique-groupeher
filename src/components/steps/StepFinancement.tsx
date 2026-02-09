@@ -1,33 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import { Banknote, LineChart, CheckCircle2 } from "lucide-react";
 import FormInput from "../FormInput";
 import SectionCard from "../SectionCard";
 import { FinancementData } from "@/types/formData";
-import Chronologie from "../Chronologie";
+import { Chronologie } from "../Chronologie";
 
 interface StepFinancementProps {
   data: FinancementData;
   onChange: (field: keyof FinancementData, value: string) => void;
+  economiesMensuellesMoyennes: string;
 }
 
-const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => {
-
-  /* const [values, setValues] = useState({
-    mois_demande: "",
-    mois_metre: "",
-    mois_pose: "",
-    mois_m1: "",
-    mois_m2: "",
-    mpr: "",
-    cee: "",
-    reinject_m1: "",
-    reinject_m2: "",
-  }); */
+const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, economiesMensuellesMoyennes }) => {
 
   return (
-    <div className="space-y-6">
+    <div className="">
       {/* Page title */}
-      <div className="mb-8">
+      <div className="mb-16">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Écofinancement & Synthèse
         </h2>
@@ -35,54 +24,49 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange }) => 
           Transfert de charge et projection des économies
         </p>
       </div>
-
+      {/* Frise */}
+      <Chronologie data={data} onChange={(v) => onChange("mensualiteConfort", v)} />
       {/* Transfert de charge */}
       <SectionCard title="Transfert de charge" icon={Banknote}>
-        <div className="space-y-4">
+        <div className="">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <FormInput
               label="Mensualité de confort"
               name="mensualiteConfort"
               value={data.mensualiteConfort}
-              onChange={(v) => onChange("mensualiteConfort", v)}
               type="number"
-              placeholder="200"
+              placeholder="0"
               suffix="€"
+              readonly={true}
             />
             <FormInput
-              label="Économies moyennes mensuelles"
+              label="Économies moyennes mensuelles sur 10 ans"
               name="economiesMoyennesMensuelles"
-              value={data.economiesMoyennesMensuelles}
-              onChange={(v) => onChange("economiesMoyennesMensuelles", v)}
+              value={economiesMensuellesMoyennes}
               type="number"
-              placeholder="158"
+              placeholder="0"
               suffix="€"
+              readonly={true}
             />
             <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
-              <label className="form-label text-primary mb-2 block">
-                Mensualité - économies
-              </label>
+              <div className="font-bold">Gain ou faible effort financier</div>
               <FormInput
                 label=""
                 name="mensualiteMoinsEconomies"
                 value={data.mensualiteMoinsEconomies}
                 onChange={(v) => onChange("mensualiteMoinsEconomies", v)}
                 type="number"
-                placeholder="42"
+                placeholder="0"
                 suffix="€/mois"
+                readonly={true}
               />
             </div>
-          </div>
-          <div className="text-center p-4 bg-primary/5 rounded-lg">
-            <p className="text-lg font-semibold text-primary">
-              = Gain ou faible effort financier
-            </p>
           </div>
         </div>
       </SectionCard>
 
       {/* Avantages écofinancement */}
-      <div className="p-6 bg-secondary rounded-xl border border-border">
+      <div className="mt-8 p-6 bg-secondary rounded-xl border border-border">
         <h4 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-primary" />
           Les avantages de l'écofinancement

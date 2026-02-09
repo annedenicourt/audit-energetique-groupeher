@@ -11,6 +11,39 @@ export const STEPS = [
   { id: 9, label: "Synthèse", shortLabel: "Synthèse" },
 ];
 
+export const situationOptions = [
+  { value: "salarie", label: "Salarié(e)" },
+  { value: "independant", label: "Indépendant(e)" },
+  { value: "retraite", label: "Retraité(e)" },
+  { value: "chomage", label: "Demandeur d'emploi" },
+  { value: "etudiant", label: "Étudiant(e)" },
+  { value: "autre", label: "Autre" },
+];
+export const typeChauffageOptions = [
+  { value: "electrique", label: "Électrique" },
+  { value: "gaz", label: "Gaz" },
+  { value: "fioul", label: "Fioul" },
+  { value: "bois", label: "Bois / Granulés" },
+  { value: "pompe_chaleur", label: "Pompe à chaleur" },
+  { value: "autre", label: "Autre" },
+];
+
+export const typeEauChaudeOptions = [
+  { value: "electrique", label: "Électrique (cumulus)" },
+  { value: "gaz", label: "Chauffe-eau gaz" },
+  { value: "thermodynamique", label: "Thermodynamique" },
+  { value: "solaire", label: "Solaire" },
+  { value: "chaudiere", label: "Lié à la chaudière" },
+  { value: "autre", label: "Autre" },
+];
+
+export const typeAerationOptions = [
+  { value: "naturelle", label: "Naturelle" },
+  { value: "vmc_simple", label: "VMC simple flux" },
+  { value: "vmc_double", label: "VMC double flux" },
+  { value: "aucune", label: "Aucune" },
+];
+
 export const classeOptions = [
   { value: "A", label: "A - Très performant" },
   { value: "B", label: "B - Performant" },

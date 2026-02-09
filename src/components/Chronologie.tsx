@@ -1,152 +1,138 @@
 import React from "react";
+import { FinancementData } from "@/types/formData";
+import { CornerUpRight, Redo } from "lucide-react";
 
-type FieldProps = {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder?: string;
-  className?: string; // ✅ optionnel
-};
 
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder,
-  className = "",
-}: FieldProps) {
-  return (
-    <input
-      aria-label={label}
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value)}
-      placeholder={placeholder}
-      className={
-        "rounded-md border border-slate-300 bg-white/90 px-2 py-1 text-sm shadow-sm " +
-        "focus:outline-none focus:ring-2 focus:ring-slate-300 " +
-        className
-      }
-    />
-  );
+interface ChronologieProps {
+  data: FinancementData;
+  onChange?: (value: string) => void;
 }
 
+export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
 
-export default function Chronologie({ values, setValue }) {
-  // values = { mois_demande, mois_metre, mois_pose, mois_m1, mois_m2, mpr, cee, reinject_m1, reinject_m2 }
+  const TopArrow = () => {
+    return (
+      <svg viewBox="0 0 600 160" className="w-full h-24">
+        <path
+          d="M40,140 C180,20 420,20 560,140"
+          fill="none"
+          stroke="black"
+          strokeWidth="6"
+          strokeLinecap="round"
+        />
+        <path
+          d="M560,140 l-26,-10 l10,26"
+          fill="none"
+          stroke="black"
+          strokeWidth="6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  }
 
   return (
-    <div className="w-full">
-      <h2 className="text-3xl font-extrabold tracking-tight">
-        PLAN À GESTION LIBRE - CHRONOLOGIE
-      </h2>
-
-      {/* Conteneur responsive calé sur le ratio de l'image */}
-      <div className="mt-6 w-full max-w-5xl">
-        <div className="relative w-full overflow-visible rounded-xl border border-slate-200 bg-white shadow-sm">
-          {/* IMPORTANT: ratio proche de ton visuel (à ajuster). Exemple ~ 16:9 */}
-          <div className="relative aspect-[16/9] w-full">
-            {/* Image de fond */}
-            <img
-              src="/chronologie.png"
-              alt="Frise chronologique"
-              className="absolute inset-0 h-full w-full rounded-xl object-contain"
-              draggable={false}
+    <div className="relative mb-16 w-full max-w-[1200px] mx-auto">
+      <div className="relative w-[90%] m-auto flex flex-row justify-between z-10">
+        <div className="w-5/12 flex flex-row justify-between">
+          <div className="">
+            <input
+              className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
+              type="text"
+              name=""
+              placeholder="Mois"
             />
-
-            {/* Champs overlay (positions en %) */}
-            {/* Mois (3 premiers à gauche) */}
-            <div className="absolute left-[18%] top-[40%] w-[12%]">
-              <Field
-                label="Mois Demande"
-                placeholder="Mois"
-                value={values?.mois_demande}
-                onChange={(v) => setValue("mois_demande", v)}
-              />
+            <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
+              <div className="text-xs text-white font-bold">Demande</div>
             </div>
-
-            <div className="absolute left-[32%] top-[40%] w-[12%]">
-              <Field
-                label="Mois Métré"
-                placeholder="Mois"
-                value={values?.mois_metre}
-                onChange={(v) => setValue("mois_metre", v)}
-              />
+            <div className="mt-6 text-center">0 €</div>
+          </div>
+          <div className="">
+            <input
+              className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
+              type="text"
+              name=""
+              placeholder="Mois"
+            />
+            <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
+              <div className="text-xs text-white font-bold">Métré</div>
             </div>
-
-            <div className="absolute left-[46%] top-[40%] w-[12%]">
-              <Field
-                label="Mois Pose"
-                placeholder="Mois"
-                value={values?.mois_pose}
-                onChange={(v) => setValue("mois_pose", v)}
-              />
+            <div className="mt-6 text-center">0 €</div>
+          </div>
+          <div className="">
+            <input
+              className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
+              type="text"
+              name=""
+              placeholder="Mois"
+            />
+            <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
+              <div className="text-xs text-white font-bold">Pose</div>
             </div>
-
-            {/* Mois à droite */}
-            <div className="absolute left-[67%] top-[40%] w-[12%]">
-              <Field
-                label="Mois 1ère mensualité"
-                placeholder="Mois"
-                value={values?.mois_m1}
-                onChange={(v) => setValue("mois_m1", v)}
-              />
-            </div>
-
-            <div className="absolute left-[87%] top-[40%] w-[12%]">
-              <Field
-                label="Mois 2e mensualité"
-                placeholder="Mois"
-                value={values?.mois_m2}
-                onChange={(v) => setValue("mois_m2", v)}
-              />
-            </div>
-
-            {/* Aides obtenues (dans le cadre) */}
-            <div className="absolute left-[63%] top-[54%] w-[10%]">
-              <Field
-                label="MPR"
-                placeholder="€"
-                value={values?.mpr}
-                onChange={(v) => setValue("mpr", v)}
-              />
-            </div>
-
-            <div className="absolute left-[63%] top-[65%] w-[10%]">
-              <Field
-                label="CEE"
-                placeholder="€"
-                value={values?.cee}
-                onChange={(v) => setValue("cee", v)}
-              />
-            </div>
-
-            {/* Montants à réinjecter (2 grands champs en bas à droite) */}
-            <div className="absolute left-[64%] top-[74%] w-[19%]">
-              <Field
-                label="À réinjecter 1"
-                placeholder="Montant à réinjecter"
-                className="py-2"
-                value={values?.reinject_m1}
-                onChange={(v) => setValue("reinject_m1", v)}
-              />
-            </div>
-
-            <div className="absolute left-[83%] top-[74%] w-[19%]">
-              <Field
-                label="À réinjecter 2"
-                placeholder="Montant à réinjecter"
-                className="py-2"
-                value={values?.reinject_m2}
-                onChange={(v) => setValue("reinject_m2", v)}
-              />
-            </div>
+            <div className="mt-6 text-center">0 €</div>
           </div>
         </div>
-
-        <p className="mt-3 text-center text-sm font-semibold text-slate-700">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
-        </p>
+        <div className="relative w-2/12">
+          <div className="absolute -top-36 -left-5 rotate-12">
+            <Redo size={200} strokeWidth={0.5} className="text-slate-300" />
+          </div>
+          <div className="mb-3 text-sm text-center">Report 6 mois à 0€/mois</div>
+          <div className="w-full h-36 p-2 bg-white border border-slate-300 rounded-lg">
+            <div className="mb-3 text-sm text-center">Aides obtenues</div>
+            <div className="mb-2 flex flex-row items-center justify-between">
+              <label className="mr-2">MPR</label>
+              <input type="text" className="w-[65%] border border-slate-300 rounded" />
+            </div>
+            <div className="flex flex-row items-center justify-between">
+              <label className="mr-2">CEE</label>
+              <input type="text" className="w-[65%] border border-slate-300 rounded" />
+            </div>
+          </div>
+          <div className="mt-2 text-xs text-center">à réinjecter dans la 2e mensualité</div>
+        </div>
+        <div className="w-3/12 flex flex-row justify-between">
+          <div className="">
+            <input
+              className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
+              type="text"
+              name=""
+              placeholder="Mois"
+            />
+            <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
+              <div className="text-xs text-center text-white font-bold">1ère mensualité</div>
+            </div>
+            <input
+              className="px-1 py-2 mt-4 w-20 text-xs text-center border border-slate-300 rounded-md"
+              type="number"
+              name=""
+              placeholder="Montant"
+            />
+          </div>
+          <div className="">
+            <input
+              className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
+              type="text"
+              name=""
+              placeholder="Mois"
+            />
+            <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
+              <div className="text-xs text-white text-center font-bold">2e mensualité de confort</div>
+            </div>
+            <input
+              className="px-1 py-2 mt-4 w-20 text-xs text-center border border-slate-300 rounded-md"
+              type="number"
+              name=""
+              value={data.mensualiteConfort}
+              onChange={(e) => onChange(e.target.value)}
+              placeholder="Montant"
+            />
+          </div>
+        </div>
       </div>
+      <div className="absolute top-[50%] h-0.5 w-full bg-orange-500 z-0" />
     </div>
   );
 }
+
+

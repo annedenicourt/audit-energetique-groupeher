@@ -135,7 +135,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
           />
           <div className="space-y-4">
             <FormInput
-              label="Économies annuelles moyennes"
+              label="Économies annuelles moyennes sur 10 ans"
               name="economiesAnnuellesMoyennes"
               value={data.economiesAnnuellesMoyennes}
               type="number"
@@ -144,7 +144,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               readonly={true}
             />
             <FormInput
-              label="Économies mensuelles moyennes"
+              label="Économies mensuelles moyennes sur 10 ans"
               name="economiesMensuellesMoyennes"
               value={data.economiesMensuellesMoyennes}
               type="number"
@@ -164,6 +164,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               type="number"
               placeholder="0"
               suffix="€"
+              readonly={true}
             />
           </div>
         </div>

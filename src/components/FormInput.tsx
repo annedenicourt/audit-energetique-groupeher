@@ -11,7 +11,9 @@ interface FormInputProps {
   suffix?: string;
   required?: boolean;
   className?: string;
-  readonly?: boolean
+  readonly?: boolean;
+  min?: string;
+  max?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -24,7 +26,9 @@ const FormInput: React.FC<FormInputProps> = ({
   placeholder = "",
   suffix,
   required = false,
-  className
+  className,
+  min,
+  max
 }) => {
   return (
     <div className={`form-field ${className}`} >
@@ -43,6 +47,8 @@ const FormInput: React.FC<FormInputProps> = ({
           className={`form-input ${suffix ? "pr-14" : ""}`}
           readOnly={readonly}
           step={1}
+          min={min}
+          max={max}
         />
         {suffix && (
           <span className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground text-sm font-medium">

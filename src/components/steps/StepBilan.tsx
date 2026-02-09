@@ -38,7 +38,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
             value={data.consommationActuelle}
             onChange={(v) => onChange("consommationActuelle", v)}
             type="number"
-            placeholder="250"
+            placeholder="0"
             suffix="kWh/m²/an"
           />
           <FormInput
@@ -47,7 +47,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
             value={data.factureAnnuelle}
             onChange={(v) => onChange("factureAnnuelle", v)}
             type="number"
-            placeholder="2500"
+            placeholder="0"
             suffix="€/an"
           />
         </div>

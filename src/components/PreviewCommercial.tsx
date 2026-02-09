@@ -23,7 +23,7 @@ const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf }) =
   return (
     <div className="mx-auto bg-white p-4">
       {/* Bouton Téléchargement PDF */}
-      <div className="mb-6 flex justify-center">
+      <div className="mb-6 flex justify-end">
         <button
           className="nav-button nav-button--primary text-lg px-8"
           onClick={() => { requestAnimationFrame(() => downloadPdf()); }}>

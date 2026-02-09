@@ -5,44 +5,12 @@ import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { ClientData } from "@/types/formData";
 import FormTextarea from "../FormTextarea";
+import { situationOptions, typeChauffageOptions, typeEauChaudeOptions, typeAerationOptions } from "@/utils/handleForm";
 
 interface StepClientProps {
   data: ClientData;
   onChange: (field: keyof ClientData, value: string) => void;
 }
-
-const situationOptions = [
-  { value: "salarie", label: "Salarié(e)" },
-  { value: "independant", label: "Indépendant(e)" },
-  { value: "retraite", label: "Retraité(e)" },
-  { value: "chomage", label: "Demandeur d'emploi" },
-  { value: "etudiant", label: "Étudiant(e)" },
-  { value: "autre", label: "Autre" },
-];
-const typeChauffageOptions = [
-  { value: "electrique", label: "Électrique" },
-  { value: "gaz", label: "Gaz" },
-  { value: "fioul", label: "Fioul" },
-  { value: "bois", label: "Bois / Granulés" },
-  { value: "pompe_chaleur", label: "Pompe à chaleur" },
-  { value: "autre", label: "Autre" },
-];
-
-const typeEauChaudeOptions = [
-  { value: "electrique", label: "Électrique (cumulus)" },
-  { value: "gaz", label: "Chauffe-eau gaz" },
-  { value: "thermodynamique", label: "Thermodynamique" },
-  { value: "solaire", label: "Solaire" },
-  { value: "chaudiere", label: "Lié à la chaudière" },
-  { value: "autre", label: "Autre" },
-];
-
-const typeAerationOptions = [
-  { value: "naturelle", label: "Naturelle" },
-  { value: "vmc_simple", label: "VMC simple flux" },
-  { value: "vmc_double", label: "VMC double flux" },
-  { value: "aucune", label: "Aucune" },
-];
 
 const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
   return (
@@ -92,11 +60,10 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.telephone}
             onChange={(v) => onChange("telephone", v)}
             type="tel"
-            placeholder="06 12 34 56 78"
+            placeholder="06 00 00 00 00"
             required
             className="mb-4"
           />
-
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
@@ -105,7 +72,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               name="adresse"
               value={data.adresse}
               onChange={(v) => onChange("adresse", v)}
-              placeholder="123 rue de la Paix"
+              placeholder="Adresse du client"
               required
             />
           </div>
@@ -114,7 +81,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             name="codePostal"
             value={data.codePostal}
             onChange={(v) => onChange("codePostal", v)}
-            placeholder="75000"
+            placeholder="Code postal"
             required
           />
           <FormInput
@@ -122,7 +89,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             name="ville"
             value={data.ville}
             onChange={(v) => onChange("ville", v)}
-            placeholder="Paris"
+            placeholder="Ville"
             required
           />
 
@@ -145,7 +112,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ageConjoint1}
             onChange={(v) => onChange("ageConjoint1", v)}
             type="number"
-            placeholder="45"
+            placeholder="Âge"
             suffix="ans"
           />
           <FormSelect
@@ -161,7 +128,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ageConjoint2}
             onChange={(v) => onChange("ageConjoint2", v)}
             type="number"
-            placeholder="42"
+            placeholder="Âge"
             suffix="ans"
           />
         </div>
@@ -176,7 +143,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.anneeConstruction}
             onChange={(v) => onChange("anneeConstruction", v)}
             type="number"
-            placeholder="1985"
+            placeholder="Année de construction"
           />
           <FormInput
             label="Propriétaire depuis"
@@ -184,7 +151,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.proprietaireDepuis}
             onChange={(v) => onChange("proprietaireDepuis", v)}
             type="number"
-            placeholder="2010"
+            placeholder="Année"
           />
           <FormInput
             label="Surface habitable"
@@ -192,7 +159,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.surfaceHabitable}
             onChange={(v) => onChange("surfaceHabitable", v)}
             type="number"
-            placeholder="120"
+            placeholder="Surface habitable"
             suffix="m²"
           />
           <FormInput
@@ -201,7 +168,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.nbrePiecesChaufees}
             onChange={(v) => onChange("nbrePiecesChaufees", v)}
             type="number"
-            placeholder="6"
+            placeholder="0"
           />
           <FormInput
             label="Nombre de personnes"
@@ -209,7 +176,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.nbrePersonnes}
             onChange={(v) => onChange("nbrePersonnes", v)}
             type="number"
-            placeholder="4"
+            placeholder="0"
           />
           <FormInput
             label="Dont enfants"
@@ -217,7 +184,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.dontEnfants}
             onChange={(v) => onChange("dontEnfants", v)}
             type="number"
-            placeholder="2"
+            placeholder="0"
           />
         </div>
       </SectionCard>
@@ -289,7 +256,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ageChauffage}
             onChange={(v) => onChange("ageChauffage", v)}
             type="number"
-            placeholder="15"
+            placeholder="Âge"
             suffix="ans"
           />
           <FormInput
@@ -298,7 +265,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.coutAnnuelChauffage}
             onChange={(v) => onChange("coutAnnuelChauffage", v)}
             type="number"
-            placeholder="1500"
+            placeholder="0"
             suffix="€"
           />
           <div className="grid grid-cols-2 gap-4">
@@ -340,7 +307,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ageEauChaude}
             onChange={(v) => onChange("ageEauChaude", v)}
             type="number"
-            placeholder="10"
+            placeholder="0"
             suffix="ans"
           />
         </div>
@@ -362,7 +329,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ageAeration}
             onChange={(v) => onChange("ageAeration", v)}
             type="number"
-            placeholder="8"
+            placeholder="0"
             suffix="ans"
           />
         </div>
@@ -377,7 +344,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.factureElecAnnuelle}
             onChange={(v) => onChange("factureElecAnnuelle", v)}
             type="number"
-            placeholder="1800"
+            placeholder="0"
             suffix="€/an"
           />
           <FormInput
@@ -386,7 +353,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.factureElecMensuelle}
             onChange={(v) => onChange("factureElecMensuelle", v)}
             type="number"
-            placeholder="150"
+            placeholder="0"
             suffix="€/mois"
           />
         </div>
@@ -401,7 +368,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.factureEnergieAnnuelle}
             onChange={(v) => onChange("factureEnergieAnnuelle", v)}
             type="number"
-            placeholder="2500"
+            placeholder="0"
             suffix="€/an"
           />
           <FormInput
@@ -410,7 +377,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.factureEnergieMensuelle}
             onChange={(v) => onChange("factureEnergieMensuelle", v)}
             type="number"
-            placeholder="210"
+            placeholder="0"
             suffix="€/mois"
           />
         </div>
@@ -433,7 +400,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.montantTravaux}
             onChange={(v) => onChange("montantTravaux", v)}
             type="number"
-            placeholder="8000"
+            placeholder="0"
             suffix="€"
           />
         </div>
@@ -444,63 +411,67 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <FormInput
-              label="Plafond maximum Ma Prime Rénov (sur 5 ans)'"
-              name="aidesMaPrimeRenov"
-              value={"20000"}
-              type="number"
-              placeholder="2000"
-              suffix="€"
-              readonly={true}
-            />
-            <FormInput
-              label="Aide disponible Ma Prime Rénov'"
-              name="aidesMaPrimeRenov"
-              value={data.aidesMaPrimeRenov}
-              onChange={(v) => onChange("aidesMaPrimeRenov", v)}
-              type="number"
-              placeholder="2000"
-              suffix="€"
-              className="my-4"
-            />
-            <FormInput
               label="Ma Prime Rénov'"
               name="aidesMaPrimeRenov"
               value={data.aidesMaPrimeRenov}
               onChange={(v) => onChange("aidesMaPrimeRenov", v)}
               type="number"
-              placeholder="2000"
+              placeholder="0"
               suffix="€"
+              min={"0"}
             />
-          </div>
-          <div>
             <FormInput
               label="CEE (Certificats d'économie d'énergie)"
               name="aidesCEE"
               value={data.aidesCEE}
               onChange={(v) => onChange("aidesCEE", v)}
               type="number"
-              placeholder="500"
+              placeholder="0"
               suffix="€"
+              className="my-4"
+              min={"0"}
             />
             <FormInput
               label="Autres aides"
               name="aidesAutre"
               value={data.aidesAutre}
               onChange={(v) => onChange("aidesAutre", v)}
+              type="number"
               placeholder="Aides locales, ANAH..."
-              className="my-4"
+              suffix="€"
+              min={"0"}
             />
+          </div>
+          <div>
             <FormInput
               label="Montant total des aides"
               name="montantAides"
               value={data.montantAides}
               onChange={(v) => onChange("montantAides", v)}
               type="number"
-              placeholder="2500"
+              placeholder="0"
+              suffix="€"
+            />
+            <FormInput
+              label="Plafond maximum Ma Prime Rénov (sur 5 ans)'"
+              name="plafondMaPrimeRenov"
+              value={"20000"}
+              type="number"
+              placeholder="2000"
+              suffix="€"
+              readonly={true}
+              className="my-4"
+            />
+            <FormInput
+              label="Aide disponible Ma Prime Rénov'"
+              name="aidesMaPrimeRenov"
+              value={data.dispoMaPrimeRenov}
+              onChange={(v) => onChange("aidesMaPrimeRenov", v)}
+              type="number"
+              placeholder="0"
               suffix="€"
             />
           </div>
-
         </div>
       </SectionCard>
     </div>

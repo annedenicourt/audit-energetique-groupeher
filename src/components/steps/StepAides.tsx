@@ -9,11 +9,10 @@ import { plafondsData, nbrePersonnesOptions, categorieOptions } from "@/utils/ha
 interface StepAidesProps {
   data: AidesData;
   onChange: (field: keyof AidesData, value: string) => void;
+  ecoEstimees10ans: string;
 }
 
-
-
-const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
+const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -70,7 +69,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
             value={data.dernierRFR}
             onChange={(v) => onChange("dernierRFR", v)}
             type="number"
-            placeholder="35000"
+            placeholder="0"
             suffix="€"
           />
           <FormSelect
@@ -99,7 +98,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
               value={data.coutTotalInstallation}
               onChange={(v) => onChange("coutTotalInstallation", v)}
               type="number"
-              placeholder="15000"
+              placeholder="0"
               suffix="€"
               className="mb-4"
             />
@@ -109,7 +108,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
               value={data.primeCEE}
               onChange={(v) => onChange("primeCEE", v)}
               type="number"
-              placeholder="2500"
+              placeholder="0"
               suffix="€"
               className="mb-4"
             />
@@ -119,7 +118,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
               value={data.maPrimeRenov}
               onChange={(v) => onChange("maPrimeRenov", v)}
               type="number"
-              placeholder="4000"
+              placeholder="0"
               suffix="€"
             />
           </div>
@@ -127,33 +126,33 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange }) => {
             <FormInput
               label="Reste à charger après MaPrimeRénov'"
               name="resteACharger"
-              value={data.resteACharger}
-              onChange={(v) => onChange("resteACharger", v)}
+              value={data.resteACharge}
               type="number"
-              placeholder="8500"
+              placeholder="0"
               suffix="€"
               className="mb-4"
+              readonly={true}
             />
             <FormInput
               label="Économies estimées sur 10 ans"
               name="economiesSur10Ans"
-              value={data.economiesSur10Ans}
-              onChange={(v) => onChange("economiesSur10Ans", v)}
+              value={ecoEstimees10ans}
               type="number"
-              placeholder="12000"
+              placeholder="0"
               suffix="€"
               className="mb-4"
+              readonly={true}
             />
-            <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+            <div className="p-2 bg-orange-500/10 rounded-lg border border-orange-500/20">
               <label className="form-label text-primary">Gain sur 10 ans</label>
               <FormInput
                 label=""
                 name="gainSur10Ans"
                 value={data.gainSur10Ans}
-                onChange={(v) => onChange("gainSur10Ans", v)}
                 type="number"
-                placeholder="3500"
+                placeholder="0"
                 suffix="€"
+                readonly={true}
               />
             </div>
           </div>

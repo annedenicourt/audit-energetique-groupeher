@@ -12,7 +12,7 @@ interface PdfContentCommercialProps {
 const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="flex justify-between py-2 border-b border-border/50 last:border-0">
     <span className="text-muted-foreground">{label}</span>
-    <span className="font-medium text-foreground">{value || "—"}</span>
+    <span className="font-medium text-sm text-foreground">{value || "—"}</span>
   </div>
 );
 
@@ -60,12 +60,12 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Bilan énergétique */}
         <SectionCard title="Bilan énergétique" icon={BarChart3}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-x-8">
+          <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Classe DPE" value={data.bilan.classeEnergetique} />
-            <SummaryRow label="Consommation" value={data.bilan.consommationActuelle ? `${data.bilan.consommationActuelle} kWh/m²/an` : ""} />
-            <SummaryRow label="Énergie actuelle" value={data.bilan.factureAnnuelle ? `${data.bilan.factureAnnuelle} €/an` : ""} />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <SummaryRow label="Consommation" value={data.bilan.consommationActuelle ? `${data.bilan.consommationActuelle} kWh/m²/an` : "kWh/m²/an"} />
+            <SummaryRow label="Facture annuelle actuelle" value={data.bilan.factureAnnuelle ? `${data.bilan.factureAnnuelle} €/an` : "€/an"} />
             <SummaryRow label="Isolation combles" value={data.bilan.isolationCombles} />
             <SummaryRow label="Commentaires" value={data.bilan.isolationComblesCommentaire} />
             <SummaryRow label="Isolation murs" value={data.bilan.isolationMurs} />

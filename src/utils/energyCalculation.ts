@@ -5,6 +5,21 @@ const toNumber = (v?: string): number => {
   return isNaN(n) ? 0 : n;
 };
 
+/*Aide disponible MPR*/
+export const computeDispoMPR = (
+  client: FormData["client"]
+): string => {
+  const total =
+    20000 - toNumber(client.aidesMaPrimeRenov);
+  return Math.round(total).toString();
+};
+export const computeTotalAides = (
+  client: FormData["client"]
+): string => {
+  const total =
+    toNumber(client.aidesCEE) +toNumber(client.aidesMaPrimeRenov) +toNumber(client.aidesAutre);
+  return Math.round(total).toString();
+};
 /*Total facture énergie (€/an)*/
 export const computeTotalNrj = (
   evolution: FormData["evolution"]
@@ -13,7 +28,6 @@ export const computeTotalNrj = (
     toNumber(evolution.montantChauffage) +
     toNumber(evolution.montantECS) +
     toNumber(evolution.montantElecDomestique);
-
   return Math.round(total).toString();
 };
 /*Projection cout énergie avant travaux*/
@@ -38,7 +52,6 @@ export const computeDepenseTotale10ans = (
     toNumber(evolution.coutNrjAujourdhui) * 14.97
   return Math.round(total).toString();
 };
-
 
 /*Projection cout énergie apres travaux*/
 export const computefacture5Ans = (
@@ -65,7 +78,8 @@ export const computeFactureTotale10ans = (
 export const computeEcoTotal10ans = (
     exponentiel:FormData["exponentiel"]
 ): string=> {
-    const total = toNumber(exponentiel.consommation10AnsSansTravaux) - toNumber(exponentiel.consommation10AnsApresTravaux)
+    const updateFactuteTotale10ans = toNumber(exponentiel.factureAujourdhui) * 14.97
+    const total = toNumber(exponentiel.consommation10AnsSansTravaux) - updateFactuteTotale10ans
   return Math.round(total).toString();
 }
 export const computeEcoAnnuellesMoy = (
@@ -80,4 +94,32 @@ export const computeEcoMensuellesMoy = (
     const total = toNumber(exponentiel.economiesAnnuellesMoyennes) / 12
   return Math.round(total).toString();
 }
+
+/*Section Aides*/
+export const computeResteaCharge = (
+  aides: FormData["aides"]
+): string => {
+  const total =
+    toNumber(aides.coutTotalInstallation) - toNumber(aides.primeCEE) - toNumber(aides.maPrimeRenov)
+  return Math.round(total).toString();
+};
+export const computeGain10ans = (
+  aides: FormData["aides"]
+): string => {
+  const updateResteACharge = toNumber(aides.coutTotalInstallation) - toNumber(aides.primeCEE) - toNumber(aides.maPrimeRenov)
+  const total =
+    toNumber(aides.economiesSur10Ans) - updateResteACharge
+  return Math.round(total).toString();
+};
+
+/*Section Financement*/
+export const computeEcoMoinsMensualite = (
+  financement: FormData["financement"]
+): string => {
+  const total =
+   toNumber(financement.economiesMoyennesMensuelles) - toNumber(financement.mensualiteConfort)
+  return Math.round(total).toString();
+};
+
+
 

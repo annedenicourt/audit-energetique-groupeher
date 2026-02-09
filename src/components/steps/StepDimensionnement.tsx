@@ -27,7 +27,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           value={data.puissanceThermique}
           onChange={(v) => onChange("dimensionnementFabricant", v)}
           type="number"
-          placeholder="12"
+          placeholder="0"
           suffix=""
         />
         <FormInput
@@ -36,7 +36,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           value={data.puissanceThermique}
           onChange={(v) => onChange("puissanceThermique", v)}
           type="number"
-          placeholder="12"
+          placeholder="0"
           suffix="kW"
         />
       </SectionCard>
@@ -50,7 +50,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             value={data.consommationElecAnnuelle}
             onChange={(v) => onChange("consommationElecAnnuelle", v)}
             type="number"
-            placeholder="5000"
+            placeholder="0"
             suffix="kWh/an"
           />
           <FormInput
@@ -59,7 +59,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             value={data.puissancePVRecommandee}
             onChange={(v) => onChange("puissancePVRecommandee", v)}
             type="number"
-            placeholder="6"
+            placeholder="0"
             suffix="kWc"
           />
           <FormInput
@@ -68,7 +68,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             value={data.productionPVEstimee}
             onChange={(v) => onChange("productionPVEstimee", v)}
             type="number"
-            placeholder="6500"
+            placeholder="0"
             suffix="kWh/an"
           />
         </div>

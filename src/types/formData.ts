@@ -55,6 +55,7 @@
    
    // Aides perçues
    aidesMaPrimeRenov: string;
+   dispoMaPrimeRenov: string;
    aidesCEE: string;
    aidesAutre: string;
    montantAides: string;
@@ -145,7 +146,7 @@
    coutTotalInstallation: string;
    primeCEE: string;
    maPrimeRenov: string;
-   resteACharger: string;
+   resteACharge: string;
    economiesSur10Ans: string;
    gainSur10Ans: string;
  }
@@ -204,6 +205,7 @@
      travauxRealises: "",
      montantTravaux: "",
      aidesMaPrimeRenov: "",
+     dispoMaPrimeRenov:"",
      aidesCEE: "",
      aidesAutre: "",
      montantAides: "",
@@ -268,7 +270,7 @@
      coutTotalInstallation: "",
      primeCEE: "",
      maPrimeRenov: "",
-     resteACharger: "",
+     resteACharge: "",
      economiesSur10Ans: "",
      gainSur10Ans: "",
    },

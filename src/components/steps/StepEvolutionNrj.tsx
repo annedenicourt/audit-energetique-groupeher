@@ -49,7 +49,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             value={data.montantChauffage}
             onChange={(v) => onChange("montantChauffage", v)}
             type="number"
-            placeholder="1200"
+            placeholder="0"
             suffix="€/an"
           />
           <FormInput
@@ -58,7 +58,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             value={data.montantECS}
             onChange={(v) => onChange("montantECS", v)}
             type="number"
-            placeholder="400"
+            placeholder="0"
             suffix="€/an"
           />
           <FormInput
@@ -67,7 +67,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             value={data.montantElecDomestique}
             onChange={(v) => onChange("montantElecDomestique", v)}
             type="number"
-            placeholder="800"
+            placeholder="0"
             suffix="€/an"
           />
           <FormInput
@@ -75,7 +75,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             name="totalFactureNRJ"
             value={data.totalFactureNRJ}
             type="number"
-            placeholder="800"
+            placeholder="0"
             suffix="€/an"
             readonly={true}
           />

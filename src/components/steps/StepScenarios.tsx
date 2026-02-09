@@ -34,7 +34,7 @@ const ScenarioCard: React.FC<{
         value={scenario.plusValueLogement}
         onChange={(v) => onChange("plusValueLogement", v)}
         type="number"
-        placeholder="15000"
+        placeholder="0"
         suffix="€"
       />
       <FormInput
@@ -43,7 +43,7 @@ const ScenarioCard: React.FC<{
         value={scenario.factureApres}
         onChange={(v) => onChange("factureApres", v)}
         type="number"
-        placeholder="1200"
+        placeholder="0"
         suffix="€/an"
       />
       <FormSelect

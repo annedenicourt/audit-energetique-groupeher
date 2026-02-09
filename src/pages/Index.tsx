@@ -12,7 +12,7 @@ import { DimensionnementData, ExponentielData, FormData, initialFormData, Scenar
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
-import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans } from "@/utils/energyCalculation";
+import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 
 const Index: React.FC = () => {
@@ -57,21 +57,22 @@ const Index: React.FC = () => {
 
   // Handlers génériques pour mettre à jour les différentes sections
   const updateClient = (field: keyof FormData["client"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      client: { ...prev.client, [field]: value },
-    }));
+    setFormData((prev) => {
+      const updatedClient = {
+        ...prev.client,
+        [field]: value,
+      };
+
+      return {
+        ...prev,
+        client: {
+          ...updatedClient,
+          dispoMaPrimeRenov: computeDispoMPR(updatedClient),
+          montantAides: computeTotalAides(updatedClient)
+        },
+      };
+    });
   };
-
-  /* const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      evolution: { ...prev.evolution, [field]: value },
-    }));
-  }; */
-
-
-
   const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
     setFormData((prev) => {
       const updatedEvolution = {
@@ -138,17 +139,40 @@ const Index: React.FC = () => {
   };
 
   const updateAides = (field: keyof FormData["aides"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      aides: { ...prev.aides, [field]: value },
-    }));
+    setFormData((prev) => {
+      const updatedAides = {
+        ...prev.aides,
+        [field]: value,
+      };
+
+      return {
+        ...prev,
+        aides: {
+          ...updatedAides,
+          resteACharge: computeResteaCharge(updatedAides),
+          //economiesSur10Ans: formData.exponentiel.economiesRealisees10Ans,
+          gainSur10Ans: computeGain10ans(updatedAides)
+        },
+      };
+    });
   };
 
   const updateFinancement = (field: keyof FormData["financement"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      financement: { ...prev.financement, [field]: value },
-    }));
+    setFormData((prev) => {
+      const updatedFinancement = {
+        ...prev.financement,
+        [field]: value,
+      };
+
+      return {
+        ...prev,
+        financement: {
+          ...updatedFinancement,
+          economiesMoyennesMensuelles: formData.exponentiel.economiesMensuellesMoyennes,
+          mensualiteMoinsEconomies: computeEcoMoinsMensualite(updatedFinancement),
+        },
+      };
+    });
   };
 
   // Rendu du composant d'étape actuel
@@ -169,9 +193,9 @@ const Index: React.FC = () => {
       case 6:
         return <StepExponentiel data={formData.exponentiel} consommation10AnsSansTravaux={formData.evolution.depenseTotal10ans} onChange={updateExponentiel} />;
       case 7:
-        return <StepAides data={formData.aides} onChange={updateAides} />;
+        return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} />;
       case 8:
-        return <StepFinancement data={formData.financement} onChange={updateFinancement} />;
+        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} />;
       case 9:
         return <StepSynthese data={formData} />;
       default:
