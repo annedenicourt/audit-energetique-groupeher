@@ -31,6 +31,13 @@ export const computeTotalNrj = (
   return Math.round(total).toString();
 };
 /*Projection cout énergie avant travaux*/
+export const computeCoutNrjMoins5ans = (
+  evolution: FormData["evolution"]
+): string => {
+  const total =
+    toNumber(evolution.coutNrjAujourdhui) * 0.659
+  return Math.round(total).toString();
+};
 export const computeCoutNrj5ans = (
   evolution: FormData["evolution"]
 ): string => {
@@ -78,14 +85,15 @@ export const computeFactureTotale10ans = (
 export const computeEcoTotal10ans = (
     exponentiel:FormData["exponentiel"]
 ): string=> {
-    const updateFactuteTotale10ans = toNumber(exponentiel.factureAujourdhui) * 14.97
-    const total = toNumber(exponentiel.consommation10AnsSansTravaux) - updateFactuteTotale10ans
+    const updateFactureTotale10ans = toNumber(exponentiel.factureAujourdhui) * 14.97
+    const total = toNumber(exponentiel.consommation10AnsSansTravaux) - updateFactureTotale10ans
   return Math.round(total).toString();
 }
 export const computeEcoAnnuellesMoy = (
     exponentiel:FormData["exponentiel"]
 ): string=> {
-    const total = toNumber(exponentiel.economiesRealisees10Ans) / 10
+  const updateEcoTotale10ans= toNumber(exponentiel.consommation10AnsSansTravaux) - toNumber(exponentiel.consommation10AnsApresTravaux)
+    const total = updateEcoTotale10ans / 10
   return Math.round(total).toString();
 }
 export const computeEcoMensuellesMoy = (

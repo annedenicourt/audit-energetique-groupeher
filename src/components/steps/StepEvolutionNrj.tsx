@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { Receipt, Wrench, HandCoins, FileText, Zap, ChartLine } from "lucide-react";
 import FormInput from "../FormInput";
 import FormTextarea from "../FormTextarea";
@@ -16,6 +16,7 @@ import {
   Cell
 } from "recharts";
 import { energieOptions } from "@/utils/handleForm";
+import AppModal from "../Modal";
 
 
 interface StepEvolutionProps {
@@ -26,10 +27,43 @@ interface StepEvolutionProps {
 
 const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string, caption: string } | null>(null);
+
+  const images = useMemo(
+    () => [
+      {
+        src: "/images/prix_elec_france.png", alt: "Graphique évolution 1", caption: "Évolution du prix de l'électricité",
+      },
+      {
+        src: "/images/prix_gaz_france.png", alt: "Graphique évolution 2", caption: "Évolution du prix du gaz",
+      },
+      {
+        src: "/images/prix_fioul_france.png", alt: "Graphique évolution 3", caption: "Évolution du prix du fioul",
+      },
+      {
+        src: "/images/prix_global_france.png", alt: "Graphique évolution 3", caption: "Contexte énergétique global",
+      },
+    ],
+    []
+  );
+
+  const openImage = (img: { src: string; alt: string, caption: string }) => {
+    setSelectedImage(img);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+  };
+
+
   const ChartData = [
-    { name: "Aujourd’hui", value: 80, color: "#22c55e" },
-    { name: "5 ans", value: 150, color: "#f59e0b" },
-    { name: "10 ans", value: 240, color: "#f97316" },
+    { name: "- 5 ans", value: 80, color: "#22c55e" },
+    { name: "Aujourd’hui", value: 150, color: "#f59e0b" },
+    { name: "+ 5 ans", value: 240, color: "#f97316" },
+    { name: "+ 10 ans", value: 300, color: "#f91616" },
   ];
 
   return (
@@ -91,14 +125,57 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         </div>
       </SectionCard>
 
+      {/* Illustrations */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {images.map((img, idx) => (
+          <div
+            key={`${img.src}-${idx}`}
+            className="border border-slate-200 rounded-lg overflow-hidden transition-transform duration-300 ease-out hover:scale-105"
+          >
+            <button
+              type="button"
+              onClick={() => openImage(img)}
+              className="block w-full"
+              title="Cliquer pour agrandir"
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="w-full h-40 object-cover"
+                loading="lazy"
+              />
+            </button>
+
+            <div className="p-2 text-xs text-center text-muted-foreground">
+              {img.caption}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <AppModal isOpen={isModalOpen} onClose={closeModal} title="Aperçu">
+        {selectedImage && (
+          <div className="flex flex-col gap-3">
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="w-full max-h-[75vh] object-contain rounded-lg"
+            />
+            <div className="text-sm text-center text-muted-foreground">
+              {selectedImage.caption}
+            </div>
+          </div>
+        )}
+      </AppModal>
+
       {/* Projection évolution des coûts - avant travaux */}
       <SectionCard title="Projection d'évolution des coûts de l'énergie (avant travaux)" icon={ChartLine}>
-        <div className="w-3/5 mx-auto">
+        <div className="w-4/5 mx-auto">
           <div className="h-[200px] w-full -ml-8">
             <ResponsiveContainer>
               <BarChart
                 data={ChartData}
-                margin={{ top: 20, right: 20, left: 20, bottom: 0 }}
+                margin={{ top: 20, right: 10, left: 10, bottom: 0 }}
               >
                 <XAxis
                   dataKey="name"
@@ -121,7 +198,17 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-4">
+            <FormInput
+              label="Facture - 5 ans"
+              name="coutNrjMoins5ans"
+              value={data.coutNrjMoins5ans}
+              type="number"
+              placeholder="0"
+              suffix="€/an"
+              readonly={true}
+              className="text-sm"
+            />
             <FormInput
               label="Facture aujourd'hui"
               name="coutNrjAujourdhui"
@@ -130,6 +217,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
               type="number"
               placeholder="0"
               suffix="€/an"
+              className="text-sm"
             />
             <FormInput
               label="Estimation + 5 ans"
@@ -138,6 +226,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
               type="text"
               placeholder="0"
               suffix="€/an"
+              className="text-sm"
               readonly={true}
             />
             <FormInput
@@ -147,6 +236,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
               type="text"
               placeholder="0"
               suffix="€/an"
+              className="text-sm"
               readonly={true}
             />
           </div>

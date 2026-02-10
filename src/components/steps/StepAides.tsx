@@ -1,5 +1,5 @@
 import React from "react";
-import { Wallet, Users, Calculator } from "lucide-react";
+import { Wallet, Users, Calculator, SquareArrowOutUpRight } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
@@ -80,16 +80,22 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
             options={categorieOptions}
           />
         </div>
-        <div className="mt-6 font-bold">
+        <div className="mt-6 flex text-sm font-bold">
           <a href="https://www.prime-energie-edf.fr/je-simule-ma-prime" target="_blank" title="Accéder au simulateur EDF">Simulateur EDF</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
-        <div className="font-bold">
+        <div className="flex text-sm font-bold">
           <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau prime avec plafond</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
+        </div>
+        <div className="flex text-sm font-bold">
+          <a href="https://drive.google.com/drive/u/1/folders/1mfTypbHZmEhCsQuF-x7esMZBXYDky8Lj" target="_blank">MaPrimeRenov'</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
       </SectionCard>
 
       {/* Synthèse financière */}
-      <SectionCard title="Synthèse financière sur 10 ans" icon={Wallet}>
+      <SectionCard title="Synthèse financière sur 10 ans" icon={Wallet} link="https://devis-groupeher-enr.fr/home" textLink="Faire un devis">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="">
             <FormInput
@@ -124,8 +130,8 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
           </div>
           <div>
             <FormInput
-              label="Reste à charger après MaPrimeRénov'"
-              name="resteACharger"
+              label="Reste à charge après MaPrimeRénov'"
+              name="resteACharge"
               value={data.resteACharge}
               type="number"
               placeholder="0"

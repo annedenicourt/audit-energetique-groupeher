@@ -12,7 +12,7 @@ import { DimensionnementData, ExponentielData, FormData, initialFormData, Scenar
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
-import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite } from "@/utils/energyCalculation";
+import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite, computeCoutNrjMoins5ans } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
 
@@ -86,6 +86,7 @@ const Index: React.FC = () => {
         evolution: {
           ...updatedEvolution,
           totalFactureNRJ: computeTotalNrj(updatedEvolution),
+          coutNrjMoins5ans: computeCoutNrjMoins5ans(updatedEvolution),
           coutNrj5Ans: computeCoutNrj5ans(updatedEvolution),
           coutNrj10Ans: computeCoutNrj10ans(updatedEvolution),
           depenseTotal10ans: computeDepenseTotale10ans(updatedEvolution)
@@ -202,7 +203,7 @@ const Index: React.FC = () => {
       case 7:
         return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} />;
       case 8:
-        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} />;
+        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.client.aidesMaPrimeRenov} aidesCEE={formData.client.aidesCEE} />;
       case 9:
         return <StepSynthese data={formData} />;
       default:

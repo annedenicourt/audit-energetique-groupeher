@@ -93,6 +93,7 @@
    // Énergie actuelle
    energieActuelle: string;
    // Projection cout NRJ
+     coutNrjMoins5ans:string;
      coutNrjAujourdhui: string,
      coutNrj5Ans: string,
      coutNrj10Ans: string,
@@ -120,19 +121,28 @@
    scenario2: ScenarioData;
    scenario3: ScenarioData;
  }
-
  export interface DimensionnementData {
-  // Dimensionnement PAC air-eau
-   dimensionnementPACaireau: string;
-   dimensionnementPACairair: string;
-   dimensionnementMultiplus: string;  
-  // Dimensionnement PV
-   consommationElecAnnuelle: string;
-   puissancePVRecommandee: string;
-   productionPVEstimee: string;
-   dimensionnementFenetres: FenetreData[];
- }
-
+  // Chauffage / ECS
+  dimensionnementPACaireau: string;
+  dimensionnementPACairair: string;
+  dimensionnementMultiplus: string;
+  dimensionnementPoele: string;
+  dimensionnementThermodynamique: string;
+  dimensionnementECSSolaire: string;
+  dimensionnementSSC: string;
+  // Photovoltaïque
+  resultatRevolt: string;
+  consommationPVElecAnnuelle: string;
+  puissancePVRecommandee: string;
+  productionPVEstimee: string;
+  batteriePhysiqueReco: string;
+  batterieVirtuelleReco: string;
+  // Isolation
+  dimensionnementComblesPerdus: string;
+  dimensionnementRampants: string;
+  // Fenêtres / Menuiseries
+  dimensionnementFenetres: FenetreData[];
+}
  export interface ExponentielData {
    consommation10AnsSansTravaux: string;
    consommation10AnsApresTravaux: string;
@@ -162,6 +172,7 @@
  
  export interface FinancementData {
    // Écofinancement
+   mensualite1: string;
    mensualiteConfort: string;
    economiesMoyennesMensuelles: string;
    mensualiteMoinsEconomies: string;
@@ -249,6 +260,7 @@
     totalFactureNRJ: "",
      energieActuelle: "",
      // Projection cout NRJ
+     coutNrjMoins5ans:"",
      coutNrjAujourdhui: "",
      coutNrj5Ans: "",
      coutNrj10Ans: "",
@@ -261,14 +273,27 @@
      scenario3: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
    },
    dimensionnement: {
-    dimensionnementPACaireau: "",
-    dimensionnementPACairair: "",
-    dimensionnementMultiplus:"",
-    consommationElecAnnuelle: "",
-    puissancePVRecommandee: "",
-    productionPVEstimee: "",
-    dimensionnementFenetres: [{ type: "", ouverture: "", matiere: "" }],
-   },
+  dimensionnementPACaireau: "",
+  dimensionnementPACairair: "",
+  dimensionnementMultiplus: "",
+  dimensionnementPoele: "",
+  dimensionnementThermodynamique: "",
+  dimensionnementECSSolaire: "",
+  dimensionnementSSC: "",
+
+  resultatRevolt: "",
+  consommationPVElecAnnuelle: "",
+  puissancePVRecommandee: "",
+  productionPVEstimee: "",
+  batteriePhysiqueReco: "",
+  batterieVirtuelleReco: "",
+
+  dimensionnementComblesPerdus: "",
+  dimensionnementRampants: "",
+
+  dimensionnementFenetres: [{ type: "", ouverture: "", matiere: "" }],
+},
+
    exponentiel: {
      consommation10AnsSansTravaux: "",
      consommation10AnsApresTravaux: "",
@@ -292,6 +317,7 @@
      gainSur10Ans: "",
    },
    financement: {
+    mensualite1:"",
      mensualiteConfort: "",
      economiesMoyennesMensuelles: "",
      mensualiteMoinsEconomies: "",

@@ -9,9 +9,11 @@ interface StepFinancementProps {
   data: FinancementData;
   onChange: (field: keyof FinancementData, value: string) => void;
   economiesMensuellesMoyennes: string;
+  aidesMaPrimeRenov: string;
+  aidesCEE: string;
 }
 
-const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, economiesMensuellesMoyennes }) => {
+const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, economiesMensuellesMoyennes, aidesMaPrimeRenov, aidesCEE }) => {
 
   return (
     <div className="">
@@ -25,7 +27,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
         </p>
       </div>
       {/* Frise */}
-      <Chronologie data={data} onChange={(v) => onChange("mensualiteConfort", v)} />
+      <Chronologie data={data} onChange={onChange} aidesMaPrimeRenov={aidesMaPrimeRenov} aidesCEE={aidesCEE} />
       {/* Transfert de charge */}
       <SectionCard title="Transfert de charge" icon={Banknote}>
         <div className="">

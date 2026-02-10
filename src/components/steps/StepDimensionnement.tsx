@@ -68,7 +68,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer}>
         <FormInput
           label="Modèle recommandé"
-          name="dimensionnementFabricant"
+          name="dimensionnementPACairair"
           value={data.dimensionnementPACairair}
           onChange={(v) => onChange("dimensionnementPACairair", v)}
           type="text"
@@ -93,9 +93,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       <SectionCard title="Poêle à bois/granulés" icon={Flame}>
         <FormInput
           label="Modèle recommandé"
-          name="dimensionnementMultiplus"
-          value={data.dimensionnementMultiplus}
-          onChange={(v) => onChange("dimensionnementMultiplus", v)}
+          name="dimensionnementPoele"
+          value={data.dimensionnementPoele}
+          onChange={(v) => onChange("dimensionnementPoele", v)}
           type="text"
           placeholder=""
           suffix=""
@@ -106,9 +106,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       <SectionCard title="Chauffe-eau thermodynamique (ECS)" icon={Droplets}>
         <FormInput
           label="Modèle recommandé"
-          name="dimensionnementMultiplus"
-          value={data.dimensionnementMultiplus}
-          onChange={(v) => onChange("dimensionnementMultiplus", v)}
+          name="dimensionnementThermodynamique"
+          value={data.dimensionnementThermodynamique}
+          onChange={(v) => onChange("dimensionnementThermodynamique", v)}
           type="text"
           placeholder=""
           suffix=""
@@ -119,9 +119,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
         <FormInput
           label="Modèle recommandé"
-          name="dimensionnementMultiplus"
-          value={data.dimensionnementMultiplus}
-          onChange={(v) => onChange("dimensionnementMultiplus", v)}
+          name="dimensionnementECSSolaire"
+          value={data.dimensionnementECSSolaire}
+          onChange={(v) => onChange("dimensionnementECSSolaire", v)}
           type="text"
           placeholder=""
           suffix=""
@@ -132,9 +132,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
         <FormInput
           label="Modèle recommandé"
-          name="dimensionnementMultiplus"
-          value={data.dimensionnementMultiplus}
-          onChange={(v) => onChange("dimensionnementMultiplus", v)}
+          name="dimensionnementSSC"
+          value={data.dimensionnementSSC}
+          onChange={(v) => onChange("dimensionnementSSC", v)}
           type="text"
           placeholder=""
           suffix=""
@@ -146,17 +146,17 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
             label="Résultat REVOLT"
-            name="consommationElecAnnuelle"
-            value={data.consommationElecAnnuelle}
-            onChange={(v) => onChange("consommationElecAnnuelle", v)}
+            name="resultatRevolt"
+            value={data.resultatRevolt}
+            onChange={(v) => onChange("resultatRevolt", v)}
             type="text"
             placeholder="0"
           />
           <FormInput
             label="Consommation électrique annuelle"
-            name="consommationElecAnnuelle"
-            value={data.consommationElecAnnuelle}
-            onChange={(v) => onChange("consommationElecAnnuelle", v)}
+            name="consommationPVElecAnnuelle"
+            value={data.consommationPVElecAnnuelle}
+            onChange={(v) => onChange("consommationPVElecAnnuelle", v)}
             type="number"
             placeholder="0"
             suffix="kWh/an"
@@ -181,18 +181,18 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           />
           <FormInput
             label="Puissance batterie physique recommandée"
-            name="productionPVEstimee"
-            value={data.productionPVEstimee}
-            onChange={(v) => onChange("productionPVEstimee", v)}
+            name="batteriePhysiqueReco"
+            value={data.batteriePhysiqueReco}
+            onChange={(v) => onChange("batteriePhysiqueReco", v)}
             type="text"
             placeholder="0"
             suffix="kWh/an"
           />
           <FormInput
             label="Puissance batterie virtuelle recommandée"
-            name="productionPVEstimee"
-            value={data.productionPVEstimee}
-            onChange={(v) => onChange("productionPVEstimee", v)}
+            name="batterieVirtuelleReco"
+            value={data.batterieVirtuelleReco}
+            onChange={(v) => onChange("batterieVirtuelleReco", v)}
             type="text"
             placeholder="0"
             suffix="kWh/an"
@@ -208,18 +208,18 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput
             label="Combles perdus (surface mesurée en m2)"
-            name="dimensionnementMultiplus"
-            value={data.dimensionnementMultiplus}
-            onChange={(v) => onChange("dimensionnementMultiplus", v)}
+            name="dimensionnementComblesPerdus"
+            value={data.dimensionnementComblesPerdus}
+            onChange={(v) => onChange("dimensionnementComblesPerdus", v)}
             type="number"
             placeholder=""
             suffix="m2"
           />
           <FormInput
             label="Sous-rampants (surface mesurée en m2)"
-            name="dimensionnementMultiplus"
-            value={data.dimensionnementMultiplus}
-            onChange={(v) => onChange("dimensionnementMultiplus", v)}
+            name="dimensionnementRampants"
+            value={data.dimensionnementRampants}
+            onChange={(v) => onChange("dimensionnementRampants", v)}
             type="number"
             placeholder=""
             suffix="m2"
@@ -235,7 +235,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Fenêtres / Portes-fenêtres */}
-      <SectionCard title="Fenêtres / Portes-fenêtres" icon={Grid2x2}>
+      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2}>
         <button
           type="button"
           onClick={addFenetre}
@@ -249,7 +249,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             <div key={idx} className="p-3 space-y-2">
               <div className="flex items-center justify-between">
                 <div className=" font-semibold">Menuiserie {idx + 1}</div>
-
                 <button
                   type="button"
                   onClick={() => removeFenetre(idx)}
@@ -313,8 +312,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           ))}
         </div>
       </SectionCard>
-
-
     </div>
   );
 };

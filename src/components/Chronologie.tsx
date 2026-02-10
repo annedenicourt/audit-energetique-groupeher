@@ -1,14 +1,17 @@
 import React from "react";
-import { FinancementData } from "@/types/formData";
+import { DimensionnementData, FenetreData, FinancementData } from "@/types/formData";
 import { CornerUpRight, Redo } from "lucide-react";
 
 
 interface ChronologieProps {
   data: FinancementData;
-  onChange?: (value: string) => void;
+  //onChange?: (value: string) => void;
+  onChange: (field: keyof FinancementData, value: string) => void;
+  aidesMaPrimeRenov: string;
+  aidesCEE: string;
 }
 
-export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
+export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesCEE, aidesMaPrimeRenov }) => {
 
   return (
     <div className="relative mb-16 w-full max-w-[1200px] mx-auto">
@@ -20,6 +23,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="text"
               name=""
               value={data.mois1}
+              onChange={(e) => onChange("mois1", e.target.value)}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -33,6 +37,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="text"
               name=""
               value={data.mois2}
+              onChange={(e) => onChange("mois2", e.target.value)}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -46,6 +51,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="text"
               name=""
               value={data.mois3}
+              onChange={(e) => onChange("mois3", e.target.value)}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -63,11 +69,23 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
             <div className="mb-3 text-sm text-center">Aides obtenues</div>
             <div className="mb-2 flex flex-row items-center justify-between">
               <label className="mr-2">MPR</label>
-              <input type="text" className="w-[65%] border border-slate-300 rounded" />
+              <input
+                type="text"
+                name=""
+                defaultValue={aidesMaPrimeRenov}
+                placeholder=""
+                readOnly
+                className="w-[65%] border border-slate-300 rounded bg-muted text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
             </div>
             <div className="flex flex-row items-center justify-between">
               <label className="mr-2">CEE</label>
-              <input type="text" className="w-[65%] border border-slate-300 rounded" />
+              <input
+                type="text"
+                name=""
+                defaultValue={aidesCEE}
+                placeholder=""
+                readOnly
+                className="w-[65%] border border-slate-300 rounded bg-muted text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
             </div>
           </div>
           <div className="mt-2 text-xs text-center">à réinjecter dans la 2e mensualité</div>
@@ -79,6 +97,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="text"
               name=""
               value={data.mois4}
+              onChange={(e) => onChange("mois4", e.target.value)}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -89,6 +108,8 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="number"
               name=""
               placeholder="Montant"
+              value={data.mensualite1}
+              onChange={(e) => onChange("mensualite1", e.target.value)}
             />
           </div>
           <div className="">
@@ -97,6 +118,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="text"
               name=""
               value={data.mois5}
+              onChange={(e) => onChange("mois5", e.target.value)}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -107,7 +129,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               type="number"
               name=""
               value={data.mensualiteConfort}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => onChange("mensualiteConfort", e.target.value)}
               placeholder="Montant"
             />
           </div>

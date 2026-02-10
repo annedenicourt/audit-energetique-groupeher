@@ -17,6 +17,26 @@ const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }
 );
 
 const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => {
+
+  const {
+    dimensionnementPACaireau,
+    dimensionnementPACairair,
+    dimensionnementMultiplus,
+    dimensionnementPoele,
+    dimensionnementThermodynamique,
+    dimensionnementECSSolaire,
+    dimensionnementSSC,
+    resultatRevolt,
+    consommationPVElecAnnuelle,
+    puissancePVRecommandee,
+    productionPVEstimee,
+    batteriePhysiqueReco,
+    batterieVirtuelleReco,
+    dimensionnementComblesPerdus,
+    dimensionnementRampants,
+    dimensionnementFenetres,
+  } = data.dimensionnement;
+
   return (
     <div>
       <div className="a4-page">
@@ -99,6 +119,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
         </SectionCard>
         <SectionCard title="Projection des coûts de l'énergie" icon={BarChart3}>
           <div className="grid grid-cols-1 gap-x-8">
+            <SummaryRow label="- 5 ans" value={data.evolution.coutNrjMoins5ans ? `${data.evolution.coutNrjMoins5ans} €` : ""} />
             <SummaryRow label="Aujourd'hui" value={data.evolution.coutNrjAujourdhui ? `${data.evolution.coutNrjAujourdhui} €` : ""} />
             <SummaryRow label="+ 5 ans" value={data.evolution.coutNrj5Ans ? `${data.evolution.coutNrj5Ans} €` : ""} />
             <SummaryRow label="+ 10 ans" value={data.evolution.coutNrj10Ans ? `${data.evolution.coutNrj10Ans} €` : ""} />
@@ -144,12 +165,28 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       </div>
       <div className="a4-page">
         {/* Dimensionnement */}
-        <SectionCard title="Dimensionnement thermique & solaire" icon={Wallet}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Coût total installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
-            <SummaryRow label="Prime CEE" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
-            <SummaryRow label="MaPrimeRénov'" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
-            <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
+        <SectionCard title="Dimensionnement" icon={Wallet}>
+          <div className="grid grid-cols-1 gap-x-8">
+            <SummaryRow label="PAC air-eau" value={dimensionnementPACaireau} />
+            <SummaryRow label="PAC air-air" value={dimensionnementPACairair} />
+            <SummaryRow label="Multi+'" value={dimensionnementMultiplus ? `${dimensionnementMultiplus} €` : ""} />
+            <SummaryRow label="Poêle à bois / granulés" value={dimensionnementPoele ? `${dimensionnementPoele} €` : ""} />
+            <SummaryRow label="Chauffe-eau thermodynamique" value={dimensionnementThermodynamique ? `${dimensionnementThermodynamique} €` : ""} />
+            <SummaryRow label="Chauffe-eau solaire" value={dimensionnementECSSolaire ? `${dimensionnementECSSolaire} €` : ""} />
+            <SummaryRow label="Système Solaire Combiné" value={dimensionnementSSC ? `${dimensionnementSSC} €` : ""} />
+            <SummaryRow label="Photovoltaïque : résultat Revolt" value={data.dimensionnement.resultatRevolt} />
+            <SummaryRow label="Photovoltaïque : conso électrique annuelle" value={data.dimensionnement.resultatRevolt} />
+            <SummaryRow label="Photovoltaïque : puissance recommandée" value={data.dimensionnement.puissancePVRecommandee} />
+            <SummaryRow label="Photovoltaïque : production estimée" value={data.dimensionnement.productionPVEstimee} />
+            <SummaryRow label="Photovoltaïque : puissance batterie physique recommandée" value={data.dimensionnement.batteriePhysiqueReco} />
+            <SummaryRow label="Photovoltaïque : puissance batterie virtuelle recommandée" value={data.dimensionnement.batterieVirtuelleReco} />
+            <SummaryRow label="Isolation combles perdus" value={dimensionnementComblesPerdus ? `${dimensionnementComblesPerdus} €` : ""} />
+            <SummaryRow label="Isolation sous-rampants" value={dimensionnementRampants ? `${dimensionnementRampants} €` : ""} />
+            {data.dimensionnement.dimensionnementFenetres.length > 0 &&
+              data.dimensionnement.dimensionnementFenetres.map((el, index) => (
+                <SummaryRow key={`menuiserie-${index}`} label={`Menuiserie ${index + 1}`} value={`${el.type} - ${el.ouverture} - ${el.matiere}`} />
+              ))
+            }
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
@@ -157,11 +194,15 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Projection */}
         <SectionCard title="Projection" icon={Wallet}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Coût total installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
-            <SummaryRow label="Prime CEE" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
-            <SummaryRow label="MaPrimeRénov'" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
-            <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
+          <div className="grid grid-cols-1 gap-x-8">
+            <SummaryRow label="Facture aujourd'hui" value={data.exponentiel.factureAujourdhui ? `${data.exponentiel.factureAujourdhui} €` : ""} />
+            <SummaryRow label="Estimation à + 5 ans" value={data.exponentiel.facture5Ans ? `${data.exponentiel.facture5Ans} €` : ""} />
+            <SummaryRow label="Estimation à + 10 ans'" value={data.exponentiel.facture10Ans ? `${data.exponentiel.facture10Ans} €` : ""} />
+            <SummaryRow label="Consommation énergétique sur 10 ans (avant travaux)" value={data.exponentiel.consommation10AnsSansTravaux ? `${data.exponentiel.consommation10AnsSansTravaux} €` : ""} />
+            <SummaryRow label="Consommation énergétique sur 10 ans (après travaux)" value={data.exponentiel.consommation10AnsApresTravaux ? `${data.exponentiel.consommation10AnsApresTravaux} €` : ""} />
+            <SummaryRow label="Économies annuelles moyennes sur 10 ans" value={data.exponentiel.economiesAnnuellesMoyennes ? `${data.exponentiel.economiesAnnuellesMoyennes} €` : ""} />
+            <SummaryRow label="Économies mensuelles moyennes sur 10 ans" value={data.exponentiel.economiesMensuellesMoyennes ? `${data.exponentiel.economiesMensuellesMoyennes} €` : ""} />
+            <SummaryRow label="Économies totales sur 10 ans" value={data.exponentiel.economiesRealisees10Ans ? `${data.exponentiel.economiesRealisees10Ans} €` : ""} />
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
@@ -169,11 +210,17 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Aides */}
         <SectionCard title="Aides estimées" icon={Wallet}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Coût total installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
-            <SummaryRow label="Prime CEE" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
-            <SummaryRow label="MaPrimeRénov'" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
+          <div className="grid grid-cols-1 gap-x-8">
+            <SummaryRow label="Nombre de personnes dans le foyer" value={data.aides.nbrePersonnesFoyer ? data.aides.nbrePersonnesFoyer : ""} />
+            <SummaryRow label="Dernier RFR (Revenu Fiscal de Référence)" value={data.aides.dernierRFR ? `${data.aides.dernierRFR} €` : ""} />
+            <SummaryRow label="Catégorie de revenus" value={data.aides.categorieRevenus ? data.aides.categorieRevenus : ""} />
+            <SummaryRow label="Coût total de l'installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
+            <SummaryRow label="Prime CEE déduite (sous conditions)" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
+            <SummaryRow label="MaPrimeRénov' (non déduite)" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
+            <SummaryRow label="Reste à charge après MaPrimeRénov'" value={data.aides.resteACharge ? `${data.aides.resteACharge} €` : ""} />
+            <SummaryRow label="Économies estimées sur 10 ans" value={data.aides.economiesSur10Ans ? `${data.aides.economiesSur10Ans} €` : ""} />
             <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
+
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
@@ -181,11 +228,10 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Financement */}
         <SectionCard title="Financement" icon={Banknote}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Mensualité de confort" value={data.financement.mensualiteConfort ? `${data.financement.mensualiteConfort} €/mois` : ""} />
-            <SummaryRow label="Économies mensuelles" value={data.financement.economiesMoyennesMensuelles ? `${data.financement.economiesMoyennesMensuelles} €/mois` : ""} />
+            <SummaryRow label="Économies moyennes mensuelles sur 10 ans" value={data.financement.economiesMoyennesMensuelles ? `${data.financement.economiesMoyennesMensuelles} €/mois` : ""} />
             <SummaryRow label="Effort financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
-            <SummaryRow label="Économies sur 10 ans" value={data.exponentiel.economiesRealisees10Ans ? `${data.exponentiel.economiesRealisees10Ans} €` : ""} />
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
