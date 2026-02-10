@@ -14,12 +14,13 @@ import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
 import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
+import StepPresentation from "@/components/steps/StepPresentation";
 
 const Index: React.FC = () => {
   // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
   // État pour la navigation entre les étapes
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(0);
 
   const STORAGE_KEY = "simulation_form";
 
@@ -49,7 +50,7 @@ const Index: React.FC = () => {
   };
 
   const goToPreviousStep = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setCurrentStep((prev) => prev - 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -108,12 +109,16 @@ const Index: React.FC = () => {
     }));
   };
 
-  const updateDimensionnement = (field: keyof FormData["dimensionnement"] | string, value: string | DimensionnementData) => {
+  const updateDimensionnement = (
+    field: keyof FormData["dimensionnement"],
+    value: string | DimensionnementData[keyof DimensionnementData] // inclut fenetres
+  ) => {
     setFormData((prev) => ({
       ...prev,
       dimensionnement: { ...prev.dimensionnement, [field]: value },
     }));
   };
+
 
   const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) => {
     setFormData((prev) => {
@@ -178,6 +183,8 @@ const Index: React.FC = () => {
   // Rendu du composant d'étape actuel
   const renderCurrentStep = () => {
     switch (currentStep) {
+      case 0:
+        return <StepPresentation />;
       case 1:
         return <StepClient data={formData.client} onChange={updateClient} />;
       /* case 2:
@@ -211,7 +218,7 @@ const Index: React.FC = () => {
       steps={STEPS}
       onPrevious={goToPreviousStep}
       onNext={goToNextStep}
-      canGoPrevious={currentStep > 1}
+      canGoPrevious={currentStep > 0}
       canGoNext={currentStep < STEPS.length}
     >
       {renderCurrentStep()}

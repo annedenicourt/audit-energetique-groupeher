@@ -23,7 +23,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
       </div>
 
       {/* Situation actuelle */}
-      <SectionCard title="Situation actuelle du logement" icon={BarChart3}>
+      <SectionCard title="Situation actuelle du logement" icon={BarChart3} link={"https://compte.cap-renov.fr/login"} textLink={"Réaliser audit sur CapRénov"}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormSelect
             label="Classe énergétique (DPE)"

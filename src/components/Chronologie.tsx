@@ -10,28 +10,6 @@ interface ChronologieProps {
 
 export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
 
-  const TopArrow = () => {
-    return (
-      <svg viewBox="0 0 600 160" className="w-full h-24">
-        <path
-          d="M40,140 C180,20 420,20 560,140"
-          fill="none"
-          stroke="black"
-          strokeWidth="6"
-          strokeLinecap="round"
-        />
-        <path
-          d="M560,140 l-26,-10 l10,26"
-          fill="none"
-          stroke="black"
-          strokeWidth="6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
-  }
-
   return (
     <div className="relative mb-16 w-full max-w-[1200px] mx-auto">
       <div className="relative w-[90%] m-auto flex flex-row justify-between z-10">
@@ -41,6 +19,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
               type="text"
               name=""
+              value={data.mois1}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -53,6 +32,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
               type="text"
               name=""
+              value={data.mois2}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -65,6 +45,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
               type="text"
               name=""
+              value={data.mois3}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -97,6 +78,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
               type="text"
               name=""
+              value={data.mois4}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">
@@ -114,6 +96,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange }) => {
               className="px-3 py-2 mb-6 w-20 text-sm text-center border border-slate-300 rounded-md"
               type="text"
               name=""
+              value={data.mois5}
               placeholder="Mois"
             />
             <div className="w-20 h-20 flex justify-center items-center bg-orange-500 rounded-full">

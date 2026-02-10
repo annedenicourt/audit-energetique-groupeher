@@ -86,7 +86,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
           </li>
           <li className="flex items-start gap-2">
             <span className="text-primary mt-1">•</span>
-            <span>Si montant supérieur à 10 000 €, frais limités à 1% pris en charge par Groupe HER-ENR</span>
+            <span>Si montant à solder supérieur à 10 000 €, frais limités à 1% mais pris en charge par le Groupe HER-ENR en déduction du devis</span>
           </li>
         </ul>
       </div>

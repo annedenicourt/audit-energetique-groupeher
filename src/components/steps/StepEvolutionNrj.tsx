@@ -164,7 +164,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         />
 
         <p className="mt-3 font-bold text-center text-xs text-muted-foreground">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
+          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans (source CRE)
         </p>
       </SectionCard>
 

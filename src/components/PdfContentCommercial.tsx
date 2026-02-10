@@ -63,7 +63,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Classe DPE" value={data.bilan.classeEnergetique} />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <div className="grid grid-cols-1gap-x-8">
             <SummaryRow label="Consommation" value={data.bilan.consommationActuelle ? `${data.bilan.consommationActuelle} kWh/m²/an` : "kWh/m²/an"} />
             <SummaryRow label="Facture annuelle actuelle" value={data.bilan.factureAnnuelle ? `${data.bilan.factureAnnuelle} €/an` : "€/an"} />
             <SummaryRow label="Isolation combles" value={data.bilan.isolationCombles} />
@@ -85,7 +85,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Evolution */}
         <SectionCard title="Répartition actuelle de la facture énergétique" icon={BarChart3}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Chauffage" value={data.evolution.montantChauffage ? `${data.evolution.montantChauffage} €` : ""} />
             <SummaryRow label="Eau chaude sanitaire (ECS)" value={data.evolution.montantECS ? `${data.evolution.montantECS} €` : ""} />
             <SummaryRow label="Électricité domestique" value={data.evolution.montantElecDomestique ? `${data.evolution.montantElecDomestique} €` : ""} />
@@ -98,7 +98,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           </div>
         </SectionCard>
         <SectionCard title="Projection des coûts de l'énergie" icon={BarChart3}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+          <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Aujourd'hui" value={data.evolution.coutNrjAujourdhui ? `${data.evolution.coutNrjAujourdhui} €` : ""} />
             <SummaryRow label="+ 5 ans" value={data.evolution.coutNrj5Ans ? `${data.evolution.coutNrj5Ans} €` : ""} />
             <SummaryRow label="+ 10 ans" value={data.evolution.coutNrj10Ans ? `${data.evolution.coutNrj10Ans} €` : ""} />

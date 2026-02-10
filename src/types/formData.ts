@@ -108,6 +108,12 @@
    factureApres: string;
    lettreApres: string;
  }
+
+ export interface FenetreData {
+   type: string;
+   ouverture: string;
+   matiere: string;
+ }
  
  export interface ScenariosData {
    scenario1: ScenarioData;
@@ -116,12 +122,15 @@
  }
 
  export interface DimensionnementData {
-   // Dimensionnement thermique
-   puissanceThermique: string;
-   // Dimensionnement solaire
+  // Dimensionnement PAC air-eau
+   dimensionnementPACaireau: string;
+   dimensionnementPACairair: string;
+   dimensionnementMultiplus: string;  
+  // Dimensionnement PV
    consommationElecAnnuelle: string;
    puissancePVRecommandee: string;
    productionPVEstimee: string;
+   dimensionnementFenetres: FenetreData[];
  }
 
  export interface ExponentielData {
@@ -156,6 +165,11 @@
    mensualiteConfort: string;
    economiesMoyennesMensuelles: string;
    mensualiteMoinsEconomies: string;
+   mois1:string,
+   mois2:string,
+   mois3:string,
+   mois4:string,
+   mois5:string,
  }
  
  export interface FormData {
@@ -247,10 +261,13 @@
      scenario3: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
    },
    dimensionnement: {
-    puissanceThermique: "",
-     consommationElecAnnuelle: "",
-     puissancePVRecommandee: "",
-     productionPVEstimee: "",
+    dimensionnementPACaireau: "",
+    dimensionnementPACairair: "",
+    dimensionnementMultiplus:"",
+    consommationElecAnnuelle: "",
+    puissancePVRecommandee: "",
+    productionPVEstimee: "",
+    dimensionnementFenetres: [{ type: "", ouverture: "", matiere: "" }],
    },
    exponentiel: {
      consommation10AnsSansTravaux: "",
@@ -278,5 +295,10 @@
      mensualiteConfort: "",
      economiesMoyennesMensuelles: "",
      mensualiteMoinsEconomies: "",
+     mois1:"",
+     mois2:"",
+     mois3:"",
+     mois4:"",
+     mois5:"",
    },
  };

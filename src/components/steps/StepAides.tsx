@@ -158,7 +158,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
           </div>
         </div>
         <div className="mt-8 text-xs text-center font-bold text-muted-foreground">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
+          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans (source CRE)
         </div>
       </SectionCard>
 

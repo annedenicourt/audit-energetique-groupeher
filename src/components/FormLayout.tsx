@@ -40,11 +40,11 @@ const FormLayout: React.FC<FormLayoutProps> = ({
               <img className="object-contain" src="/images/logo-blanc-her-enr-.webp" alt="logo groupe HER" />
             </div>
             <div>
-              <h1 className="text-xl font-display font-bold text-primary-foreground">
+              {/* <h1 className="text-xl font-display font-bold text-primary-foreground">
                 Groupe HER-ENR
-              </h1>
-              <p className="text-sm text-primary-foreground/70">
-                Devis & Audit Énergétique
+              </h1> */}
+              <p className="font-bold text-lg text-white">
+                Étude Énergétique personnalisée
               </p>
             </div>
           </div>

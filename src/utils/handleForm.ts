@@ -104,3 +104,19 @@ export const plafondsData = [
   { personnes: "5", tresModestes: "40 835 €", modestes: "52 348 €", intermediaires: "73 907 €", superieurs: "73 907 €" },
   { personnes: "Par personne supplémentaire", tresModestes: "+ 5 151 €", modestes: "+ 6 598 €", intermediaires: "+ 9 357 €", superieurs: "+ 9 357 €" },
 ];
+
+export const fenetreTypeOptions = [
+  {value:"fenetre", label:"Fenêtre"},
+  {value:"portefenetre", label:"Porte-fenêtre"},
+];
+
+export const fenetreOuvrantOptions = [
+  {value:"fixe", label:"Fixe"},
+  {value:"battant", label:"Battante"},
+  {value:"coulissante", label:"Coulissante"},
+];
+
+export const fenetreMatiereOptions = [
+  {value:"pvc", label:"PVC"},
+  {value:"alu", label:"Aluminium"},
+];

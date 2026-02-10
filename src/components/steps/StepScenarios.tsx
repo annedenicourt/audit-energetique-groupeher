@@ -73,7 +73,7 @@ const StepScenarios: React.FC<StepScenariosProps> = ({ data, onChange }) => {
       {/* Page title */}
       <div className="mb-6">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-          Scénarios
+          Résultat audit CAP RENOV
         </h2>
       </div>
 
