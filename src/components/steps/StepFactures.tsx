@@ -3,7 +3,9 @@ import { Receipt, Wrench, HandCoins } from "lucide-react";
 import FormInput from "../FormInput";
 import FormTextarea from "../FormTextarea";
 import SectionCard from "../SectionCard";
-import { FacturesData } from "@/types/formData";
+import { ClientData } from "@/types/formData";
+
+type FacturesData = ClientData;
 
 interface StepFacturesProps {
   data: FacturesData;
