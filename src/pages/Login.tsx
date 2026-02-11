@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { AuthError } from "@supabase/supabase-js";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,37 @@ const Login: React.FC = () => {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const translateAuthError = (error: AuthError): string => {
+    if (!error) return "";
+
+    const code = error.code || "";
+    const message = error.message || "";
+
+    // Cas signup désactivé
+    if (code === "signup_disabled") {
+      return "Accès refusé : cette adresse email n'est pas autorisée";
+    }
+
+    // Email invalide
+    if (code === "invalid_email") {
+      return "Adresse email invalide.";
+    }
+
+    // Lien expiré
+    if (message.includes("expired")) {
+      return "Le lien de connexion a expiré. Merci de demander un nouveau lien";
+    }
+
+    // Trop de requêtes
+    if (message.includes("rate limit")) {
+      return "Trop de tentatives. Merci de réessayer dans quelques minutes";
+    }
+
+    // Fallback générique
+    return "Une erreur est survenue. Merci de réessayer";
+  };
+
 
   if (loading) {
     return (
@@ -41,7 +73,7 @@ const Login: React.FC = () => {
     setSubmitting(false);
 
     if (error) {
-      setError(error.message);
+      setError(translateAuthError(error));
     } else {
       setSent(true);
     }
@@ -57,9 +89,7 @@ const Login: React.FC = () => {
             className="h-14 mx-auto rounded-lg bg-primary p-2"
           />
           <CardTitle className="text-2xl">Connexion</CardTitle>
-          <CardDescription>
-            Accédez à l'outil d'audit énergétique
-          </CardDescription>
+
         </CardHeader>
         <CardContent>
           {sent ? (

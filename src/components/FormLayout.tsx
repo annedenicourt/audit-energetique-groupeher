@@ -1,5 +1,6 @@
 import React from "react";
 import { Check, ChevronLeft, ChevronRight, Leaf } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Step {
   id: number;
@@ -30,6 +31,12 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   canGoNext,
   canGoPrevious,
 }) => {
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    window.location.href = "/login";
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -40,12 +47,14 @@ const FormLayout: React.FC<FormLayoutProps> = ({
               <img className="object-contain" src="/images/logo-blanc-her-enr-.webp" alt="logo groupe HER" />
             </div>
             <div>
-              {/* <h1 className="text-xl font-display font-bold text-primary-foreground">
-                Groupe HER-ENR
-              </h1> */}
               <p className="font-bold text-lg text-white">
                 Étude Énergétique personnalisée
               </p>
+            </div>
+            <div>
+              <button className="py-2 px-3 text-sm text-white font-bold bg-orange-500 rounded-full" onClick={() => handleLogout()}>
+                Déconnexion
+              </button>
             </div>
           </div>
         </div>
