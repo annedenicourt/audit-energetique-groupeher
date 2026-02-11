@@ -3,7 +3,9 @@
  import FormInput from "../FormInput";
  import FormSelect from "../FormSelect";
  import SectionCard from "../SectionCard";
- import { HabitationData } from "@/types/formData";
+import { ClientData } from "@/types/formData";
+
+type HabitationData = ClientData;
  
  interface StepHabitationProps {
    data: HabitationData;
