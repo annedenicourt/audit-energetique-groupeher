@@ -209,7 +209,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       </div>
       <div className="a4-page">
         {/* Aides */}
-        <SectionCard title="Aides estimées" icon={Wallet}>
+        <SectionCard title="Aides estimées" icon={Wallet} className="mb-4">
           <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Nombre de personnes dans le foyer" value={data.aides.nbrePersonnesFoyer ? data.aides.nbrePersonnesFoyer : ""} />
             <SummaryRow label="Dernier RFR (Revenu Fiscal de Référence)" value={data.aides.dernierRFR ? `${data.aides.dernierRFR} €` : ""} />
@@ -220,12 +220,8 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Reste à charge après MaPrimeRénov'" value={data.aides.resteACharge ? `${data.aides.resteACharge} €` : ""} />
             <SummaryRow label="Économies estimées sur 10 ans" value={data.aides.economiesSur10Ans ? `${data.aides.economiesSur10Ans} €` : ""} />
             <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
-
           </div>
         </SectionCard>
-        <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>
-      </div>
-      <div className="a4-page">
         {/* Financement */}
         <SectionCard title="Financement" icon={Banknote}>
           <div className="grid grid-cols-1 gap-x-8">
