@@ -16,16 +16,28 @@ export type Database = {
     Tables: {
       etudes_energetiques: {
         Row: {
+          client_name: string | null
           created_at: string
-          id: number
+          id: string
+          payload: Json
+          pdf_path: string | null
+          user_id: string
         }
         Insert: {
+          client_name?: string | null
           created_at?: string
-          id?: number
+          id?: string
+          payload: Json
+          pdf_path?: string | null
+          user_id: string
         }
         Update: {
+          client_name?: string | null
           created_at?: string
-          id?: number
+          id?: string
+          payload?: Json
+          pdf_path?: string | null
+          user_id?: string
         }
         Relationships: []
       }
