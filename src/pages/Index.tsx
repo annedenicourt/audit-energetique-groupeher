@@ -25,19 +25,19 @@ const Index: React.FC = () => {
   const STORAGE_KEY = "simulation_form";
 
   useEffect(() => {
-    const stored = sessionStorage.getItem(STORAGE_KEY);
+    const stored = localStorage.getItem(STORAGE_KEY);
 
     if (stored) {
       try {
         setFormData(JSON.parse(stored));
       } catch (e) {
-        console.warn("Données sessionStorage invalides", e);
+        console.warn("Données localStorage invalides", e);
       }
     }
   }, []);
 
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
 
 
