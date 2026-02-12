@@ -167,6 +167,7 @@ const Index: React.FC = () => {
       const updatedAides = {
         ...prev.aides,
         [field]: value,
+        economiesSur10Ans: prev.exponentiel.economiesRealisees10Ans,
       };
 
       return {
@@ -174,7 +175,6 @@ const Index: React.FC = () => {
         aides: {
           ...updatedAides,
           resteACharge: computeResteaCharge(updatedAides),
-          //economiesSur10Ans: formData.exponentiel.economiesRealisees10Ans,
           gainSur10Ans: computeGain10ans(updatedAides)
         },
       };
