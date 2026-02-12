@@ -128,17 +128,35 @@ const Index: React.FC = () => {
         [field]: value,
       };
 
+      // Calculs chaînés dans le bon ordre
+      const facture5Ans = computefacture5Ans(updatedExponentiel);
+      const facture10Ans = computefacture10Ans(updatedExponentiel);
+      const consommation10AnsSansTravaux = prev.evolution.depenseTotal10ans;
+      const consommation10AnsApresTravaux = computeFactureTotale10ans(updatedExponentiel);
+
+      // Injecter les valeurs fraîches pour les calculs suivants
+      const withFreshValues = {
+        ...updatedExponentiel,
+        facture5Ans,
+        facture10Ans,
+        consommation10AnsSansTravaux,
+        consommation10AnsApresTravaux,
+      };
+
+      const economiesRealisees10Ans = computeEcoTotal10ans(withFreshValues);
+      const economiesAnnuellesMoyennes = computeEcoAnnuellesMoy(withFreshValues);
+      const withEcoAnnuelles = {
+        ...withFreshValues,
+        economiesRealisees10Ans,
+        economiesAnnuellesMoyennes,
+      };
+      const economiesMensuellesMoyennes = computeEcoMensuellesMoy(withEcoAnnuelles);
+
       return {
         ...prev,
         exponentiel: {
-          ...updatedExponentiel,
-          facture5Ans: computefacture5Ans(updatedExponentiel),
-          facture10Ans: computefacture10Ans(updatedExponentiel),
-          consommation10AnsSansTravaux: formData.evolution.depenseTotal10ans,
-          consommation10AnsApresTravaux: computeFactureTotale10ans(updatedExponentiel),
-          economiesRealisees10Ans: computeEcoTotal10ans(updatedExponentiel),
-          economiesAnnuellesMoyennes: computeEcoAnnuellesMoy(updatedExponentiel),
-          economiesMensuellesMoyennes: computeEcoMensuellesMoy(updatedExponentiel),
+          ...withEcoAnnuelles,
+          economiesMensuellesMoyennes,
         },
       };
     });
@@ -168,13 +186,13 @@ const Index: React.FC = () => {
       const updatedFinancement = {
         ...prev.financement,
         [field]: value,
+        economiesMoyennesMensuelles: prev.exponentiel.economiesMensuellesMoyennes,
       };
 
       return {
         ...prev,
         financement: {
           ...updatedFinancement,
-          economiesMoyennesMensuelles: formData.exponentiel.economiesMensuellesMoyennes,
           mensualiteMoinsEconomies: computeEcoMoinsMensualite(updatedFinancement),
         },
       };
