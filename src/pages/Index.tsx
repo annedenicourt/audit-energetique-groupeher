@@ -20,7 +20,7 @@ const Index: React.FC = () => {
   // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
   // État pour la navigation entre les étapes
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(1);
 
   const STORAGE_KEY = "simulation_form";
 
@@ -184,27 +184,27 @@ const Index: React.FC = () => {
   // Rendu du composant d'étape actuel
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case 0:
-        return <StepPresentation />;
       case 1:
+        return <StepPresentation />;
+      case 2:
         return <StepClient data={formData.client} onChange={updateClient} />;
       /* case 2:
         return <StepHabitation data={formData.habitation} onChange={updateHabitation} />; */
-      case 2:
-        return <StepBilan data={formData.bilan} onChange={updateBilan} />;
       case 3:
-        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} />;
+        return <StepBilan data={formData.bilan} onChange={updateBilan} />;
       case 4:
-        return <StepScenarios data={formData.scenarios} onChange={updateScenarios} />;
+        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} />;
       case 5:
-        return <StepDimensionnement data={formData.dimensionnement} onChange={updateDimensionnement} />;
+        return <StepScenarios data={formData.scenarios} onChange={updateScenarios} />;
       case 6:
-        return <StepExponentiel data={formData.exponentiel} consommation10AnsSansTravaux={formData.evolution.depenseTotal10ans} onChange={updateExponentiel} />;
+        return <StepDimensionnement data={formData.dimensionnement} onChange={updateDimensionnement} />;
       case 7:
-        return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} />;
+        return <StepExponentiel data={formData.exponentiel} consommation10AnsSansTravaux={formData.evolution.depenseTotal10ans} onChange={updateExponentiel} />;
       case 8:
-        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.client.aidesMaPrimeRenov} aidesCEE={formData.client.aidesCEE} />;
+        return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} />;
       case 9:
+        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} />;
+      case 10:
         return <StepSynthese data={formData} />;
       default:
         return null;

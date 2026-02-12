@@ -1,14 +1,15 @@
 // Définition des étapes du formulaire
 export const STEPS = [
-  { id: 1, label: "Fiche Découverte", shortLabel: "Client" },
-  { id: 2, label: "Bilan Énergétique", shortLabel: "Bilan" },
-  { id: 3, label: "Evolution de la facture énergétique", shortLabel: "Evolution" },
-  { id: 4, label: "Scénarios", shortLabel: "Scénarios" },
-  { id: 5, label: "Dimensionnement", shortLabel: "Dimensionnement" },
-  { id: 6, label: "Projection", shortLabel: "Projection" },
-  { id: 7, label: "Aides", shortLabel: "Aides" },
-  { id: 8, label: "Financement", shortLabel: "Financement" },
-  { id: 9, label: "Synthèse", shortLabel: "Synthèse" },
+  { id: 1, label: "Présentation", shortLabel: "Présentation" },
+  { id: 2, label: "Fiche Découverte", shortLabel: "Client" },
+  { id: 3, label: "Bilan Énergétique", shortLabel: "Bilan" },
+  { id: 4, label: "Evolution de la facture énergétique", shortLabel: "Evolution" },
+  { id: 5, label: "Scénarios", shortLabel: "Scénarios" },
+  { id: 6, label: "Dimensionnement", shortLabel: "Dimensionnement" },
+  { id: 7, label: "Projection", shortLabel: "Projection" },
+  { id: 8, label: "Aides", shortLabel: "Aides" },
+  { id: 9, label: "Financement", shortLabel: "Financement" },
+  { id: 10, label: "Synthèse", shortLabel: "Synthèse" },
 ];
 
 export const situationOptions = [

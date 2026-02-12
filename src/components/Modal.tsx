@@ -27,7 +27,7 @@ export default function AppModal({
       contentLabel={title ?? "Modal"}
       className={
         className ??
-        "bg-white rounded-xl shadow-xl max-w-4xl w-[92vw] max-h-[90vh] overflow-auto outline-none p-4"
+        "bg-white rounded-xl shadow-xl max-w-5xl w-[96vw] max-h-[95vh] overflow-auto outline-none p-4"
       }
       overlayClassName={
         overlayClassName ??

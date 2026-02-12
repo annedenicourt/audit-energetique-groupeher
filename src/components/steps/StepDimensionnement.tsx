@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2 } from "lucide-react";
+import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2, SquareArrowOutUpRight } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
@@ -65,7 +65,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement pac air-air */}
-      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer}>
+      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm" textLink="Voir produits">
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementPACairair"
@@ -78,7 +78,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement multi+ */}
-      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer}>
+      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx" textLink="Voir produits">
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementMultiplus"
@@ -90,7 +90,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         />
       </SectionCard>
       {/* Dimensionnement poele */}
-      <SectionCard title="Poêle à bois/granulés" icon={Flame}>
+      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/u/1/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk" textLink="Voir produits">
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementPoele"
@@ -116,7 +116,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement chauffe-eau solaire */}
-      <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
+      <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets} link="https://drive.google.com/drive/u/1/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF" textLink="Voir produits">
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementECSSolaire"
@@ -129,7 +129,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement SSC */}
-      <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
+      <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun} link="https://drive.google.com/drive/u/1/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1" textLink="Voir produits">
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementSSC"
@@ -142,7 +142,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement solaire */}
-      <SectionCard title="Photovoltaïque" icon={Sun} link="https://app.revolt.eco/groupe-her-enr/projects" textLink="Aller sur REVOLT">
+      <SectionCard title="Photovoltaïque" icon={Sun} link="https://drive.google.com/drive/u/1/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X" textLink="Voir Produits">
+        <a
+          href="https://app.revolt.eco/groupe-her-enr/projects"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Aller sur REVOLT
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
             label="Résultat REVOLT"
@@ -198,9 +206,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             suffix="kWh/an"
           />
         </div>
-        <div className="mt-6 text-sm font-bold">
-          <a href="https://drive.google.com/drive/u/1/folders/1nc7A9KeNsI7zjV8xkcOSaaTM_6T4R6wv" target="_blank">Voir Produits</a>
-        </div>
       </SectionCard>
 
       {/* Dimensionnement Isolation */}
@@ -228,14 +233,14 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement ITE */}
-      <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer}>
+      <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
         <div>
           <img src="" alt="" />
         </div>
       </SectionCard>
 
       {/* Fenêtres / Portes-fenêtres */}
-      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2}>
+      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2} link="https://drive.google.com/drive/u/1/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
         <button
           type="button"
           onClick={addFenetre}
