@@ -7,7 +7,8 @@ import PdfContentCommercial from "./PdfContentCommercial";
 
 interface StepSyntheseProps {
   data: FormData;
-  downloadPdf: () => void
+  downloadPdf: () => void;
+  isSaving?: boolean;
 }
 
 // Composant pour afficher une ligne de résumé
@@ -18,7 +19,7 @@ const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }
   </div>
 );
 
-const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf }) => {
+const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf, isSaving }) => {
 
   return (
     <div className="mx-auto bg-white p-4">
@@ -26,9 +27,10 @@ const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf }) =
       <div className="mb-6 flex justify-end">
         <button
           className="nav-button nav-button--primary px-6"
+          disabled={isSaving}
           onClick={() => { requestAnimationFrame(() => downloadPdf()); }}>
           <FileCheck className="w-5 h-5" />
-          Télécharger PDF Commercial
+          {isSaving ? "Sauvegarde en cours…" : "Télécharger PDF Commercial"}
         </button>
       </div>
       <div>

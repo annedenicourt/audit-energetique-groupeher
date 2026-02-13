@@ -1,47 +1,74 @@
 import React, { useState } from "react";
-import { FileCheck, User, Home, Receipt, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
-import SectionCard from "../SectionCard";
+import { FileCheck } from "lucide-react";
 import { FormData } from "@/types/formData";
 import html2pdf from "html2pdf.js";
 import PreviewCommercial from "../PreviewCommercial";
 import PreviewClient from "../PreviewClient";
+import { saveStudy } from "@/utils/saveStudy";
+import { toast } from "sonner";
 
 interface StepSyntheseProps {
   data: FormData;
 }
 
-// Composant pour afficher une ligne de résumé
-const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
-  <div className="flex justify-between py-2 border-b border-border/50 last:border-0">
-    <span className="text-muted-foreground">{label}</span>
-    <span className="font-medium text-foreground">{value || "—"}</span>
-  </div>
-);
+const STORAGE_KEY = "simulation_form";
 
 const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
 
   const [pdfMode, setPdfMode] = useState("commercial");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const downloadPdf = () => {
+  const downloadPdf = async () => {
+    setIsSaving(true);
     document.body.classList.add("exporting");
     const el = document.getElementById("pdf-content");
 
-    html2pdf()
-      .set({
-        filename:
-          pdfMode === "commercial"
-            ? `${data.client.nom}_Rapport_Commercial_HER.pdf`
-            : `HER_ENR_Synthese_Client_${data.client.nom}.pdf`,
-        margin: 0,
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(el)
-      .save()
-      .finally(() => {
-        document.body.classList.remove("exporting");
-      });
-  }
+    const filename =
+      pdfMode === "commercial"
+        ? `${data.client.nom}_Rapport_Commercial_HER.pdf`
+        : `HER_ENR_Synthese_Client_${data.client.nom}.pdf`;
+
+    try {
+      // Générer le PDF en Blob
+      const pdfBlob: Blob = await html2pdf()
+        .set({
+          filename,
+          margin: 0,
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        })
+        .from(el)
+        .outputPdf("blob");
+
+      // Sauvegarder dans Supabase (upload + insert)
+      const result = await saveStudy(pdfBlob, data, filename);
+
+      if (result.success) {
+        // Téléchargement local
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Supprimer le brouillon localStorage
+        localStorage.removeItem(STORAGE_KEY);
+        toast.success("Étude sauvegardée et PDF téléchargé !");
+      } else {
+        console.error("[downloadPdf] Sauvegarde échouée :", result.error);
+        toast.error(`Sauvegarde échouée : ${result.error}`);
+      }
+    } catch (err) {
+      console.error("[downloadPdf] Erreur inattendue", err);
+      toast.error("Erreur lors de la génération du PDF");
+    } finally {
+      document.body.classList.remove("exporting");
+      setIsSaving(false);
+    }
+  };
 
   return (
     <div className="">
@@ -65,9 +92,9 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
 
       <div className="mx-auto bg-white p-8">
         {pdfMode === "commercial" ? (
-          <PreviewCommercial data={data} downloadPdf={downloadPdf} />
+          <PreviewCommercial data={data} downloadPdf={downloadPdf} isSaving={isSaving} />
         ) : (
-          <PreviewClient data={data} downloadPdf={downloadPdf} />
+          <PreviewClient data={data} downloadPdf={downloadPdf} isSaving={isSaving} />
         )}
       </div>
     </div>
