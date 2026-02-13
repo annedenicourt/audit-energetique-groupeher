@@ -43,7 +43,18 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      etudes_energetiques_with_email: {
+        Row: {
+          client_name: string | null
+          created_at: string | null
+          email: string | null
+          id: string | null
+          payload: Json | null
+          pdf_path: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
