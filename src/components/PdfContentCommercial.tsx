@@ -174,16 +174,16 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Chauffe-eau thermodynamique" value={dimensionnementThermodynamique ? `${dimensionnementThermodynamique} €` : ""} />
             <SummaryRow label="Chauffe-eau solaire" value={dimensionnementECSSolaire ? `${dimensionnementECSSolaire} €` : ""} />
             <SummaryRow label="Système Solaire Combiné" value={dimensionnementSSC ? `${dimensionnementSSC} €` : ""} />
-            <SummaryRow label="Photovoltaïque : résultat Revolt" value={data.dimensionnement.resultatRevolt} />
-            <SummaryRow label="Photovoltaïque : conso électrique annuelle" value={data.dimensionnement.resultatRevolt} />
-            <SummaryRow label="Photovoltaïque : puissance recommandée" value={data.dimensionnement.puissancePVRecommandee} />
-            <SummaryRow label="Photovoltaïque : production estimée" value={data.dimensionnement.productionPVEstimee} />
-            <SummaryRow label="Photovoltaïque : puissance batterie physique recommandée" value={data.dimensionnement.batteriePhysiqueReco} />
-            <SummaryRow label="Photovoltaïque : puissance batterie virtuelle recommandée" value={data.dimensionnement.batterieVirtuelleReco} />
+            <SummaryRow label="Photovoltaïque : résultat Revolt" value={resultatRevolt} />
+            <SummaryRow label="Photovoltaïque : conso électrique annuelle" value={consommationPVElecAnnuelle} />
+            <SummaryRow label="Photovoltaïque : puissance recommandée" value={puissancePVRecommandee} />
+            <SummaryRow label="Photovoltaïque : production estimée" value={productionPVEstimee} />
+            <SummaryRow label="Photovoltaïque : puissance batterie physique recommandée" value={batteriePhysiqueReco} />
+            <SummaryRow label="Photovoltaïque : puissance batterie virtuelle recommandée" value={batterieVirtuelleReco} />
             <SummaryRow label="Isolation combles perdus" value={dimensionnementComblesPerdus ? `${dimensionnementComblesPerdus} €` : ""} />
             <SummaryRow label="Isolation sous-rampants" value={dimensionnementRampants ? `${dimensionnementRampants} €` : ""} />
-            {data.dimensionnement.dimensionnementFenetres.length > 0 &&
-              data.dimensionnement.dimensionnementFenetres.map((el, index) => (
+            {dimensionnementFenetres.length > 0 &&
+              dimensionnementFenetres.map((el, index) => (
                 <SummaryRow key={`menuiserie-${index}`} label={`Menuiserie ${index + 1}`} value={`${el.type} - ${el.ouverture} - ${el.matiere}`} />
               ))
             }
@@ -197,7 +197,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Facture aujourd'hui" value={data.exponentiel.factureAujourdhui ? `${data.exponentiel.factureAujourdhui} €` : ""} />
             <SummaryRow label="Estimation à + 5 ans" value={data.exponentiel.facture5Ans ? `${data.exponentiel.facture5Ans} €` : ""} />
-            <SummaryRow label="Estimation à + 10 ans'" value={data.exponentiel.facture10Ans ? `${data.exponentiel.facture10Ans} €` : ""} />
+            <SummaryRow label="Estimation à + 10 ans" value={data.exponentiel.facture10Ans ? `${data.exponentiel.facture10Ans} €` : ""} />
             <SummaryRow label="Consommation énergétique sur 10 ans (avant travaux)" value={data.exponentiel.consommation10AnsSansTravaux ? `${data.exponentiel.consommation10AnsSansTravaux} €` : ""} />
             <SummaryRow label="Consommation énergétique sur 10 ans (après travaux)" value={data.exponentiel.consommation10AnsApresTravaux ? `${data.exponentiel.consommation10AnsApresTravaux} €` : ""} />
             <SummaryRow label="Économies annuelles moyennes sur 10 ans" value={data.exponentiel.economiesAnnuellesMoyennes ? `${data.exponentiel.economiesAnnuellesMoyennes} €` : ""} />

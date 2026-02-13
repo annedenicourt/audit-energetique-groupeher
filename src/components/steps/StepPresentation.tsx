@@ -26,12 +26,10 @@ const StepPresentation = () => {
   return (
     <div className="">
       {/* Page title */}
-      <div className="">
-        <h2 className="text-2xl font-display font-bold text-foreground">
+      <div className="flex flex-row items-center">
+        <h2 className="mr-4 text-2xl font-display font-bold text-foreground">
           Présentation Groupe HER-Enr
         </h2>
-      </div>
-      <div className="my-4 flex flex-row items-center">
         <a
           href="https://particulier.edf.fr/fr/accueil/aides-financement/professionnels/resultats.html?raisonSociale=HER%20ENR"
           target="_blank"
@@ -48,6 +46,9 @@ const StepPresentation = () => {
           Mandataire Administratif MaPrimeRénov'
           <SquareArrowOutUpRight size={20} className="ml-1" />
         </a>
+      </div>
+      <div className="my-4 flex flex-row items-center">
+
       </div>
 
       <div

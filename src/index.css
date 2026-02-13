@@ -217,9 +217,11 @@
   padding: 10mm;
   margin: auto;
   box-sizing: border-box;
-  background: white;
+  background: #122F62;
   overflow: hidden;
   display: flow-root;
+  border-radius: 10px;
+  border: 2px solid white;
 }
 .a4-page > :first-child { margin-top: 0; }
 .a4-page:last-child{

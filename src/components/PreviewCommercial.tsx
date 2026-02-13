@@ -39,7 +39,7 @@ const PreviewCommercial: React.FC<StepSyntheseProps> = ({ data, downloadPdf, isS
       <div className="fixed -left-[10000px] top-0">
         <div id="pdf-content">
           <div className="a4-page">
-            MA PAGE DE COUV
+            <img src="/images/couv_pdf.png" alt="couverture pdf" />
           </div>
           <PdfContentCommercial data={data} />
         </div>

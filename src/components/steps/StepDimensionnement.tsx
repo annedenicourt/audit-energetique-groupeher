@@ -51,8 +51,16 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           Dimensionnement
         </h2>
       </div>
-      {/* Dimensionnement thermique */}
-      <SectionCard title="PAC air-eau (chauffage / ECS)" icon={Thermometer} link="https://projipac.atlantic-pros.fr/fr" textLink="Dimensionnement PAC">
+      {/* Dimensionnement pac air-eau */}
+      <SectionCard title="PAC air-eau (chauffage / ECS)" icon={Thermometer} link="https://projipac.atlantic-pros.fr/fr" textLink="Dimensionnement PAC air-eau">
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementPACaireau"
@@ -65,7 +73,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement pac air-air */}
-      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm" textLink="Voir produits">
+      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement PAC air-air">
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementPACairair"
@@ -78,7 +94,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement multi+ */}
-      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx" textLink="Voir produits">
+      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement Multi +">
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementMultiplus"
@@ -90,7 +114,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         />
       </SectionCard>
       {/* Dimensionnement poele */}
-      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/u/1/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk" textLink="Voir produits">
+      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/u/1/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y" textLink="Dimensionnement poêle">
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementPoele"
@@ -116,7 +148,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement chauffe-eau solaire */}
-      <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets} link="https://drive.google.com/drive/u/1/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF" textLink="Voir produits">
+      <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementECSSolaire"
@@ -129,7 +169,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement SSC */}
-      <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun} link="https://drive.google.com/drive/u/1/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1" textLink="Voir produits">
+      <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
+        <a
+          href="https://drive.google.com/drive/u/1/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
+          target="_blank"
+          className="mr-4 mb-4 flex flex-row items-center text-sm"
+        >
+          Voir produits
+          <SquareArrowOutUpRight size={20} className="ml-1" />
+        </a>
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementSSC"
@@ -142,13 +190,13 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement solaire */}
-      <SectionCard title="Photovoltaïque" icon={Sun} link="https://drive.google.com/drive/u/1/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X" textLink="Voir Produits">
+      <SectionCard title="Photovoltaïque" icon={Sun} link="https://app.revolt.eco/groupe-her-enr/projects" textLink="Aller sur REVOLT">
         <a
-          href="https://app.revolt.eco/groupe-her-enr/projects"
+          href="https://drive.google.com/drive/u/1/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
-          Aller sur REVOLT
+          Voir produits
           <SquareArrowOutUpRight size={20} className="ml-1" />
         </a>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
