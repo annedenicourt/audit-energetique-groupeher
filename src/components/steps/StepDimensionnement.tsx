@@ -54,7 +54,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       {/* Dimensionnement pac air-eau */}
       <SectionCard title="PAC air-eau (chauffage / ECS)" icon={Thermometer} link="https://projipac.atlantic-pros.fr/fr" textLink="Dimensionnement PAC air-eau">
         <a
-          href="https://drive.google.com/drive/u/1/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
+          href="https://drive.google.com/drive/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -73,9 +73,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement pac air-air */}
-      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement PAC air-air">
+      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement PAC air-air">
         <a
-          href="https://drive.google.com/drive/u/1/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
+          href="https://drive.google.com/drive/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -94,9 +94,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement multi+ */}
-      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement Multi +">
+      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement Multi +">
         <a
-          href="https://drive.google.com/drive/u/1/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
+          href="https://drive.google.com/drive/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -114,9 +114,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         />
       </SectionCard>
       {/* Dimensionnement poele */}
-      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/u/1/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y" textLink="Dimensionnement poêle">
+      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y" textLink="Dimensionnement poêle">
         <a
-          href="https://drive.google.com/drive/u/1/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
+          href="https://drive.google.com/drive/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -150,7 +150,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       {/* Dimensionnement chauffe-eau solaire */}
       <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
         <a
-          href="https://drive.google.com/drive/u/1/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
+          href="https://drive.google.com/drive/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -171,7 +171,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       {/* Dimensionnement SSC */}
       <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
         <a
-          href="https://drive.google.com/drive/u/1/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
+          href="https://drive.google.com/drive/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
           target="_blank"
           className="mr-4 mb-4 flex flex-row items-center text-sm"
         >
@@ -281,14 +281,14 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement ITE */}
-      <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/u/1/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
+      <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
         <div>
           <img src="" alt="" />
         </div>
       </SectionCard>
 
       {/* Fenêtres / Portes-fenêtres */}
-      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2} link="https://drive.google.com/drive/u/1/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
+      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2} link="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
         <button
           type="button"
           onClick={addFenetre}

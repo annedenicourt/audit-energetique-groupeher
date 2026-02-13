@@ -35,9 +35,15 @@ const Admin: React.FC = () => {
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
-    profiles.forEach((p) => map.set(p.id, p.display_name ?? "—"));
+    profiles.forEach((profile) => map.set(profile.id, profile.display_name ?? "—"));
     return map;
   }, [profiles]);
+
+  const getUserName = (userId) => {
+    console.log(profiles)
+    const result = profiles.find((profile) => profile.id === userId)
+    return result?.display_name
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -81,12 +87,12 @@ const Admin: React.FC = () => {
     let result = studies;
 
     if (search) {
-      const q = search.toLowerCase();
-      result = result.filter((s) => s.client_name?.toLowerCase().includes(q));
+      const value = search.toLowerCase();
+      result = result.filter((item) => item.client_name?.toLowerCase().includes(value));
     }
 
     if (filterCommercial && filterCommercial !== "all") {
-      result = result.filter((s) => s.user_id === filterCommercial);
+      result = result.filter((item) => item.user_id === filterCommercial);
     }
 
     const getCommercial = (uid: string) => (profileMap.get(uid) ?? "").toLowerCase();
@@ -113,7 +119,7 @@ const Admin: React.FC = () => {
   }, [studies, search, filterCommercial, sortKey, profileMap]);
 
   const commercials = useMemo(
-    () => profiles.filter((p) => studies.some((s) => s.user_id === p.id)),
+    () => profiles.filter((profile) => studies.some((study) => study.user_id === profile.id)),
     [profiles, studies]
   );
 
@@ -215,17 +221,18 @@ const Admin: React.FC = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filtered.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell className="font-medium">{s.client_name ?? "—"}</TableCell>
-                    <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>
-                    <TableCell>{formatDate(s.created_at)}</TableCell>
+                {filtered.map((item) => (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">{item.client_name ?? "—"}</TableCell>
+                    <TableCell>{profileMap.get(item.user_id) ?? "—"}</TableCell>
+                    <TableCell>{getUserName(item.user_id)}</TableCell>
+                    <TableCell>{formatDate(item.created_at)}</TableCell>
                     <TableCell className="text-right">
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => handleOpenPdf(s.pdf_path)}
-                        disabled={!s.pdf_path}
+                        onClick={() => handleOpenPdf(item.pdf_path)}
+                        disabled={!item.pdf_path}
                       >
                         <FileText className="h-4 w-4 mr-1" />
                         Ouvrir

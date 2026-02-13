@@ -1,6 +1,10 @@
 import React from "react";
-import { Check, ChevronLeft, ChevronRight, Leaf } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { NavLink } from "./NavLink";
+import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface Step {
   id: number;
@@ -32,10 +36,16 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   canGoPrevious,
 }) => {
 
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const { isAdmin, loading: adminLoading } = useIsAdmin();
+
+
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/login";
+    await signOut();
+    navigate("/login", { replace: true });
   };
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -52,8 +62,16 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                   Étude Énergétique personnalisée
                 </p>
               </div>
-              <div>
-                <button className="py-2 px-3 text-sm text-white font-bold bg-orange-500 rounded-full" onClick={() => handleLogout()}>
+              <div className="flex">
+                {isAdmin &&
+                  <NavLink to={"/admin"}>
+                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
+                      <LayoutDashboard className="w-4 h-4" />
+                      Espace admin
+                    </button>
+                  </NavLink>
+                }
+                <button className="py-2 px-3 text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => handleLogout()}>
                   Déconnexion
                 </button>
               </div>
