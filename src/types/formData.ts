@@ -32,6 +32,11 @@
    coutAnnuelChauffage: string;
    temperatureJour: string;
    temperatureNuit: string;
+
+   // Chauffage d'appoint
+   typeChauffageAppoint: string;
+   ageChauffageAppoint: string;
+   coutAnnuelChauffageAppoint: string;
    
    // Eau chaude
    typeEauChaude: string;
@@ -217,6 +222,9 @@
      typeChauffage: "",
      ageChauffage: "",
      coutAnnuelChauffage: "",
+     typeChauffageAppoint: "",
+     ageChauffageAppoint: "",
+     coutAnnuelChauffageAppoint: "",
      temperatureJour: "",
      temperatureNuit: "",
      typeEauChaude: "",

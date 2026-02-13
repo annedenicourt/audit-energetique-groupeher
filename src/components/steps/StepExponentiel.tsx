@@ -101,11 +101,11 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
           label="Consommation énergétique sur 10 ans (après travaux)"
           name="consommation10AnsApresTravaux"
           value={data.consommation10AnsApresTravaux}
-          onChange={(v) => onChange("consommation10AnsApresTravaux", v)}
           type="number"
           placeholder="0"
           suffix="€"
           className="mt-8"
+          readonly={true}
         />
         <p className="text-xs text-center font-bold text-muted-foreground mt-3">
           Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans (source CRE)

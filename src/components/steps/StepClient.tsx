@@ -246,15 +246,15 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
           <FormSelect
             label="Type de chauffage"
             name="typeChauffage"
-            value={data.typeChauffage}
-            onChange={(v) => onChange("typeChauffage", v)}
+            value={data.typeChauffageAppoint}
+            onChange={(v) => onChange("typeChauffageAppoint", v)}
             options={typeChauffageOptions}
           />
           <FormInput
             label="Âge de l'installation"
             name="ageChauffage"
-            value={data.ageChauffage}
-            onChange={(v) => onChange("ageChauffage", v)}
+            value={data.ageChauffageAppoint}
+            onChange={(v) => onChange("ageChauffageAppoint", v)}
             type="number"
             placeholder="Âge"
             suffix="ans"
@@ -262,32 +262,12 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
           <FormInput
             label="Coût annuel estimé"
             name="coutAnnuelChauffage"
-            value={data.coutAnnuelChauffage}
-            onChange={(v) => onChange("coutAnnuelChauffage", v)}
+            value={data.coutAnnuelChauffageAppoint}
+            onChange={(v) => onChange("coutAnnuelChauffageAppoint", v)}
             type="number"
             placeholder="0"
             suffix="€"
           />
-          <div className="grid grid-cols-2 gap-4">
-            <FormInput
-              label="Température jour"
-              name="temperatureJour"
-              value={data.temperatureJour}
-              onChange={(v) => onChange("temperatureJour", v)}
-              type="number"
-              placeholder="20"
-              suffix="°C"
-            />
-            <FormInput
-              label="Température nuit"
-              name="temperatureNuit"
-              value={data.temperatureNuit}
-              onChange={(v) => onChange("temperatureNuit", v)}
-              type="number"
-              placeholder="17"
-              suffix="°C"
-            />
-          </div>
         </div>
       </SectionCard>
 
