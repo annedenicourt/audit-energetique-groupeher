@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import FormLayout from "@/components/FormLayout";
 import StepClient from "@/components/steps/StepClient";
-import StepHabitation from "@/components/steps/StepHabitation";
-import StepFactures from "@/components/steps/StepFactures";
 import StepBilan from "@/components/steps/StepBilan";
 import StepScenarios from "@/components/steps/StepScenarios";
 import StepAides from "@/components/steps/StepAides";
@@ -15,11 +13,12 @@ import StepExponentiel from "@/components/steps/StepExponentiel";
 import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite, computeCoutNrjMoins5ans } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
+import StepDossier from "@/components/steps/StepDossier";
 
 const Index: React.FC = () => {
   // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  // État pour la navigation entre les étapes
+  // État pour la navigation entre les étapesc
   const [currentStep, setCurrentStep] = useState(1);
 
   const STORAGE_KEY = "simulation_form";
@@ -223,12 +222,14 @@ const Index: React.FC = () => {
       case 9:
         return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} />;
       case 10:
-        return <StepSynthese data={formData} />;
+        return <StepDossier data={formData} />;
       default:
         return null;
     }
   };
+  console.log(currentStep)
 
+  console.log(STEPS.length)
   return (
     <FormLayout
       currentStep={currentStep}
@@ -237,7 +238,7 @@ const Index: React.FC = () => {
       steps={STEPS}
       onPrevious={goToPreviousStep}
       onNext={goToNextStep}
-      canGoPrevious={currentStep > 0}
+      canGoPrevious={currentStep > 1}
       canGoNext={currentStep < STEPS.length}
     >
       {renderCurrentStep()}

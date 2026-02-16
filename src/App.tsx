@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Synthese from "./pages/Synthese";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +24,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/synthese" element={<ProtectedRoute><Synthese /></ProtectedRoute>} />
             <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
             <Route path="*" element={<NotFound />} />
           </Routes>

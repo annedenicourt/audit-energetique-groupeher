@@ -26,7 +26,7 @@ const StepPresentation = () => {
   return (
     <div className="">
       {/* Page title */}
-      <div className="flex flex-row items-center">
+      <div className="mb-4 flex flex-row items-center">
         <h2 className="mr-4 text-2xl font-display font-bold text-foreground">
           Présentation Groupe HER-Enr
         </h2>
@@ -47,10 +47,6 @@ const StepPresentation = () => {
           <SquareArrowOutUpRight size={20} className="ml-1" />
         </a>
       </div>
-      <div className="my-4 flex flex-row items-center">
-
-      </div>
-
       <div
         className=""
         onClick={() => setIsModalOpen(true)}
@@ -58,7 +54,7 @@ const StepPresentation = () => {
         <img
           src={"/images/protocole_secu.png"}
           alt={"protocole sécuritaire HER-Enr"}
-          className="w-full object-cover"
+          className="w-full h-[60vh] object-contain"
           loading="lazy"
         />
       </div>
@@ -69,7 +65,7 @@ const StepPresentation = () => {
             <img
               src={"images/protocole_secu.png"}
               alt={"protocole sécuritaire HER-Enr"}
-              className="w-full max-h-[75vh] object-contain rounded-lg"
+              className="w-full max-h-[90vh] object-contain rounded-lg"
             />
           </div>
         )}

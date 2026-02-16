@@ -8,6 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { LayoutList, LayoutGrid, FileText, Search, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
+import { NavLink } from "@/components/NavLink";
+import { useNavigate } from "react-router-dom";
 
 interface Study {
   id: string;
@@ -25,6 +27,7 @@ interface Profile {
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
 
 const Admin: React.FC = () => {
+  const navigate = useNavigate();
   const [studies, setStudies] = useState<Study[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,12 +41,6 @@ const Admin: React.FC = () => {
     profiles.forEach((profile) => map.set(profile.id, profile.display_name ?? "—"));
     return map;
   }, [profiles]);
-
-  const getUserName = (userId) => {
-    console.log(profiles)
-    const result = profiles.find((profile) => profile.id === userId)
-    return result?.display_name
-  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -128,8 +125,16 @@ const Admin: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-background p-4 md:p-8">
+      <div className="mb-4">
+        <button
+          onClick={() => navigate(-1)}
+          className="text-sm text-muted-foreground hover:text-primary"
+        >
+          ← Retour Espace Commercial
+        </button>
+      </div>
       <div className="max-w-6xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-foreground">Administration – Études</h1>
+        <h1 className="text-3xl font-bold text-foreground">Études réalisées</h1>
 
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-3 items-start md:items-center flex-wrap">
@@ -225,7 +230,6 @@ const Admin: React.FC = () => {
                   <TableRow key={item.id}>
                     <TableCell className="font-medium">{item.client_name ?? "—"}</TableCell>
                     <TableCell>{profileMap.get(item.user_id) ?? "—"}</TableCell>
-                    <TableCell>{getUserName(item.user_id)}</TableCell>
                     <TableCell>{formatDate(item.created_at)}</TableCell>
                     <TableCell className="text-right">
                       <Button

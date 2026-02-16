@@ -35,7 +35,7 @@ const ScenarioCard: React.FC<{
         onChange={(v) => onChange("plusValueLogement", v)}
         type="number"
         placeholder="0"
-        suffix="€"
+        suffix="%"
       />
       <FormInput
         label="Facture énergétique après travaux"

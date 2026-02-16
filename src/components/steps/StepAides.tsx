@@ -164,17 +164,9 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
           </div>
         </div>
         <div className="mt-8 text-xs text-center font-bold text-muted-foreground">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans (source CRE)
+          Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
         </div>
       </SectionCard>
-
-      {/* Note d'information */}
-      <div className="p-4 bg-accent/10 border border-accent/20 rounded-lg">
-        <p className="text-sm text-foreground">
-          <strong>Note :</strong> MaPrimeRénov' est présentée à titre indicatif et n'est pas déduite du coût du projet.
-          La prime CEE peut être déduite sous conditions d'éligibilité.
-        </p>
-      </div>
     </div>
   );
 };

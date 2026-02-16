@@ -29,7 +29,7 @@ export const useIsAdmin = (): UseIsAdminResult => {
         .select("role")
         .eq("id", user.id)
         .single();
-console.log(data)
+        
       if (fetchError) {
         setError(fetchError.message);
         setIsAdmin(false);

@@ -5,13 +5,14 @@ import { FormData } from "@/types/formData";
 import html2pdf from "html2pdf.js";
 import PdfContentCommercial from "./PdfContentCommercial";
 
-interface PreviwCommercialProps {
+interface PreviwDossierProps {
   data: FormData;
   downloadPdf: () => void;
   isSaving?: boolean;
 }
 
-const PreviewCommercial: React.FC<PreviwCommercialProps> = ({ data, downloadPdf, isSaving }) => {
+
+const PreviewDossier: React.FC<PreviwDossierProps> = ({ data, downloadPdf, isSaving }) => {
 
   return (
     <div className="mx-auto bg-white p-4">
@@ -19,30 +20,20 @@ const PreviewCommercial: React.FC<PreviwCommercialProps> = ({ data, downloadPdf,
       <div className="mb-6 flex items-center">
         <FileCheck size="30" className="mr-3 text-primary" />
         <div className="mr-6 text-2xl font-display font-bold text-foreground">
-          Infos Simulateur
+          Dossier de liaison
         </div>
         <button
           className="nav-button nav-button--primary px-6"
           disabled={isSaving}
-          onClick={() => { requestAnimationFrame(() => downloadPdf()); }}
+        //onClick={() => { requestAnimationFrame(() => downloadPdf()); }}
         >
           <FileCheck className="w-5 h-5" />
           {isSaving ? "Sauvegarde en cours…" : "Télécharger PDF"}
         </button>
       </div>
-      <div>
-        <PdfContentCommercial data={data} />
-      </div>
-      <div className="fixed -left-[10000px] top-0">
-        <div id="pdf-content">
-          <div className="a4-page">
-            <img src="/images/couv_pdf.png" alt="couverture pdf" />
-          </div>
-          <PdfContentCommercial data={data} />
-        </div>
-      </div>
+
     </div>
   );
 };
 
-export default PreviewCommercial;
+export default PreviewDossier;

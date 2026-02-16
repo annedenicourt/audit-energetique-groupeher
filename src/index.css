@@ -198,7 +198,7 @@
   }
 
   .nav-button--secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80
+    @apply bg-orange-100/50 text-secondary-foreground hover:bg-secondary/80
            focus:ring-secondary;
   }
 

@@ -227,7 +227,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Mensualité de confort" value={data.financement.mensualiteConfort ? `${data.financement.mensualiteConfort} €/mois` : ""} />
             <SummaryRow label="Économies moyennes mensuelles sur 10 ans" value={data.financement.economiesMoyennesMensuelles ? `${data.financement.economiesMoyennesMensuelles} €/mois` : ""} />
-            <SummaryRow label="Effort financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
+            <SummaryRow label="Gain ou faible effort financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>

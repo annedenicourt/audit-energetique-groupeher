@@ -27,11 +27,11 @@ export default function AppModal({
       contentLabel={title ?? "Modal"}
       className={
         className ??
-        "bg-white rounded-xl shadow-xl max-w-5xl w-[96vw] max-h-[95vh] overflow-auto outline-none p-4"
+        "bg-white rounded-xl shadow-xl max-w-7xl max-h-[100vh] overflow-auto outline-none p-4"
       }
       overlayClassName={
         overlayClassName ??
-        "fixed inset-0 bg-black/60 flex items-center justify-center p-4"
+        "fixed inset-0 bg-black/60 flex items-center justify-center p-4 z-30"
       }
     >
       <div className="flex items-center justify-between gap-3 mb-3">

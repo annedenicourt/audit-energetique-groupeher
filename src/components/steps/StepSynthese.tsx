@@ -6,6 +6,7 @@ import PreviewCommercial from "../PreviewCommercial";
 import PreviewClient from "../PreviewClient";
 import { saveStudy } from "@/utils/saveStudy";
 import { toast } from "sonner";
+import PreviewDossier from "../PreviewDossier";
 
 interface StepSyntheseProps {
   data: FormData;
@@ -15,7 +16,7 @@ const STORAGE_KEY = "simulation_form";
 
 const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
 
-  const [pdfMode, setPdfMode] = useState("commercial");
+  const [pdfMode, setPdfMode] = useState("simulateur");
   const [isSaving, setIsSaving] = useState(false);
 
   const downloadPdf = async () => {
@@ -72,29 +73,21 @@ const StepSynthese: React.FC<StepSyntheseProps> = ({ data }) => {
 
   return (
     <div className="">
-      {/* Page title */}
-      <div className="my-8 flex items-center">
-        <FileCheck size="30" className="mr-3 text-primary" />
-        <h2 className="text-2xl font-display font-bold text-foreground">
-          Synthèse du dossier
-        </h2>
-      </div>
-
       <div className="mt-8 flex items-center">
-        <div className={`p-4 rounded-t-lg cursor-pointer ${pdfMode === "commercial" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("commercial") }}>
-          Aperçu commercial
+        <div className={`p-4 rounded-t-lg cursor-pointer ${pdfMode === "simulateur" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("simulateur") }}>
+          Synthèse simulateur
         </div>
-        <div className={`p-4 rounded-t-lg cursor-pointer ${pdfMode === "client" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("client") }}>
-          Aperçu client
+        <div className={`p-4 rounded-t-lg cursor-pointer ${pdfMode === "dossier" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("dossier") }}>
+          Synthèse dossier de liaison
         </div>
       </div>
 
 
       <div className="mx-auto bg-white p-8">
-        {pdfMode === "commercial" ? (
+        {pdfMode === "simulateur" ? (
           <PreviewCommercial data={data} downloadPdf={downloadPdf} isSaving={isSaving} />
         ) : (
-          <PreviewClient data={data} downloadPdf={downloadPdf} isSaving={isSaving} />
+          <PreviewDossier data={data} downloadPdf={downloadPdf} isSaving={isSaving} />
         )}
       </div>
     </div>

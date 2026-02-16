@@ -176,8 +176,12 @@ const FormLayout: React.FC<FormLayoutProps> = ({
           </div>
 
           <button
-            onClick={onNext}
-            disabled={!canGoNext}
+            onClick={() =>
+              currentStep === totalSteps ?
+                navigate("/synthese")
+                : onNext()
+            }
+            //disabled={!canGoNext}
             className="nav-button nav-button--primary disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <span className="hidden sm:inline">

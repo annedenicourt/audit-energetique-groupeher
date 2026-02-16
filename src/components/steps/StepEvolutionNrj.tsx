@@ -116,7 +116,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         </div>
         <div className="mt-4">
           <FormSelect
-            label="Énergie actuelle du logement"
+            label="Chauffage actuel du logement"
             name="energieActuelle"
             value={data.energieActuelle}
             onChange={(v) => onChange("energieActuelle", v)}
@@ -254,7 +254,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         />
 
         <p className="mt-3 font-bold text-center text-xs text-muted-foreground">
-          Hypothèse : augmentation moyenne estimée à 6% par an sur une durée de 10 ans (source CRE)
+          Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
         </p>
       </SectionCard>
 
