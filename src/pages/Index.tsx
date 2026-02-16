@@ -227,9 +227,7 @@ const Index: React.FC = () => {
         return null;
     }
   };
-  console.log(currentStep)
 
-  console.log(STEPS.length)
   return (
     <FormLayout
       currentStep={currentStep}

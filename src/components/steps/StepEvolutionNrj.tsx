@@ -116,7 +116,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
         </div>
         <div className="mt-4">
           <FormSelect
-            label="Chauffage actuel du logement"
+            label="Chauffage principal du logement"
             name="energieActuelle"
             value={data.energieActuelle}
             onChange={(v) => onChange("energieActuelle", v)}

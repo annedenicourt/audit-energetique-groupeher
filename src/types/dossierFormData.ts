@@ -40,20 +40,25 @@ export interface DossierFormData {
   deuxDerniersAvisImpots: boolean;
   taxeFonciereActeNotarie: boolean;
   mandatMaPrimeRenov: boolean;
+  idNumerique: boolean;
   rib: boolean;
   attestationFioul: boolean;
   attestationIndivisionnaire: boolean;
   attestationProprietaireBailleur: boolean;
-  noteDimensionnementRevolt: boolean;
+  noteDimensionnement: boolean;
+  revolt: boolean;
+  pouvoir: boolean;
   // Prime EDF
   montantPrimeEDF: string;
   mailPrimeEDF: string;
   mdpPrimeEDF: string;
   // Prime Rénov
   montantPrimeRenov: string;
-  gmailCree: string;
+  mailPrimeRenov: string;
   mdpPrimeRenov: string;
-
+  //Compte email
+  gmailCree: string;
+  mdpGmail: string;
   // 4) DOSSIER DE FINANCEMENT
   justificatifDomicile: boolean;
   bulletinsSalaires: boolean;
@@ -110,7 +115,7 @@ export interface DossierFormData {
   amperageMax: string;
   emplacementTableauPrincipal: string;
   linky: string;
-  puissanceKva: string;
+  abonnementKva: string;
 
   // 7) PAC AIR EAU
   pacMonoblocHybea: boolean;
@@ -172,7 +177,7 @@ export interface DossierFormData {
   pvFormatPortrait: boolean;
   pvFormatPaysage: boolean;
   pvToitureBacAcier: boolean;
-  pvToitureEvente: boolean;
+  pvToitureEverite: boolean;
   pvToitureTuile: boolean;
   pvRaccordementEnterre: boolean;
   pvRaccordementAerien: boolean;
@@ -189,6 +194,28 @@ export interface DossierFormData {
 
   // 12) RADIATEURS
   radiateurs: RadiateurData[];
+
+// PHOTOS CHECKLIST
+  photoCompteur: boolean;
+  photoChaudiere: boolean;
+  photoGroupeExt: boolean;
+  photoMaison: boolean;
+  photoCombles: boolean;
+  photoECS: boolean;
+  photoDisjoncteur: boolean;
+  photoTuyauterie: boolean;
+  photoRadiateurs: boolean;
+  photoPlafonds: boolean;
+  photoSousSol: boolean;
+  photoTableauElec: boolean;
+  photoVentilation: boolean;
+  photoUniteInt: boolean;
+  photoPlancher: boolean;
+  photoRDC: boolean;
+  photoFenetres: boolean;
+  photoPorteFenetre: boolean;
+  photoFacade: boolean;
+  photoPorte: boolean;
 }
 
 export const defaultSplit: SplitData = {
@@ -227,17 +254,22 @@ export const defaultDossierFormData: DossierFormData = {
   deuxDerniersAvisImpots: false,
   taxeFonciereActeNotarie: false,
   mandatMaPrimeRenov: false,
+  idNumerique: false,
   rib: false,
   attestationFioul: false,
   attestationIndivisionnaire: false,
   attestationProprietaireBailleur: false,
-  noteDimensionnementRevolt: false,
+  noteDimensionnement: false,
+  revolt: false,
+  pouvoir: false,
   montantPrimeEDF: "",
   mailPrimeEDF: "",
   mdpPrimeEDF: "",
   montantPrimeRenov: "",
-  gmailCree: "",
+  mailPrimeRenov: "",
   mdpPrimeRenov: "",
+  gmailCree: "",
+  mdpGmail: "",
 
   justificatifDomicile: false,
   bulletinsSalaires: false,
@@ -286,7 +318,7 @@ export const defaultDossierFormData: DossierFormData = {
   amperageMax: "",
   emplacementTableauPrincipal: "",
   linky: "",
-  puissanceKva: "",
+  abonnementKva: "",
 
   pacMonoblocHybea: false,
   pacBiBloc: false,
@@ -325,7 +357,7 @@ export const defaultDossierFormData: DossierFormData = {
   pacAirAirMultiSplit: false,
   pacAirAirConsole: false,
   pacAirAirGainable: false,
-  splits: Array.from({ length: 5 }, () => ({ ...defaultSplit })),
+  splits: Array.from({ length: 1 }, () => ({ ...defaultSplit })),
   pacAirAirGroupeExtSol: false,
   pacAirAirGroupeExtMur: false,
   pacAirAirLeveGroupe: false,
@@ -344,7 +376,7 @@ export const defaultDossierFormData: DossierFormData = {
   pvFormatPortrait: false,
   pvFormatPaysage: false,
   pvToitureBacAcier: false,
-  pvToitureEvente: false,
+  pvToitureEverite: false,
   pvToitureTuile: false,
   pvRaccordementEnterre: false,
   pvRaccordementAerien: false,
@@ -358,5 +390,26 @@ export const defaultDossierFormData: DossierFormData = {
 
   commentaires: "",
 
-  radiateurs: Array.from({ length: 10 }, () => ({ ...defaultRadiateur })),
+  radiateurs: Array.from({ length: 1 }, () => ({ ...defaultRadiateur })),
+
+  photoCompteur: false,
+  photoChaudiere: false,
+  photoGroupeExt: false,
+  photoMaison: false,
+  photoCombles: false,
+  photoECS: false,
+  photoDisjoncteur: false,
+  photoTuyauterie: false,
+  photoRadiateurs: false,
+  photoPlafonds: false,
+  photoSousSol: false,
+  photoTableauElec: false,
+  photoVentilation: false,
+  photoUniteInt: false,
+  photoPlancher: false,
+  photoRDC: false,
+  photoFenetres: false,
+  photoPorteFenetre: false,
+  photoFacade: false,
+  photoPorte: false,
 };

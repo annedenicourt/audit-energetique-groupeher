@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Wallet, Users, Calculator, SquareArrowOutUpRight } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { AidesData } from "@/types/formData";
-import { plafondsData, nbrePersonnesOptions, categorieOptions } from "@/utils/handleForm";
+import { plafondsData, nbrePersonnesOptions, categorieOptions, plafondParPersonneSupp } from "@/utils/handleForm";
 
 interface StepAidesProps {
   data: AidesData;
@@ -13,6 +13,29 @@ interface StepAidesProps {
 }
 
 const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans }) => {
+
+  useEffect(() => {
+    const nbPers = Number(data.nbrePersonnesFoyer);
+    const rfr = Number(data.dernierRFR);
+
+    if (!nbPers || !Number.isFinite(rfr)) return;
+
+    const base = plafondsData.find((item) => item.personnes === nbPers) ?? plafondsData[plafondsData.length - 1];
+    const extra = Math.max(0, nbPers - plafondsData[plafondsData.length - 1].personnes);
+
+    const seuilTres = base.tres + extra * plafondParPersonneSupp.tres;
+    const seuilMod = base.mod + extra * plafondParPersonneSupp.mod;
+    const seuilInter = base.inter + extra * plafondParPersonneSupp.inter;
+
+    const cat =
+      rfr <= seuilTres ? "Très modestes" :
+        rfr <= seuilMod ? "Modestes" :
+          rfr <= seuilInter ? "Intermédiaires" :
+            "Supérieurs";
+
+    if (data.categorieRevenus !== cat) onChange("categorieRevenus", cat);
+  }, [data.nbrePersonnesFoyer, data.dernierRFR, data.categorieRevenus, onChange]);
+
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -31,23 +54,39 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Personnes</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Très modestes</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Modestes</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Intermédiaires</th>
-                <th className="text-left py-3 px-4 font-semibold text-foreground">Supérieurs</th>
+                <th className="w-1/5 text-left py-3 px-4 font-semibold text-foreground">Personnes</th>
+                <th className="w-1/5 text-center py-3 font-semibold text-foreground">Très modestes</th>
+                <th className="w-1/5 text-center py-3 font-semibold text-foreground">Modestes</th>
+                <th className="w-1/5 text-center py-3 font-semibold text-foreground">Intermédiaires</th>
+                <th className="w-1/5 text-center py-3 font-semibold text-foreground">Supérieurs</th>
               </tr>
             </thead>
             <tbody>
               {plafondsData.map((row) => (
                 <tr key={row.personnes} className="border-b border-border/50 hover:bg-muted/50">
-                  <td className="py-3 px-4 font-medium">{row.personnes}</td>
-                  <td className="py-3 px-4 text-muted-foreground"> {row.personnes === "Par personne supplémentaire" ? "" : "≤"}  {row.tresModestes}</td>
-                  <td className="py-3 px-4 text-muted-foreground">{row.personnes === "Par personne supplémentaire" ? "" : "≤"} {row.modestes}</td>
-                  <td className="py-3 px-4 text-muted-foreground">{row.personnes === "Par personne supplémentaire" ? "" : "≤"} {row.intermediaires}</td>
-                  <td className="py-3 px-4 text-muted-foreground">{row.personnes === "Par personne supplémentaire" ? "" : "≤"} {row.superieurs}</td>
+                  <td className="py-3 font-medium">{row.personnes}</td>
+                  <td className="py-3 bg-cyan-100 text-center text-muted-foreground"> {row.personnes > 5 ? "" : "≤"}  {row.tres} €</td>
+                  <td className="py-3 bg-amber-100 text-center text-muted-foreground">{row.personnes > 5 ? "" : "≤"} {row.mod} €</td>
+                  <td className="py-3 bg-violet-100 text-center text-muted-foreground">{row.personnes > 5 ? "" : "≤"} {row.inter} €</td>
+                  <td className="py-3 bg-red-100 text-center text-muted-foreground">{row.personnes > 5 ? "" : "≤"} {row.sup} €</td>
                 </tr>
               ))}
+              {/* Ligne personne supplémentaire */}
+              <tr className="border-b border-border/50 hover:bg-muted/50">
+                <td className="py-3">Par personne supplémentaire</td>
+                <td className="py-3 bg-cyan-100 text-center text-muted-foreground">
+                  + {plafondParPersonneSupp.tres} €
+                </td>
+                <td className="py-3 bg-amber-100 text-center text-muted-foreground">
+                  + {plafondParPersonneSupp.mod} €
+                </td>
+                <td className="py-3 bg-violet-100 text-center text-muted-foreground">
+                  + {plafondParPersonneSupp.inter} €
+                </td>
+                <td className="py-3 bg-red-100 text-center text-muted-foreground">
+                  + {plafondParPersonneSupp.sup} €
+                </td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -72,12 +111,13 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
             placeholder="0"
             suffix="€"
           />
-          <FormSelect
+          <FormInput
             label="Catégorie de revenus"
             name="categorieRevenus"
             value={data.categorieRevenus}
-            onChange={(v) => onChange("categorieRevenus", v)}
-            options={categorieOptions}
+            type="text"
+            placeholder=""
+            readonly={true}
           />
         </div>
         <div className="mt-6 flex text-sm font-bold">
@@ -118,6 +158,9 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
               suffix="€"
               className="mb-4"
             />
+
+          </div>
+          <div>
             <FormInput
               label="MaPrimeRénov' (non déduite)"
               name="maPrimeRenov"
@@ -127,8 +170,6 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
               placeholder="0"
               suffix="€"
             />
-          </div>
-          <div>
             <FormInput
               label="Reste à charge après MaPrimeRénov'"
               name="resteACharge"

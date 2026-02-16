@@ -327,7 +327,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="0"
             suffix="€/an"
           />
-          <FormInput
+          {/* <FormInput
             label="Total mensuel"
             name="factureElecMensuelle"
             value={data.factureElecMensuelle}
@@ -335,7 +335,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             type="number"
             placeholder="0"
             suffix="€/mois"
-          />
+          /> */}
         </div>
       </SectionCard>
 
@@ -351,7 +351,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="0"
             suffix="€/an"
           />
-          <FormInput
+          {/* <FormInput
             label="Total mensuel"
             name="factureEnergieMensuelle"
             value={data.factureEnergieMensuelle}
@@ -359,7 +359,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             type="number"
             placeholder="0"
             suffix="€/mois"
-          />
+          /> */}
         </div>
       </SectionCard>
 

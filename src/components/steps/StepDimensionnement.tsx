@@ -307,6 +307,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
 
       {/* Dimensionnement ITE */}
       <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
+        <div>Faire photos et plans de façade pour devis R2</div>
         <div>
           <img src="" alt="" />
         </div>

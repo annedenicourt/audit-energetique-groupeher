@@ -97,14 +97,24 @@ export const nbrePersonnesOptions = [
 ];
 
 // Tableau des plafonds de ressources (à titre indicatif)
+/* export const plafondsData = [
+  { personnes: "1", tresModestes: "17 363", modestes: "22 259", intermediaires: "31 185", superieurs: "31 185" },
+  { personnes: "2", tresModestes: "25 393", modestes: "32 553", intermediaires: "45 842", superieurs: "45 842" },
+  { personnes: "3", tresModestes: "30 540", modestes: "39 148", intermediaires: "55 196", superieurs: "55 196" },
+  { personnes: "4", tresModestes: "35 676", modestes: "45 735", intermediaires: "64 550", superieurs: "64 550" },
+  { personnes: "5", tresModestes: "40 835", modestes: "52 348", intermediaires: "73 907", superieurs: "73 907" },
+  { personnes: "Par personne supplémentaire", tresModestes: "+ 5 151", modestes: "+ 6 598", intermediaires: "+ 9 357", superieurs: "+ 9 357" },
+]; */
+
 export const plafondsData = [
-  { personnes: "1", tresModestes: "17 363 €", modestes: "22 259 €", intermediaires: "31 185 €", superieurs: "31 185 €" },
-  { personnes: "2", tresModestes: "25 393 €", modestes: "32 553 €", intermediaires: "45 842 €", superieurs: "45 842 €" },
-  { personnes: "3", tresModestes: "30 540 €", modestes: "39 148 €", intermediaires: "55 196 €", superieurs: "55 196 €" },
-  { personnes: "4", tresModestes: "35 676 €", modestes: "45 735 €", intermediaires: "64 550 €", superieurs: "64 550 €" },
-  { personnes: "5", tresModestes: "40 835 €", modestes: "52 348 €", intermediaires: "73 907 €", superieurs: "73 907 €" },
-  { personnes: "Par personne supplémentaire", tresModestes: "+ 5 151 €", modestes: "+ 6 598 €", intermediaires: "+ 9 357 €", superieurs: "+ 9 357 €" },
-];
+  { personnes: 1, tres: 17363, mod: 22259, inter: 31185, sup: 31185 },
+  { personnes: 2, tres: 25393, mod: 32553, inter: 45842, sup: 45842},
+  { personnes: 3, tres: 30540, mod: 39148, inter: 55196, sup: 55196},
+  { personnes: 4, tres: 35676, mod: 45735, inter: 64550, sup: 64550},
+  { personnes: 5, tres: 40835, mod: 52348, inter: 73907, sup: 73907 },
+] as const;
+
+export const plafondParPersonneSupp = { tres: 5151, mod: 6598, inter: 9357, sup: 9357} as const;
 
 export const fenetreTypeOptions = [
   {value:"fenetre", label:"Fenêtre"},
@@ -120,4 +130,16 @@ export const fenetreOuvrantOptions = [
 export const fenetreMatiereOptions = [
   {value:"pvc", label:"PVC"},
   {value:"alu", label:"Aluminium"},
+];
+
+export const OUI_NON = [
+  { value: "Oui", label: "Oui" },
+  { value: "Non", label: "Non" },
+];
+
+export const MATERIAUX_RADIATEUR = [
+  { value: "Acier", label: "Acier" },
+  { value: "Fonte", label: "Fonte" },
+  { value: "Fonte Alu", label: "Fonte Alu" },
+  { value: "Fonte Tub", label: "Fonte Tub" },
 ];
