@@ -20,14 +20,29 @@ export const computeTotalAides = (
     toNumber(client.aidesCEE) +toNumber(client.aidesMaPrimeRenov) +toNumber(client.aidesAutre);
   return Math.round(total).toString();
 };
-/*Total facture énergie (€/an)*/
-export const computeTotalNrj = (
-  evolution: FormData["evolution"]
+
+/*Addition facture énergétique globale avant travaux*/
+export const computeNRJAnnuel = (
+  client: FormData["client"]
 ): string => {
   const total =
-    toNumber(evolution.montantChauffage) +
-    toNumber(evolution.montantECS) +
-    toNumber(evolution.montantElecDomestique);
+    toNumber(client.coutAnnuelChauffage) + toNumber(client.coutAnnuelChauffageAppoint)+ toNumber(client.factureElecAnnuelle);
+  return Math.round(total).toString();
+};
+
+/*Total facture énergie (€/an)*/
+export const computeTotalChauffage = (
+  client: FormData["client"],
+): string => {
+  const total =
+    toNumber(client.coutAnnuelChauffage) + toNumber(client.coutAnnuelChauffageAppoint);
+  return Math.round(total).toString();
+};
+export const computeTotalNrj = (
+  evolution: FormData["evolution"], montantChauffage:string
+): string => {
+  const total =
+    toNumber(montantChauffage) + toNumber(evolution.montantElecDomestique);
   return Math.round(total).toString();
 };
 /*Projection cout énergie avant travaux*/
@@ -57,6 +72,15 @@ export const computeDepenseTotale10ans = (
 ): string => {
   const total =
     toNumber(evolution.coutNrjAujourdhui) * 14.97
+  return Math.round(total).toString();
+};
+
+/*Facture NRJ apres travaux*/
+export const computefactureApres = (
+  percent: number, evolution: FormData["evolution"]
+): string => {
+  const base = toNumber(evolution.coutNrjAujourdhui);
+  const total = Math.round(base * (1 - percent / 100));
   return Math.round(total).toString();
 };
 
@@ -104,7 +128,14 @@ export const computeEcoMensuellesMoy = (
 }
 
 /*Section Aides*/
-export const computeResteaCharge = (
+export const computeResteaChargeAvant = (
+  aides: FormData["aides"]
+): string => {
+  const total =
+    toNumber(aides.coutTotalInstallation) - toNumber(aides.primeCEE)
+  return Math.round(total).toString();
+};
+export const computeResteaChargeApres = (
   aides: FormData["aides"]
 ): string => {
   const total =

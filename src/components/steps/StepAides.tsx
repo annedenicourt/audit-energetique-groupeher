@@ -4,7 +4,7 @@ import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { AidesData } from "@/types/formData";
-import { plafondsData, nbrePersonnesOptions, categorieOptions, plafondParPersonneSupp } from "@/utils/handleForm";
+import { plafondsData, nbrePersonnesOptions, plafondParPersonneSupp } from "@/utils/handleForm";
 
 interface StepAidesProps {
   data: AidesData;
@@ -105,6 +105,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
           <FormInput
             label="Dernier RFR (Revenu Fiscal de Référence)"
             name="dernierRFR"
+            min={"0"}
             value={data.dernierRFR}
             onChange={(v) => onChange("dernierRFR", v)}
             type="number"
@@ -141,6 +142,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
             <FormInput
               label="Coût total de l'installation"
               name="coutTotalInstallation"
+              min={"0"}
               value={data.coutTotalInstallation}
               onChange={(v) => onChange("coutTotalInstallation", v)}
               type="number"
@@ -151,6 +153,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
             <FormInput
               label="Prime CEE déduite (sous conditions)"
               name="primeCEE"
+              min={"0"}
               value={data.primeCEE}
               onChange={(v) => onChange("primeCEE", v)}
               type="number"
@@ -158,22 +161,35 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
               suffix="€"
               className="mb-4"
             />
+            <FormInput
+              label="Reste à charge AVANT MaPrimeRénov'"
+              name="resteAChargeAvantMpr"
+              min={"0"}
+              value={data.resteAChargeAvantMpr}
+              type="number"
+              placeholder="0"
+              suffix="€"
+              readonly={true}
+            />
 
           </div>
           <div>
             <FormInput
               label="MaPrimeRénov' (non déduite)"
               name="maPrimeRenov"
+              min={"0"}
               value={data.maPrimeRenov}
               onChange={(v) => onChange("maPrimeRenov", v)}
               type="number"
               placeholder="0"
               suffix="€"
+              className="mb-4"
             />
             <FormInput
-              label="Reste à charge après MaPrimeRénov'"
-              name="resteACharge"
-              value={data.resteACharge}
+              label="Reste à charge APRÈS MaPrimeRénov'"
+              name="resteAChargeApresMpr"
+              min={"0"}
+              value={data.resteAChargeApresMpr}
               type="number"
               placeholder="0"
               suffix="€"
@@ -183,6 +199,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
             <FormInput
               label="Économies estimées sur 10 ans"
               name="economiesSur10Ans"
+              min={"0"}
               value={ecoEstimees10ans}
               type="number"
               placeholder="0"
@@ -190,19 +207,20 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
               className="mb-4"
               readonly={true}
             />
-            <div className="p-2 bg-orange-500/10 rounded-lg border border-orange-500/20">
-              <label className="form-label text-primary">Gain sur 10 ans</label>
-              <FormInput
-                label=""
-                name="gainSur10Ans"
-                value={data.gainSur10Ans}
-                type="number"
-                placeholder="0"
-                suffix="€"
-                readonly={true}
-              />
-            </div>
           </div>
+        </div>
+        <div className="p-2 bg-orange-500/10 rounded-lg border border-orange-500/20">
+          <label className="form-label text-primary">Gain sur 10 ans</label>
+          <FormInput
+            label=""
+            name="gainSur10Ans"
+            min={"0"}
+            value={data.gainSur10Ans}
+            type="number"
+            placeholder="0"
+            suffix="€"
+            readonly={true}
+          />
         </div>
         <div className="mt-8 text-xs text-center font-bold text-muted-foreground">
           Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans

@@ -108,6 +108,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
               type="number"
               name=""
               placeholder="Montant"
+              min={"0"}
               value={data.mensualite1}
               onChange={(e) => onChange("mensualite1", e.target.value)}
             />
@@ -128,6 +129,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
               className="px-1 py-2 mt-4 w-20 text-xs text-center border border-slate-300 rounded-md"
               type="number"
               name=""
+              min={"0"}
               value={data.mensualiteConfort}
               onChange={(e) => onChange("mensualiteConfort", e.target.value)}
               placeholder="Montant"

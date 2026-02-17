@@ -106,7 +106,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
         {/* Evolution */}
         <SectionCard title="Répartition actuelle de la facture énergétique" icon={BarChart3}>
           <div className="grid grid-cols-1 gap-x-8">
-            <SummaryRow label="Chauffage" value={data.evolution.montantChauffage ? `${data.evolution.montantChauffage} €` : ""} />
+            <SummaryRow label="Chauffage" value={data.client.montantChauffage ? `${data.client.montantChauffage} €` : ""} />
             <SummaryRow label="Eau chaude sanitaire (ECS)" value={data.evolution.montantECS ? `${data.evolution.montantECS} €` : ""} />
             <SummaryRow label="Électricité domestique" value={data.evolution.montantElecDomestique ? `${data.evolution.montantElecDomestique} €` : ""} />
             <SummaryRow label="Total" value={data.evolution.totalFactureNRJ ? `${data.evolution.totalFactureNRJ} €` : ""} />
@@ -136,27 +136,27 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
               <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
                 <h5 className="font-semibold text-foreground mb-2">Scénario 1</h5>
                 <p className="text-sm text-muted-foreground">{data.scenarios.scenario1.nom}</p>
-                <p className="text-primary font-medium mt-2">
+                {/* <p className="text-primary font-medium mt-2">
                   {data.scenarios.scenario1.economieAnnuelle ? `Économie: ${data.scenarios.scenario1.economieAnnuelle} €/an` : ""}
-                </p>
+                </p> */}
               </div>
             )}
             {data.scenarios.scenario2.nom && (
               <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
                 <h5 className="font-semibold text-foreground mb-2">Scénario 2</h5>
                 <p className="text-sm text-muted-foreground">{data.scenarios.scenario2.nom}</p>
-                <p className="text-accent font-medium mt-2">
+                {/* <p className="text-accent font-medium mt-2">
                   {data.scenarios.scenario2.economieAnnuelle ? `Économie: ${data.scenarios.scenario2.economieAnnuelle} €/an` : ""}
-                </p>
+                </p> */}
               </div>
             )}
             {data.scenarios.scenario3.nom && (
               <div className="p-4 bg-secondary rounded-lg border border-border">
                 <h5 className="font-semibold text-foreground mb-2">Scénario 3</h5>
                 <p className="text-sm text-muted-foreground">{data.scenarios.scenario3.nom}</p>
-                <p className="text-foreground font-medium mt-2">
+                {/* <p className="text-foreground font-medium mt-2">
                   {data.scenarios.scenario3.economieAnnuelle ? `Économie: ${data.scenarios.scenario3.economieAnnuelle} €/an` : ""}
-                </p>
+                </p> */}
               </div>
             )}
           </div>
@@ -216,8 +216,9 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Catégorie de revenus" value={data.aides.categorieRevenus ? data.aides.categorieRevenus : ""} />
             <SummaryRow label="Coût total de l'installation" value={data.aides.coutTotalInstallation ? `${data.aides.coutTotalInstallation} €` : ""} />
             <SummaryRow label="Prime CEE déduite (sous conditions)" value={data.aides.primeCEE ? `${data.aides.primeCEE} €` : ""} />
+            <SummaryRow label="Reste à charge avant MaPrimeRénov'" value={data.aides.resteAChargeAvantMpr ? `${data.aides.resteAChargeAvantMpr} €` : ""} />
             <SummaryRow label="MaPrimeRénov' (non déduite)" value={data.aides.maPrimeRenov ? `${data.aides.maPrimeRenov} €` : ""} />
-            <SummaryRow label="Reste à charge après MaPrimeRénov'" value={data.aides.resteACharge ? `${data.aides.resteACharge} €` : ""} />
+            <SummaryRow label="Reste à charge après MaPrimeRénov'" value={data.aides.resteAChargeApresMpr ? `${data.aides.resteAChargeApresMpr} €` : ""} />
             <SummaryRow label="Économies estimées sur 10 ans" value={data.aides.economiesSur10Ans ? `${data.aides.economiesSur10Ans} €` : ""} />
             <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
           </div>

@@ -74,6 +74,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               value={data.factureAujourdhui}
               onChange={(v) => onChange("factureAujourdhui", v)}
               type="number"
+              min={"0"}
               placeholder="0"
               suffix="€/an"
             />
@@ -82,6 +83,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               name="facture5Ans"
               value={data.facture5Ans}
               type="text"
+              min={"0"}
               placeholder="0"
               suffix="€/an"
               readonly={true}
@@ -91,6 +93,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               name="facture10Ans"
               value={data.facture10Ans}
               type="text"
+              min={"0"}
               placeholder="0"
               suffix="€/an"
               readonly={true}

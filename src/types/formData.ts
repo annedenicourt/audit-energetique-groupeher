@@ -37,6 +37,8 @@
    typeChauffageAppoint: string;
    ageChauffageAppoint: string;
    coutAnnuelChauffageAppoint: string;
+
+   montantChauffage: string;
    
    // Eau chaude
    typeEauChaude: string;
@@ -80,6 +82,8 @@
    menuiseriesCommentaire: string;
    chauffagePrincipal: string;
    chauffagePrincipalCommentaire: string;
+   chauffageAppoint: string;
+   chauffageAppointCommentaire: string;
    eauChaudeSanitaire: string;
    eauChaudeSanitaireCommentaire: string;
    ventilation: string;
@@ -91,7 +95,6 @@
 
  export interface EvolutionData {
   // Répartition facture
-   montantChauffage: string;
    montantECS: string;
    montantElecDomestique: string;
    totalFactureNRJ: string;
@@ -170,7 +173,8 @@
    coutTotalInstallation: string;
    primeCEE: string;
    maPrimeRenov: string;
-   resteACharge: string;
+   resteAChargeAvantMpr: string;
+   resteAChargeApresMpr: string;
    economiesSur10Ans: string;
    gainSur10Ans: string;
  }
@@ -225,6 +229,7 @@
      typeChauffageAppoint: "",
      ageChauffageAppoint: "",
      coutAnnuelChauffageAppoint: "",
+     montantChauffage:"",
      temperatureJour: "",
      temperatureNuit: "",
      typeEauChaude: "",
@@ -255,6 +260,8 @@
      menuiseriesCommentaire: "",
      chauffagePrincipal: "",
      chauffagePrincipalCommentaire: "",
+     chauffageAppoint: "",
+     chauffageAppointCommentaire: "",
      eauChaudeSanitaire: "",
      eauChaudeSanitaireCommentaire: "",
      ventilation: "",
@@ -262,7 +269,6 @@
      notes: "",
    },
    evolution: {
-     montantChauffage: "",
      montantECS: "",
      montantElecDomestique: "",
     totalFactureNRJ: "",
@@ -320,7 +326,8 @@
      coutTotalInstallation: "",
      primeCEE: "",
      maPrimeRenov: "",
-     resteACharge: "",
+     resteAChargeAvantMpr: "",
+     resteAChargeApresMpr: "",
      economiesSur10Ans: "",
      gainSur10Ans: "",
    },

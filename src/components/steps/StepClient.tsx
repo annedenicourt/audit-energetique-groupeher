@@ -214,7 +214,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.coutAnnuelChauffage}
             onChange={(v) => onChange("coutAnnuelChauffage", v)}
             type="number"
-            placeholder="1500"
+            placeholder="0"
             suffix="€"
           />
           <div className="grid grid-cols-2 gap-4">
@@ -317,7 +317,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
 
       {/* Facture électricité */}
       <SectionCard title="Facture électricité globale" icon={Receipt}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="">
           <FormInput
             label="Total annuel"
             name="factureElecAnnuelle"
@@ -327,39 +327,21 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="0"
             suffix="€/an"
           />
-          {/* <FormInput
-            label="Total mensuel"
-            name="factureElecMensuelle"
-            value={data.factureElecMensuelle}
-            onChange={(v) => onChange("factureElecMensuelle", v)}
-            type="number"
-            placeholder="0"
-            suffix="€/mois"
-          /> */}
         </div>
       </SectionCard>
 
       {/* Facture énergétique globale */}
       <SectionCard title="Facture énergétique globale" icon={Receipt}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="">
           <FormInput
             label="Total annuel"
             name="factureEnergieAnnuelle"
             value={data.factureEnergieAnnuelle}
-            onChange={(v) => onChange("factureEnergieAnnuelle", v)}
             type="number"
             placeholder="0"
             suffix="€/an"
+            readonly={true}
           />
-          {/* <FormInput
-            label="Total mensuel"
-            name="factureEnergieMensuelle"
-            value={data.factureEnergieMensuelle}
-            onChange={(v) => onChange("factureEnergieMensuelle", v)}
-            type="number"
-            placeholder="0"
-            suffix="€/mois"
-          /> */}
         </div>
       </SectionCard>
 

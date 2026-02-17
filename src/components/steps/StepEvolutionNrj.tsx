@@ -1,13 +1,11 @@
 import React, { useMemo, useState } from "react";
-import { Receipt, Wrench, HandCoins, FileText, Zap, ChartLine } from "lucide-react";
+import { FileText, Zap, ChartLine } from "lucide-react";
 import FormInput from "../FormInput";
 import FormTextarea from "../FormTextarea";
 import SectionCard from "../SectionCard";
 import { EvolutionData } from "@/types/formData";
 import FormSelect from "../FormSelect";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   ResponsiveContainer,
@@ -18,14 +16,14 @@ import {
 import { energieOptions } from "@/utils/handleForm";
 import AppModal from "../Modal";
 
-
 interface StepEvolutionProps {
   data: EvolutionData;
   onChange: (field: keyof EvolutionData, value: string) => void;
+  montantChauffage: string;
 }
 
 
-const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
+const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, montantChauffage }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string, caption: string } | null>(null);
@@ -76,17 +74,18 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
       </div>
       {/* Répartition facture */}
       <SectionCard title="Répartition de la facture énergétique" icon={Zap}>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
-            label="Chauffage"
+            label="Chauffage (ECS)"
             name="montantChauffage"
-            value={data.montantChauffage}
-            onChange={(v) => onChange("montantChauffage", v)}
+            value={montantChauffage}
+            //onChange={(v) => onChange("montantChauffage", v)}
             type="number"
             placeholder="0"
             suffix="€/an"
+            readonly={true}
           />
-          <FormInput
+          {/* <FormInput
             label="Eau chaude sanitaire (ECS)"
             name="montantECS"
             value={data.montantECS}
@@ -94,20 +93,21 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange }) => {
             type="number"
             placeholder="0"
             suffix="€/an"
-          />
+          /> */}
           <FormInput
-            label="Électricité domestique"
+            label="Électricité domestique (ECS)"
             name="montantElecDomestique"
             value={data.montantElecDomestique}
             onChange={(v) => onChange("montantElecDomestique", v)}
             type="number"
+            min={"0"}
             placeholder="0"
             suffix="€/an"
           />
           <FormInput
             label="Total"
             name="totalFactureNRJ"
-            value={data.totalFactureNRJ}
+            value={data.montantElecDomestique ? data.totalFactureNRJ : montantChauffage}
             type="number"
             placeholder="0"
             suffix="€/an"

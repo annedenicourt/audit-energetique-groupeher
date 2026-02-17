@@ -34,6 +34,17 @@ const ScenarioCard: React.FC<{
         value={scenario.plusValueLogement}
         onChange={(v) => onChange("plusValueLogement", v)}
         type="number"
+        min={"0"}
+        placeholder="0"
+        suffix="%"
+      />
+      <FormInput
+        label="Économies"
+        name={`${title}-plusvalue`}
+        value={scenario.economieAnnuelle}
+        onChange={(v) => onChange("economieAnnuelle", v)}
+        type="number"
+        min={"0"}
         placeholder="0"
         suffix="%"
       />
@@ -41,10 +52,11 @@ const ScenarioCard: React.FC<{
         label="Facture énergétique après travaux"
         name={`${title}-facture`}
         value={scenario.factureApres}
-        onChange={(v) => onChange("factureApres", v)}
         type="number"
+        min={"0"}
         placeholder="0"
         suffix="€/an"
+        readonly={true}
       />
       <FormSelect
         label="Lettre énergétique après travaux"

@@ -10,7 +10,7 @@ import { DimensionnementData, ExponentielData, FormData, initialFormData, Scenar
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
-import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaCharge, computeGain10ans, computeEcoMoinsMensualite, computeCoutNrjMoins5ans } from "@/utils/energyCalculation";
+import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaChargeAvant, computeResteaChargeApres, computeGain10ans, computeEcoMoinsMensualite, computeCoutNrjMoins5ans, computeNRJAnnuel, computeTotalChauffage, computefactureApres } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
 import StepDossier from "@/components/steps/StepDossier";
@@ -68,7 +68,9 @@ const Index: React.FC = () => {
         client: {
           ...updatedClient,
           dispoMaPrimeRenov: computeDispoMPR(updatedClient),
-          montantAides: computeTotalAides(updatedClient)
+          montantAides: computeTotalAides(updatedClient),
+          factureEnergieAnnuelle: computeNRJAnnuel(updatedClient),
+          montantChauffage: computeTotalChauffage(updatedClient)
         },
       };
     });
@@ -80,11 +82,14 @@ const Index: React.FC = () => {
         [field]: value,
       };
 
+      const montantChauffage = computeTotalChauffage(prev.client)
+
       return {
         ...prev,
         evolution: {
           ...updatedEvolution,
-          totalFactureNRJ: computeTotalNrj(updatedEvolution),
+          // montantChauffage: prev.client.montantChauffage,
+          totalFactureNRJ: computeTotalNrj(updatedEvolution, montantChauffage),
           coutNrjMoins5ans: computeCoutNrjMoins5ans(updatedEvolution),
           coutNrj5Ans: computeCoutNrj5ans(updatedEvolution),
           coutNrj10Ans: computeCoutNrj10ans(updatedEvolution),
@@ -102,11 +107,20 @@ const Index: React.FC = () => {
     }));
   };
 
-  const updateScenarios = (field: keyof FormData["scenarios"] | string, value: string | ScenarioData) => {
-    setFormData((prev) => ({
-      ...prev,
-      scenarios: { ...prev.scenarios, [field]: value },
-    }));
+  const updateScenarios = (scenarioKey: keyof FormData["scenarios"] | string, updatedScenario: ScenarioData) => {
+    setFormData((prev) => {
+      const percent = Number(updatedScenario.economieAnnuelle || 0);
+      return {
+        ...prev,
+        scenarios: {
+          ...prev.scenarios,
+          [scenarioKey]: {
+            ...updatedScenario,
+            factureApres: computefactureApres(percent, prev.evolution),
+          },
+        },
+      };
+    });
   };
 
   const updateDimensionnement = (
@@ -118,7 +132,6 @@ const Index: React.FC = () => {
       dimensionnement: { ...prev.dimensionnement, [field]: value },
     }));
   };
-
 
   const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) => {
     setFormData((prev) => {
@@ -173,7 +186,8 @@ const Index: React.FC = () => {
         ...prev,
         aides: {
           ...updatedAides,
-          resteACharge: computeResteaCharge(updatedAides),
+          resteAChargeAvantMpr: computeResteaChargeAvant(updatedAides),
+          resteAChargeApresMpr: computeResteaChargeApres(updatedAides),
           gainSur10Ans: computeGain10ans(updatedAides)
         },
       };
@@ -208,9 +222,9 @@ const Index: React.FC = () => {
       /* case 2:
         return <StepHabitation data={formData.habitation} onChange={updateHabitation} />; */
       case 3:
-        return <StepBilan data={formData.bilan} onChange={updateBilan} />;
+        return <StepBilan data={formData.bilan} onChange={updateBilan} factureNrjAnnuelle={formData.client.factureEnergieAnnuelle} />;
       case 4:
-        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} />;
+        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} montantChauffage={formData.client.montantChauffage} />;
       case 5:
         return <StepScenarios data={formData.scenarios} onChange={updateScenarios} />;
       case 6:

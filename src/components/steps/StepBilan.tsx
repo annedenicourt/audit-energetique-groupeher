@@ -10,9 +10,10 @@ import { classeOptions, etatOptions } from "@/utils/handleForm";
 interface StepBilanProps {
   data: BilanData;
   onChange: (field: keyof BilanData, value: string) => void;
+  factureNrjAnnuelle: string;
 }
 
-const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
+const StepBilan: React.FC<StepBilanProps> = ({ data, onChange, factureNrjAnnuelle }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -39,6 +40,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
           <FormInput
             label="Consommation actuelle"
             name="consommationActuelle"
+            min={"0"}
             value={data.consommationActuelle}
             onChange={(v) => onChange("consommationActuelle", v)}
             type="number"
@@ -48,11 +50,12 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
           <FormInput
             label="Facture énergétique annuelle"
             name="factureAnnuelle"
-            value={data.factureAnnuelle}
-            onChange={(v) => onChange("factureAnnuelle", v)}
+            min={"0"}
+            value={factureNrjAnnuelle}
             type="number"
             placeholder="0"
             suffix="€/an"
+            readonly={true}
           />
         </div>
       </SectionCard>
@@ -135,6 +138,26 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange }) => {
                 name="chauffagePrincipalCommentaire"
                 value={data.chauffagePrincipalCommentaire}
                 onChange={(v) => onChange("chauffagePrincipalCommentaire", v)}
+                placeholder="Observations..."
+              />
+            </div>
+          </div>
+
+          {/* Chauffage d'appoint */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pb-4 border-b border-border">
+            <FormSelect
+              label="Chauffage d'appoint"
+              name="chauffageAppoint"
+              value={data.chauffageAppoint}
+              onChange={(v) => onChange("chauffageAppoint", v)}
+              options={etatOptions}
+            />
+            <div className="md:col-span-2">
+              <FormInput
+                label="Commentaires"
+                name="chauffageAppointCommentaire"
+                value={data.chauffageAppointCommentaire}
+                onChange={(v) => onChange("chauffageAppointCommentaire", v)}
                 placeholder="Observations..."
               />
             </div>
