@@ -14,6 +14,33 @@ export type Database = {
   }
   public: {
     Tables: {
+      dossiers: {
+        Row: {
+          client_name: string | null
+          created_at: string
+          id: string
+          payload: Json
+          pdf_path: string
+          user_id: string
+        }
+        Insert: {
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          payload: Json
+          pdf_path: string
+          user_id: string
+        }
+        Update: {
+          client_name?: string | null
+          created_at?: string
+          id?: string
+          payload?: Json
+          pdf_path?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       etudes_energetiques: {
         Row: {
           client_name: string | null
@@ -62,34 +89,6 @@ export type Database = {
         }
         Relationships: []
       }
-      dossiers: {
-        Row: {
-          id: string
-          user_id: string
-          client_name: string | null
-          pdf_path: string
-          payload: Json
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          client_name?: string | null
-          pdf_path: string
-          payload: Json
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          client_name?: string | null
-          pdf_path?: string
-          payload?: Json
-          created_at?: string
-        }
-  Relationships: []
-}
-
     }
     Views: {
       etudes_energetiques_with_email: {

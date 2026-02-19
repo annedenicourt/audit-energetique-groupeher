@@ -6,10 +6,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LayoutList, LayoutGrid, FileText, Search, ArrowUpDown } from "lucide-react";
+import {
+  LayoutList, LayoutGrid, FileText, Search, ArrowUpDown,
+  LayoutDashboard, Users, FolderOpen, Menu, X, FileCheck,
+  TrendingUp, Activity, Database,
+} from "lucide-react";
 import { toast } from "sonner";
-import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+type AdminView = "dashboard" | "pdf" | "users";
 
 interface Study {
   id: string;
@@ -26,21 +34,288 @@ interface Profile {
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
 
-const Admin: React.FC = () => {
-  const navigate = useNavigate();
-  const [studies, setStudies] = useState<Study[]>([]);
-  const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<"list" | "cards">("list");
+// ─── Sidebar nav items ─────────────────────────────────────────────────────────
+
+const NAV_ITEMS: { view: AdminView; label: string; icon: React.FC<{ className?: string }> }[] = [
+  { view: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { view: "pdf",       label: "PDFs",      icon: FolderOpen },
+  { view: "users",     label: "Utilisateurs", icon: Users },
+];
+
+// ─── Sidebar component ─────────────────────────────────────────────────────────
+
+const AdminSidebar: React.FC<{ current: AdminView; onChange: (v: AdminView) => void }> = ({ current, onChange }) => (
+  <nav className="flex flex-col h-full">
+    <div className="px-6 py-5 border-b border-sidebar-border">
+      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">Groupe HER-ENR</p>
+      <h2 className="text-lg font-bold text-foreground font-display">Espace admin</h2>
+    </div>
+    <ul className="flex-1 px-3 py-4 space-y-1">
+      {NAV_ITEMS.map(({ view, label, icon: Icon }) => {
+        const isActive = current === view;
+        return (
+          <li key={view}>
+            <button
+              onClick={() => onChange(view)}
+              className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150
+                ${isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+            >
+              <Icon className="h-4 w-4 shrink-0" />
+              {label}
+              {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary-foreground/70" />}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+);
+
+// ─── Dashboard view ────────────────────────────────────────────────────────────
+
+const AdminDashboardView: React.FC<{ studyCount: number; profileCount: number }> = ({ studyCount, profileCount }) => (
+  <div className="space-y-6">
+    <div>
+      <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+      <p className="text-sm text-muted-foreground mt-1">Vue d'ensemble de l'activité.</p>
+    </div>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <Card>
+        <CardContent className="p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+            <FileText className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Études réalisées</p>
+            <p className="text-2xl font-bold text-foreground">{studyCount}</p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-accent/10 flex items-center justify-center">
+            <Users className="h-5 w-5 text-accent" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Commerciaux</p>
+            <p className="text-2xl font-bold text-foreground">{profileCount}</p>
+          </div>
+        </CardContent>
+      </Card>
+      <Card>
+        <CardContent className="p-5 flex items-center gap-4">
+          <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center">
+            <Activity className="h-5 w-5 text-secondary-foreground" />
+          </div>
+          <div>
+            <p className="text-xs text-muted-foreground">Statut</p>
+            <p className="text-sm font-semibold text-foreground">Opérationnel</p>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+    <Card>
+      <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-2 min-h-[160px]">
+        <TrendingUp className="h-8 w-8 text-muted-foreground/40" />
+        <p className="text-sm text-muted-foreground">Graphiques & statistiques — à venir</p>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+// ─── PDF view (existing logic, unchanged) ─────────────────────────────────────
+
+const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean }> = ({ studies, profiles, loading }) => {
+  const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("date_desc");
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
-    profiles.forEach((profile) => map.set(profile.id, profile.display_name ?? "—"));
+    profiles.forEach((p) => map.set(p.id, p.display_name ?? "—"));
     return map;
   }, [profiles]);
+
+  const commercials = useMemo(
+    () => profiles.filter((p) => studies.some((s) => s.user_id === p.id)),
+    [profiles, studies]
+  );
+
+  const filtered = useMemo(() => {
+    let result = studies;
+    if (search) {
+      const v = search.toLowerCase();
+      result = result.filter((s) => s.client_name?.toLowerCase().includes(v));
+    }
+    if (filterCommercial !== "all") {
+      result = result.filter((s) => s.user_id === filterCommercial);
+    }
+    const gc = (uid: string) => (profileMap.get(uid) ?? "").toLowerCase();
+    return [...result].sort((a, b) => {
+      switch (sortKey) {
+        case "client_name_asc":  return (a.client_name ?? "").localeCompare(b.client_name ?? "");
+        case "client_name_desc": return (b.client_name ?? "").localeCompare(a.client_name ?? "");
+        case "commercial_asc":   return gc(a.user_id).localeCompare(gc(b.user_id));
+        case "commercial_desc":  return gc(b.user_id).localeCompare(gc(a.user_id));
+        case "date_asc":         return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case "date_desc":
+        default:                 return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      }
+    });
+  }, [studies, search, filterCommercial, sortKey, profileMap]);
+
+  const handleOpenPdf = async (pdfPath: string | null) => {
+    if (!pdfPath) { toast.error("Aucun PDF disponible pour cette étude."); return; }
+    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(pdfPath, 60);
+    if (error || !data?.signedUrl) { toast.error("Impossible de générer le lien PDF."); return; }
+    window.open(data.signedUrl, "_blank");
+  };
+
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-foreground">Études réalisées</h1>
+        <p className="text-sm text-muted-foreground mt-1">Toutes les études et leurs PDFs.</p>
+      </div>
+
+      {/* Toolbar */}
+      <div className="flex flex-col md:flex-row gap-3 items-start md:items-center flex-wrap">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input placeholder="Rechercher un client…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
+        </div>
+        <Select value={filterCommercial} onValueChange={setFilterCommercial}>
+          <SelectTrigger className="w-[200px]">
+            <SelectValue placeholder="Tous les commerciaux" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tous les commerciaux</SelectItem>
+            {commercials.map((c) => (
+              <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        <Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
+          <SelectTrigger className="w-[220px]">
+            <ArrowUpDown className="h-4 w-4 mr-2" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="date_desc">Date ↓ récente</SelectItem>
+            <SelectItem value="date_asc">Date ↑ ancienne</SelectItem>
+            <SelectItem value="client_name_asc">Client A→Z</SelectItem>
+            <SelectItem value="client_name_desc">Client Z→A</SelectItem>
+            <SelectItem value="commercial_asc">Commercial A→Z</SelectItem>
+            <SelectItem value="commercial_desc">Commercial Z→A</SelectItem>
+          </SelectContent>
+        </Select>
+        <div className="flex gap-1 border rounded-md p-1">
+          <Button variant={listView === "list" ? "default" : "ghost"} size="icon" onClick={() => setListView("list")} aria-label="Vue liste">
+            <LayoutList className="h-4 w-4" />
+          </Button>
+          <Button variant={listView === "cards" ? "default" : "ghost"} size="icon" onClick={() => setListView("cards")} aria-label="Vue cartes">
+            <LayoutGrid className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {loading && (
+        <div className="space-y-3">
+          {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-md" />)}
+        </div>
+      )}
+
+      {!loading && filtered.length === 0 && (
+        <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">Aucune étude trouvée.</div>
+      )}
+
+      {!loading && filtered.length > 0 && listView === "list" && (
+        <div className="rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Client</TableHead>
+                <TableHead>Commercial</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead className="text-right">PDF</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((item) => (
+                <TableRow key={item.id}>
+                  <TableCell className="font-medium">{item.client_name ?? "—"}</TableCell>
+                  <TableCell>{profileMap.get(item.user_id) ?? "—"}</TableCell>
+                  <TableCell>{formatDate(item.created_at)}</TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => handleOpenPdf(item.pdf_path)} disabled={!item.pdf_path}>
+                      <FileText className="h-4 w-4 mr-1" />Ouvrir
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
+
+      {!loading && filtered.length > 0 && listView === "cards" && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filtered.map((s) => (
+            <Card key={s.id}>
+              <CardContent className="p-5 space-y-3">
+                <p className="font-semibold text-foreground truncate">{s.client_name ?? "—"}</p>
+                <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>
+                <p className="text-sm text-muted-foreground">{formatDate(s.created_at)}</p>
+                <Button variant="outline" size="sm" className="w-full" onClick={() => handleOpenPdf(s.pdf_path)} disabled={!s.pdf_path}>
+                  <FileText className="h-4 w-4 mr-1" />Ouvrir PDF
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─── Users view (placeholder) ──────────────────────────────────────────────────
+
+const AdminUsersView: React.FC = () => (
+  <div className="space-y-6">
+    <div>
+      <h1 className="text-2xl font-bold text-foreground">Utilisateurs</h1>
+      <p className="text-sm text-muted-foreground mt-1">Gestion des comptes commerciaux.</p>
+    </div>
+    <Card>
+      <CardContent className="p-10 flex flex-col items-center justify-center gap-3 text-center min-h-[200px]">
+        <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center">
+          <Database className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <p className="font-semibold text-foreground">Gestion des utilisateurs</p>
+        <p className="text-sm text-muted-foreground max-w-xs">
+          Création, modification et suppression des comptes — à venir.
+        </p>
+      </CardContent>
+    </Card>
+  </div>
+);
+
+// ─── Main Admin page ───────────────────────────────────────────────────────────
+
+const Admin: React.FC = () => {
+  const navigate = useNavigate();
+  const [view, setView] = useState<AdminView>("dashboard");
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const [studies, setStudies] = useState<Study[]>([]);
+  const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,232 +324,61 @@ const Admin: React.FC = () => {
         supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
         supabase.from("profiles").select("id, display_name"),
       ]);
-
-      if (studiesRes.error) {
-        toast.error("Erreur chargement études: " + studiesRes.error.message);
-      } else {
-        setStudies(studiesRes.data ?? []);
-      }
-
-      if (profilesRes.error) {
-        toast.error("Erreur chargement profils: " + profilesRes.error.message);
-      } else {
-        setProfiles(profilesRes.data ?? []);
-      }
-
+      if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
+      else setStudies(studiesRes.data ?? []);
+      if (profilesRes.error) toast.error("Erreur chargement profils: " + profilesRes.error.message);
+      else setProfiles(profilesRes.data ?? []);
       setLoading(false);
     };
     fetchData();
   }, []);
 
-  const handleOpenPdf = async (pdfPath: string | null) => {
-    if (!pdfPath) {
-      toast.error("Aucun PDF disponible pour cette étude.");
-      return;
-    }
-    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(pdfPath, 60);
-    if (error || !data?.signedUrl) {
-      toast.error("Impossible de générer le lien PDF.");
-      return;
-    }
-    window.open(data.signedUrl, "_blank");
+  const handleNav = (v: AdminView) => {
+    setView(v);
+    setMobileOpen(false);
   };
 
-  const filtered = useMemo(() => {
-    let result = studies;
-
-    if (search) {
-      const value = search.toLowerCase();
-      result = result.filter((item) => item.client_name?.toLowerCase().includes(value));
-    }
-
-    if (filterCommercial && filterCommercial !== "all") {
-      result = result.filter((item) => item.user_id === filterCommercial);
-    }
-
-    const getCommercial = (uid: string) => (profileMap.get(uid) ?? "").toLowerCase();
-
-    result = [...result].sort((a, b) => {
-      switch (sortKey) {
-        case "client_name_asc":
-          return (a.client_name ?? "").localeCompare(b.client_name ?? "");
-        case "client_name_desc":
-          return (b.client_name ?? "").localeCompare(a.client_name ?? "");
-        case "commercial_asc":
-          return getCommercial(a.user_id).localeCompare(getCommercial(b.user_id));
-        case "commercial_desc":
-          return getCommercial(b.user_id).localeCompare(getCommercial(a.user_id));
-        case "date_asc":
-          return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-        case "date_desc":
-        default:
-          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      }
-    });
-
-    return result;
-  }, [studies, search, filterCommercial, sortKey, profileMap]);
-
-  const commercials = useMemo(
-    () => profiles.filter((profile) => studies.some((study) => study.user_id === profile.id)),
-    [profiles, studies]
-  );
-
-  const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="mb-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-sm text-muted-foreground hover:text-primary"
-        >
-          ← Retour Espace Commercial
-        </button>
-      </div>
-      <div className="max-w-6xl mx-auto space-y-6">
-        <h1 className="text-3xl font-bold text-foreground">Études réalisées</h1>
-
-        {/* Toolbar */}
-        <div className="flex flex-col md:flex-row gap-3 items-start md:items-center flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Rechercher un client…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-
-          <Select value={filterCommercial} onValueChange={setFilterCommercial}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Tous les commerciaux" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Tous les commerciaux</SelectItem>
-              {commercials.map((c) => (
-                <SelectItem key={c.id} value={c.id}>
-                  {c.display_name ?? c.id}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
-            <SelectTrigger className="w-[220px]">
-              <ArrowUpDown className="h-4 w-4 mr-2" />
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="date_desc">Date ↓ récente</SelectItem>
-              <SelectItem value="date_asc">Date ↑ ancienne</SelectItem>
-              <SelectItem value="client_name_asc">Client A→Z</SelectItem>
-              <SelectItem value="client_name_desc">Client Z→A</SelectItem>
-              <SelectItem value="commercial_asc">Commercial A→Z</SelectItem>
-              <SelectItem value="commercial_desc">Commercial Z→A</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <div className="flex gap-1 border rounded-md p-1">
-            <Button
-              variant={view === "list" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setView("list")}
-              aria-label="Vue liste"
-            >
-              <LayoutList className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={view === "cards" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setView("cards")}
-              aria-label="Vue cartes"
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </Button>
-          </div>
+    <div className="min-h-screen flex w-full bg-background">
+      {/* ── Desktop sidebar ── */}
+      <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-border bg-card">
+        <AdminSidebar current={view} onChange={handleNav} />
+        <div className="px-4 pb-4">
+          <button
+            onClick={() => navigate(-1)}
+            className="w-full text-xs text-muted-foreground hover:text-primary text-left px-4 py-2 rounded-lg hover:bg-muted transition-colors"
+          >
+            ← Retour Espace Commercial
+          </button>
         </div>
+      </aside>
 
-        {/* Loading skeleton */}
-        {loading && (
-          <div className="space-y-3">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <Skeleton key={i} className="h-14 w-full rounded-md" />
-            ))}
-          </div>
-        )}
+      {/* ── Mobile header + drawer ── */}
+      <div className="flex flex-col flex-1 min-w-0">
+        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" aria-label="Menu">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64 p-0">
+              <AdminSidebar current={view} onChange={handleNav} />
+            </SheetContent>
+          </Sheet>
+          <span className="font-bold text-foreground font-display">Espace admin</span>
+        </header>
 
-        {/* Empty state */}
-        {!loading && filtered.length === 0 && (
-          <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">
-            Aucune étude trouvée.
-          </div>
-        )}
-
-        {/* List view */}
-        {!loading && filtered.length > 0 && view === "list" && (
-          <div className="rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Commercial</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead className="text-right">PDF</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filtered.map((item) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.client_name ?? "—"}</TableCell>
-                    <TableCell>{profileMap.get(item.user_id) ?? "—"}</TableCell>
-                    <TableCell>{formatDate(item.created_at)}</TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleOpenPdf(item.pdf_path)}
-                        disabled={!item.pdf_path}
-                      >
-                        <FileText className="h-4 w-4 mr-1" />
-                        Ouvrir
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
-
-        {/* Cards view */}
-        {!loading && filtered.length > 0 && view === "cards" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filtered.map((s) => (
-              <Card key={s.id}>
-                <CardContent className="p-5 space-y-3">
-                  <p className="font-semibold text-foreground truncate">{s.client_name ?? "—"}</p>
-                  <p className="text-sm text-muted-foreground">
-                    Commercial : {profileMap.get(s.user_id) ?? "—"}
-                  </p>
-                  <p className="text-sm text-muted-foreground">{formatDate(s.created_at)}</p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                    onClick={() => handleOpenPdf(s.pdf_path)}
-                    disabled={!s.pdf_path}
-                  >
-                    <FileText className="h-4 w-4 mr-1" />
-                    Ouvrir PDF
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+        {/* ── Content ── */}
+        <main className="flex-1 p-4 md:p-8 overflow-auto">
+          {view === "dashboard" && (
+            <AdminDashboardView studyCount={studies.length} profileCount={profiles.length} />
+          )}
+          {view === "pdf" && (
+            <AdminPdfView studies={studies} profiles={profiles} loading={loading} />
+          )}
+          {view === "users" && <AdminUsersView />}
+        </main>
       </div>
     </div>
   );
