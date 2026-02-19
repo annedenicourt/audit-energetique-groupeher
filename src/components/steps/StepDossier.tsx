@@ -140,7 +140,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
       {/* PIECES CHECKLITS*/}
       <SectionCard title="Éléments pour dossier de financement">
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Pièces / checklist</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Pièces / checklist</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
           <CheckboxField label="Devis non signé" checked={form.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} />
           <CheckboxField label="Devis signé" checked={form.devisSigne} onChange={(v) => update("devisSigne", v)} />
@@ -157,22 +157,30 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Pouvoir" checked={form.pouvoir} onChange={(v) => update("pouvoir", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Compte Prime EDF</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Compte Prime EDF</h3>
+        <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="underline">Prime CEE déduite</div>
+          <div className="underline">Compte Prime CEE EDF</div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <FormInput label="Montant Prime EDF" name="montantPrimeEDF" value={form.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" />
           <FormInput label="Mail" name="mailPrimeEDF" value={form.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
           <FormInput label="MDP" name="mdpPrimeEDF" value={form.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Compte Prime Rénov</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Compte Prime Rénov</h3>
+        <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="underline">Non éligible</div>
+          <div className="underline">Compte MaPrimeRenov'</div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
           <FormInput label="Montant Prime Rénov" name="montantPrimeRenov" value={form.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" />
-          <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} />
+          <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" />
           <FormInput label="MDP" name="mdpPrimeRenov" value={form.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} />
         </div>
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Si le client n'a pas d'adresse mail</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput label="Gmail créé" name="gmailCree" value={form.gmailCree} onChange={(v) => update("gmailCree", v)} />
+          <FormInput label="Gmail créé" name="gmailCree" value={form.gmailCree} onChange={(v) => update("gmailCree", v)} type="email" />
           <FormInput label="MDP" name="mdpGmail" value={form.mdpGmail} onChange={(v) => update("mdpGmail", v)} />
         </div>
       </SectionCard>
@@ -189,23 +197,24 @@ const StepDossier: React.FC<StepDossierProps> = () => {
       {/* MAISON */}
       <SectionCard title="Maison">
         <FormInput type="number" label="Année de construction" name="anneeConstruction_d" value={form.anneeConstruction} onChange={(v) => update("anneeConstruction", v)} />
-
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Structure</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Structure</h3>
         <div className="mb-2">
           <CheckboxField label="Plain-pied" checked={form.plainPied} onChange={(v) => update("plainPied", v)} />
           <CheckboxField label="Étages" checked={form.etages} onChange={(v) => update("etages", v)} />
-          {form.etages && <FormInput label="Nombre d'étages" name="nbEtages" value={form.nbEtages} onChange={(v) => update("nbEtages", v)} />}
+          {form.etages && <FormInput className="my-4" type="number" label="Nombre d'étages" name="nbEtages" value={form.nbEtages} onChange={(v) => update("nbEtages", v)} />}
           <CheckboxField label="Sous-sol" checked={form.sousSol} onChange={(v) => update("sousSol", v)} />
-          <CheckboxField label="Vide sanitaire" checked={form.videSanitaire} onChange={(v) => update("videSanitaire", v)} />
+          <CheckboxField label="Vide sanitaire" checked={form.videSanitaire} onChange={(v) => {
+            update("videSanitaire", v);
+            if (!v) update("videSanitaireAccessible", false);
+          }} />
           {form.videSanitaire &&
-            <FormSelect
-              label="Vide sanitaire accessible ? "
-              //placeholder=""
-              name="videSanitaireAccessible"
-              value={form.videSanitaireAccessible}
-              onChange={(v) => update("videSanitaireAccessible", v)}
-              options={[{ value: "accessible", label: "Accessible" }, { value: "non_accessible", label: "Pas accessible" },]}
-            />
+            <div className="ml-4">
+              <CheckboxField
+                label="Accessible ?"
+                checked={form.videSanitaireAccessible}
+                onChange={(v) => update("videSanitaireAccessible", v)}
+              />
+            </div>
           }
         </div>
         {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -213,12 +222,12 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           {form.videSanitaire && <FormInput label="Accessible" name="videSanitaireAccessible" value={form.videSanitaireAccessible} onChange={(v) => update("videSanitaireAccessible", v)} />}
         </div> */}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
           <FormInput label="Type de mur" name="typeMur_d" value={form.typeMur} onChange={(v) => update("typeMur", v)} />
           <FormInput type="number" label="Épaisseur mur" name="epaisseurMur_d" value={form.epaisseurMur} onChange={(v) => update("epaisseurMur", v)} suffix="cm" />
         </div>
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Combles</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Combles</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Comble perdu" checked={form.comblePerdu} onChange={(v) => update("comblePerdu", v)} />
           <CheckboxField label="Comble aménagé (sous rampant)" checked={form.combleAmenage} onChange={(v) => update("combleAmenage", v)} />
@@ -235,14 +244,14 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           </div>
         )}
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Type de plancher</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de plancher</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Bois" checked={form.plancherBois} onChange={(v) => update("plancherBois", v)} />
           <CheckboxField label="Placo" checked={form.plancherPlaco} onChange={(v) => update("plancherPlaco", v)} />
           <CheckboxField label="Hourdis" checked={form.plancherHourdis} onChange={(v) => update("plancherHourdis", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Chauffage actuel</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Chauffage actuel</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Fioul" checked={form.chauffageFioul} onChange={(v) => update("chauffageFioul", v)} />
           <CheckboxField label="Gaz" checked={form.chauffageGaz} onChange={(v) => update("chauffageGaz", v)} />
@@ -258,7 +267,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <FormSelect label="Circuit hydraulique fonctionnel" name="circuitHydraulique" value={form.circuitHydraulique} onChange={(v) => update("circuitHydraulique", v)} options={OUI_NON} />
         </div>
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Type de radiateurs</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de radiateurs</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Radiat. Acier" checked={form.radiateurAcier} onChange={(v) => update("radiateurAcier", v)} />
           <CheckboxField label="Radiat. Alu" checked={form.radiateurAlu} onChange={(v) => update("radiateurAlu", v)} />
@@ -267,7 +276,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
         </div>
         <FormInput label="Nombre de radiateurs" name="nombreRadiateurs" value={form.nombreRadiateurs} onChange={(v) => update("nombreRadiateurs", v)} />
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Thermostats</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Thermostats</h3>
         <div className="flex flex-wrap gap-6">
           <CheckboxField label="Kit bi-zone" checked={form.thermostatBiZone} onChange={(v) => update("thermostatBiZone", v)} />
           <CheckboxField label="Thermostat filaire" checked={form.thermostatFilaire} onChange={(v) => update("thermostatFilaire", v)} />
@@ -308,7 +317,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
         <FormSelect label="Chape à faire" name="chapeAFairePac" value={form.chapeAFairePac} onChange={(v) => update("chapeAFairePac", v)} options={OUI_NON} />
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Passage des liaisons</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Passage des liaisons</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Comble" checked={form.passageLiaisonsComble} onChange={(v) => update("passageLiaisonsComble", v)} />
           <CheckboxField label="Direct" checked={form.passageLiaisonsDirect} onChange={(v) => update("passageLiaisonsDirect", v)} />
@@ -321,7 +330,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
         <FormSelect label="Tranchée à faire" name="trancheeAFairePac" value={form.trancheeAFairePac} onChange={(v) => update("trancheeAFairePac", v)} options={OUI_NON} />
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Type de pose</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de pose</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Sol" checked={form.typePosePacSol} onChange={(v) => update("typePosePacSol", v)} />
           <CheckboxField label="Mur" checked={form.typePosePacMur} onChange={(v) => update("typePosePacMur", v)} />
@@ -354,7 +363,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Bi-bloc" checked={form.btdBiBloc} onChange={(v) => update("btdBiBloc", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Emplacement ballon</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Emplacement ballon</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Local tech." checked={form.btdEmplacementLocalTech} onChange={(v) => update("btdEmplacementLocalTech", v)} />
           <CheckboxField label="Garage" checked={form.btdEmplacementGarage} onChange={(v) => update("btdEmplacementGarage", v)} />
@@ -365,7 +374,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <FormInput label="" name="btdEmplacementAutreTexte" value={form.btdEmplacementAutreTexte} onChange={(v) => update("btdEmplacementAutreTexte", v)} placeholder="Précisez" />
         )}
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Emplacement groupe ext.</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Sol" checked={form.btdGroupeExtSol} onChange={(v) => update("btdGroupeExtSol", v)} />
           <CheckboxField label="Mur" checked={form.btdGroupeExtMur} onChange={(v) => update("btdGroupeExtMur", v)} />
@@ -384,20 +393,22 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Console" checked={form.pacAirAirConsole} onChange={(v) => update("pacAirAirConsole", v)} />
           <CheckboxField label="Gainable" checked={form.pacAirAirGainable} onChange={(v) => update("pacAirAirGainable", v)} />
         </div>
-
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Splits</h4>
         {form.splits.map((split, i) => (
-          <div key={i} className="grid grid-cols-2 md:grid-cols-5 gap-3 p-3">
-            <FormInput label={`Split ${i + 1} – Pièce`} name={`split_${i}_piece`} value={split.nomPiece} onChange={(v) => updateSplit(i, "nomPiece", v)} />
-            <FormInput label="Puissance" name={`split_${i}_kw`} value={split.puissanceKw} onChange={(v) => updateSplit(i, "puissanceKw", v)} suffix="kW" />
-            <FormSelect label="Dos à dos" name={`split_${i}_dos`} value={split.dosADos} onChange={(v) => updateSplit(i, "dosADos", v)} options={OUI_NON} />
-            <FormSelect label="Pompe de relevage" name={`split_${i}_pompe`} value={split.pompeRelevage} onChange={(v) => updateSplit(i, "pompeRelevage", v)} options={OUI_NON} />
-            <div className="flex items-end">
-              <button type="button" onClick={() => removeSplit(i)} className="mb-4 text-destructive hover:text-destructive/80">
-                <Trash2 size={20} />
-              </button>
+          <div key={i} >
+            <h3 className="font-semibold text-lime-600">Split {i + 1}</h3>
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 p-3">
+              <FormInput label={`Pièce`} name={`split_${i}_piece`} value={split.nomPiece} onChange={(v) => updateSplit(i, "nomPiece", v)} />
+              <FormInput label="Puissance" name={`split_${i}_kw`} value={split.puissanceKw} onChange={(v) => updateSplit(i, "puissanceKw", v)} suffix="kW" />
+              <FormSelect label="Dos à dos" name={`split_${i}_dos`} value={split.dosADos} onChange={(v) => updateSplit(i, "dosADos", v)} options={OUI_NON} />
+              <FormSelect label="Pompe de relevage" name={`split_${i}_pompe`} value={split.pompeRelevage} onChange={(v) => updateSplit(i, "pompeRelevage", v)} options={OUI_NON} />
+              <div className="flex items-end">
+                <button type="button" onClick={() => removeSplit(i)} className="mb-4 text-destructive hover:text-destructive/80">
+                  <Trash2 size={20} />
+                </button>
+              </div>
             </div>
           </div>
+
         ))}
         <div className="">
           <button type="button" onClick={addSplit} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
@@ -405,7 +416,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           </button>
         </div>
 
-        <h4 className="font-semibold text-sm mt-4 mb-2 text-muted-foreground">Emplacement groupe ext.</h4>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Sol" checked={form.pacAirAirGroupeExtSol} onChange={(v) => update("pacAirAirGroupeExtSol", v)} />
           <CheckboxField label="Mur" checked={form.pacAirAirGroupeExtMur} onChange={(v) => update("pacAirAirGroupeExtMur", v)} />
@@ -427,33 +438,33 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
       {/* PV ou SSC */}
       <SectionCard title="PV ou SSC">
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Type de pose</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Type de pose</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Au sol" checked={form.pvTypePoseAuSol} onChange={(v) => update("pvTypePoseAuSol", v)} />
           <CheckboxField label="Toiture" checked={form.pvTypePoseToiture} onChange={(v) => update("pvTypePoseToiture", v)} />
           <CheckboxField label="Murale SSC" checked={form.pvTypePoseMuraleSsc} onChange={(v) => update("pvTypePoseMuraleSsc", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Format de pose</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Format de pose</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Portrait" checked={form.pvFormatPortrait} onChange={(v) => update("pvFormatPortrait", v)} />
           <CheckboxField label="Paysage" checked={form.pvFormatPaysage} onChange={(v) => update("pvFormatPaysage", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Type de toiture</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Type de toiture</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Bac acier" checked={form.pvToitureBacAcier} onChange={(v) => update("pvToitureBacAcier", v)} />
           <CheckboxField label="Éverite" checked={form.pvToitureEverite} onChange={(v) => update("pvToitureEverite", v)} />
           <CheckboxField label="Tuile" checked={form.pvToitureTuile} onChange={(v) => update("pvToitureTuile", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Raccordement (si compteur ext.)</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Raccordement (si compteur ext.)</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Enterré" checked={form.pvRaccordementEnterre} onChange={(v) => update("pvRaccordementEnterre", v)} />
           <CheckboxField label="Aérien" checked={form.pvRaccordementAerien} onChange={(v) => update("pvRaccordementAerien", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Documents</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Documents</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Devis signé" checked={form.pvDocDevisSigne} onChange={(v) => update("pvDocDevisSigne", v)} />
           <CheckboxField label="Pouvoir" checked={form.pvDocPouvoir} onChange={(v) => update("pvDocPouvoir", v)} />
@@ -478,7 +489,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
         <div className="overflow-x-auto">
           {form.radiateurs.map((rad, i) => (
             <div key={i} className="mb-3">
-              <div className="mb-2">Radiateur {i + 1}</div>
+              <div className="mb-2 text-lime-600 ">Radiateur {i + 1}</div>
               <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
                 <FormSelect label={`Matériau`} name={`radiateur_${i}_materiau`} value={rad.materiau} onChange={(v) => updateRadiateur(i, "materiau", v)} options={MATERIAUX_RADIATEUR} />
                 <FormInput type="number" label="Hauteur" name={`radiateur_${i}_hauteur`} value={rad.hauteur} onChange={(v) => updateRadiateur(i, "hauteur", v)} suffix="cm" />
@@ -493,51 +504,6 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
             </div>
           ))}
-          {/* <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left p-2 font-medium"></th>
-                <th className="text-left p-2 font-medium">Matériau</th>
-                <th className="text-left p-2 font-medium">Hauteur</th>
-                <th className="text-left p-2 font-medium">Largeur</th>
-                <th className="text-left p-2 font-medium">Épaisseur</th>
-                <th className="p-2"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {form.radiateurs.map((rad, i) => (
-                <tr key={i} className="border-b border-border">
-                  <td className="p-2 text-muted-foreground">{i + 1}</td>
-                  <td className="p-2">
-                    <select
-                      value={rad.materiau}
-                      onChange={(e) => updateRadiateur(i, "materiau", e.target.value)}
-                      className="form-select text-sm py-1"
-                    >
-                      <option value="">—</option>
-                      {MATERIAUX_RADIATEUR.map((m) => (
-                        <option key={m.value} value={m.value}>{m.label}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="p-2">
-                    <input className="form-input text-sm py-1 w-20" value={rad.hauteur} onChange={(e) => updateRadiateur(i, "hauteur", e.target.value)} placeholder="cm" />
-                  </td>
-                  <td className="p-2">
-                    <input className="form-input text-sm py-1 w-20" value={rad.largeur} onChange={(e) => updateRadiateur(i, "largeur", e.target.value)} placeholder="cm" />
-                  </td>
-                  <td className="p-2">
-                    <input className="form-input text-sm py-1 w-20" value={rad.epaisseur} onChange={(e) => updateRadiateur(i, "epaisseur", e.target.value)} placeholder="cm" />
-                  </td>
-                  <td className="p-2">
-                    <button type="button" onClick={() => removeRadiateur(i)} className="text-destructive hover:text-destructive/80">
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
         </div>
         <button type="button" onClick={addRadiateur} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
           <Plus className="w-4 h-4" /> Ajouter un radiateur
@@ -546,7 +512,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
       {/* PHOTOS CHECKLIST*/}
       <SectionCard title="Photos à faire (obligatoire)">
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Équipement</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Équipement</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
           <CheckboxField label="Compteur" checked={form.photoCompteur} onChange={(v) => update("photoCompteur", v)} />
           <CheckboxField label="Chaudière à remplacer" checked={form.photoChaudiere} onChange={(v) => update("photoChaudiere", v)} />
@@ -566,7 +532,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Rez-de-chaussée" checked={form.photoRDC} onChange={(v) => update("photoRDC", v)} />
         </div>
 
-        <h4 className="font-semibold text-sm mb-2 text-muted-foreground">Menuiseries et isolation extérieure</h4>
+        <h3 className="font-semibold text-lime-600 mb-2">Menuiseries et isolation extérieure</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <CheckboxField label="Fenêtres" checked={form.photoFenetres} onChange={(v) => update("photoFenetres", v)} />
           <CheckboxField label="Portes-fenêtres" checked={form.photoPorteFenetre} onChange={(v) => update("photoPorteFenetre", v)} />

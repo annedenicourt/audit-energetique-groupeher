@@ -14,9 +14,9 @@ interface PreviwCommercialProps {
 const PreviewCommercial: React.FC<PreviwCommercialProps> = ({ data, downloadPdf, isSaving }) => {
 
   return (
-    <div className="mx-auto bg-white p-4">
+    <div className="mx-auto pt-4 bg-white border border-orange-100">
       {/* Bouton Téléchargement PDF */}
-      <div className="mb-6 flex items-center">
+      <div className="m-6 flex items-center">
         <FileCheck size="30" className="mr-3 text-primary" />
         <div className="mr-6 text-2xl font-display font-bold text-foreground">
           Infos Simulateur

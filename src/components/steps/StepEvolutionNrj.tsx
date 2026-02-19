@@ -3,7 +3,7 @@ import { FileText, Zap, ChartLine } from "lucide-react";
 import FormInput from "../FormInput";
 import FormTextarea from "../FormTextarea";
 import SectionCard from "../SectionCard";
-import { EvolutionData } from "@/types/formData";
+import { ClientData, EvolutionData } from "@/types/formData";
 import FormSelect from "../FormSelect";
 import {
   XAxis,
@@ -19,11 +19,11 @@ import AppModal from "../Modal";
 interface StepEvolutionProps {
   data: EvolutionData;
   onChange: (field: keyof EvolutionData, value: string) => void;
-  montantChauffage: string;
+  client: ClientData;
 }
 
 
-const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, montantChauffage }) => {
+const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string, caption: string } | null>(null);
@@ -78,7 +78,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, montan
           <FormInput
             label="Chauffage (ECS)"
             name="montantChauffage"
-            value={montantChauffage}
+            value={client.montantChauffage}
             //onChange={(v) => onChange("montantChauffage", v)}
             type="number"
             placeholder="0"
@@ -97,17 +97,18 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, montan
           <FormInput
             label="Électricité domestique (ECS)"
             name="montantElecDomestique"
-            value={data.montantElecDomestique}
-            onChange={(v) => onChange("montantElecDomestique", v)}
+            value={client.factureElecAnnuelle}
+            //onChange={(v) => onChange("montantElecDomestique", v)}
             type="number"
             min={"0"}
             placeholder="0"
             suffix="€/an"
+            readonly={true}
           />
           <FormInput
             label="Total"
             name="totalFactureNRJ"
-            value={data.montantElecDomestique ? data.totalFactureNRJ : montantChauffage}
+            value={client.factureEnergieAnnuelle}
             type="number"
             placeholder="0"
             suffix="€/an"

@@ -83,13 +83,14 @@ const Index: React.FC = () => {
       };
 
       const montantChauffage = computeTotalChauffage(prev.client)
+      const montantNRJAnnuelle = prev.client.factureEnergieAnnuelle
 
       return {
         ...prev,
         evolution: {
           ...updatedEvolution,
           // montantChauffage: prev.client.montantChauffage,
-          totalFactureNRJ: computeTotalNrj(updatedEvolution, montantChauffage),
+          totalFactureNRJ: montantNRJAnnuelle,
           coutNrjMoins5ans: computeCoutNrjMoins5ans(updatedEvolution),
           coutNrj5Ans: computeCoutNrj5ans(updatedEvolution),
           coutNrj10Ans: computeCoutNrj10ans(updatedEvolution),
@@ -224,7 +225,7 @@ const Index: React.FC = () => {
       case 3:
         return <StepBilan data={formData.bilan} onChange={updateBilan} factureNrjAnnuelle={formData.client.factureEnergieAnnuelle} />;
       case 4:
-        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} montantChauffage={formData.client.montantChauffage} />;
+        return <StepEvolutionNrj data={formData.evolution} onChange={updateEvolutionNrj} client={formData.client} />;
       case 5:
         return <StepScenarios data={formData.scenarios} onChange={updateScenarios} />;
       case 6:

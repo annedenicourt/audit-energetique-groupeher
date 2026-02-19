@@ -25,10 +25,12 @@ export async function saveStudy(
       return { success: false, error: "Utilisateur non authentifié" };
     }
 
+    const now = new Date();
+    const formattedDate = now.toISOString().slice(0,19).replace(/[:T]/g, "-");// 2026-02-18-11-42-30
     const userId = user.id;
-    const storagePath = `${userId}/${Date.now()}-${filename}`;
+    const storagePath = `${userId}/etudes/${filename}-${formattedDate}`;
 
-    // 2. Upload du PDF dans le bucket privé `pdfs`
+    // 2. Upload du PDF dans le bucket privé `pdfs/etudes`
     const { error: uploadError } = await supabase.storage
       .from("pdfs")
       .upload(storagePath, pdfBlob, {

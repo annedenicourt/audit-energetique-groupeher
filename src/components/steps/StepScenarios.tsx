@@ -15,7 +15,7 @@ interface StepScenariosProps {
 const ScenarioCard: React.FC<{
   title: string;
   scenario: ScenarioData;
-  onChange: (field: keyof ScenarioData, value: string) => void;
+  onChange?: (field: keyof ScenarioData, value: string) => void;
   color: string;
 }> = ({ title, scenario, onChange, color }) => (
   <div className={`p-5 rounded-lg border-2 ${color}`}>

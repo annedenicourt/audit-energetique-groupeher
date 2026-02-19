@@ -4,9 +4,11 @@ import SectionCard from "./SectionCard";
 import { FormData } from "@/types/formData";
 import html2pdf from "html2pdf.js";
 import PdfContentCommercial from "./PdfContentCommercial";
+import PdfContentDossier from "./PdfContentDossier";
+import { DossierFormData } from "@/types/dossierFormData";
 
 interface PreviwDossierProps {
-  data: FormData;
+  data: DossierFormData;
   downloadPdf: () => void;
   isSaving?: boolean;
 }
@@ -15,9 +17,9 @@ interface PreviwDossierProps {
 const PreviewDossier: React.FC<PreviwDossierProps> = ({ data, downloadPdf, isSaving }) => {
 
   return (
-    <div className="mx-auto bg-white p-4">
+    <div className="mx-auto bg-white border border-orange-100">
       {/* Bouton Téléchargement PDF */}
-      <div className="mb-6 flex items-center">
+      <div className="m-6 flex items-center">
         <FileCheck size="30" className="mr-3 text-primary" />
         <div className="mr-6 text-2xl font-display font-bold text-foreground">
           Dossier de liaison
@@ -25,11 +27,22 @@ const PreviewDossier: React.FC<PreviwDossierProps> = ({ data, downloadPdf, isSav
         <button
           className="nav-button nav-button--primary px-6"
           disabled={isSaving}
-        //onClick={() => { requestAnimationFrame(() => downloadPdf()); }}
+          onClick={() => { requestAnimationFrame(() => downloadPdf()); }}
         >
           <FileCheck className="w-5 h-5" />
           {isSaving ? "Sauvegarde en cours…" : "Télécharger PDF"}
         </button>
+      </div>
+      <div>
+        <PdfContentDossier data={data} />
+      </div>
+      <div className="fixed -left-[10000px] top-0">
+        <div id="pdf-content">
+          <div className="a4-page">
+            <img src="/images/couv_pdf.png" alt="couverture pdf" />
+          </div>
+          <PdfContentDossier data={data} />
+        </div>
       </div>
 
     </div>

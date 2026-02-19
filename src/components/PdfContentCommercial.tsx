@@ -1,12 +1,75 @@
 import React, { useState } from "react";
 import { FileCheck, User, Home, Receipt, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
 import SectionCard from "./SectionCard";
-import { FormData } from "@/types/formData";
+import { FormData, ScenarioData } from "@/types/formData";
 import html2pdf from "html2pdf.js";
+import { lettreOptions } from "@/utils/handleForm";
+import FormSelect from "./FormSelect";
+import FormInput from "./FormInput";
 
 interface PdfContentCommercialProps {
   data: FormData;
 }
+
+export const ScenarioCardPdf: React.FC<{
+  title: string;
+  scenario: ScenarioData;
+  onChange?: (field: keyof ScenarioData, value: string) => void;
+  color: string;
+}> = ({ title, scenario, onChange, color }) => (
+  <div className={`p-5 rounded-lg border-2 ${color}`}>
+    <h4 className="font-semibold text-foreground mb-4">{title}</h4>
+    <div className="space-y-3">
+      <FormInput
+        label="Nom du scénario"
+        name={`${title}-nom`}
+        value={scenario.nom}
+        placeholder="Ex: Pompe à chaleur + isolation"
+        readonly={true}
+      />
+      <FormInput
+        label="Plus-value du logement"
+        name={`${title}-plusvalue`}
+        value={scenario.plusValueLogement}
+        type="number"
+        min={"0"}
+        placeholder="0"
+        suffix="%"
+        readonly={true}
+      />
+      <FormInput
+        label="Économies"
+        name={`${title}-plusvalue`}
+        value={scenario.economieAnnuelle}
+        type="number"
+        min={"0"}
+        placeholder="0"
+        suffix="%"
+        readonly={true}
+      />
+      <FormInput
+        label="Facture énergétique après travaux"
+        name={`${title}-facture`}
+        value={scenario.factureApres}
+        type="number"
+        min={"0"}
+        placeholder="0"
+        suffix="€/an"
+        readonly={true}
+      />
+      <FormInput
+        label="Lettre énergétique après travaux"
+        name={`${title}-lettre`}
+        value={scenario.lettreApres}
+        type="number"
+        min={"0"}
+        placeholder="0"
+        suffix="€/an"
+        readonly={true}
+      />
+    </div>
+  </div>
+);
 
 // Composant pour afficher une ligne de résumé
 const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }) => (
@@ -106,10 +169,9 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
         {/* Evolution */}
         <SectionCard title="Répartition actuelle de la facture énergétique" icon={BarChart3}>
           <div className="grid grid-cols-1 gap-x-8">
-            <SummaryRow label="Chauffage" value={data.client.montantChauffage ? `${data.client.montantChauffage} €` : ""} />
-            <SummaryRow label="Eau chaude sanitaire (ECS)" value={data.evolution.montantECS ? `${data.evolution.montantECS} €` : ""} />
-            <SummaryRow label="Électricité domestique" value={data.evolution.montantElecDomestique ? `${data.evolution.montantElecDomestique} €` : ""} />
-            <SummaryRow label="Total" value={data.evolution.totalFactureNRJ ? `${data.evolution.totalFactureNRJ} €` : ""} />
+            <SummaryRow label="Chauffage (ECS)" value={data.client.montantChauffage ? `${data.client.montantChauffage} €` : ""} />
+            <SummaryRow label="Électricité domestique (ECS)" value={data.client.factureElecAnnuelle ? `${data.client.factureElecAnnuelle} €` : ""} />
+            <SummaryRow label="Total" value={data.client.factureEnergieAnnuelle ? `${data.client.factureEnergieAnnuelle} €` : ""} />
           </div>
         </SectionCard>
         <SectionCard title="Énergie actuelle du logement" icon={BarChart3} className="my-4">
@@ -131,34 +193,22 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
       <div className="a4-page">
         {/* Scénarios */}
         <SectionCard title="Scénarios proposés" icon={TrendingUp}>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {data.scenarios.scenario1.nom && (
-              <div className="p-4 bg-primary/5 rounded-lg border border-primary/20">
-                <h5 className="font-semibold text-foreground mb-2">Scénario 1</h5>
-                <p className="text-sm text-muted-foreground">{data.scenarios.scenario1.nom}</p>
-                {/* <p className="text-primary font-medium mt-2">
-                  {data.scenarios.scenario1.economieAnnuelle ? `Économie: ${data.scenarios.scenario1.economieAnnuelle} €/an` : ""}
-                </p> */}
-              </div>
-            )}
-            {data.scenarios.scenario2.nom && (
-              <div className="p-4 bg-accent/5 rounded-lg border border-accent/20">
-                <h5 className="font-semibold text-foreground mb-2">Scénario 2</h5>
-                <p className="text-sm text-muted-foreground">{data.scenarios.scenario2.nom}</p>
-                {/* <p className="text-accent font-medium mt-2">
-                  {data.scenarios.scenario2.economieAnnuelle ? `Économie: ${data.scenarios.scenario2.economieAnnuelle} €/an` : ""}
-                </p> */}
-              </div>
-            )}
-            {data.scenarios.scenario3.nom && (
-              <div className="p-4 bg-secondary rounded-lg border border-border">
-                <h5 className="font-semibold text-foreground mb-2">Scénario 3</h5>
-                <p className="text-sm text-muted-foreground">{data.scenarios.scenario3.nom}</p>
-                {/* <p className="text-foreground font-medium mt-2">
-                  {data.scenarios.scenario3.economieAnnuelle ? `Économie: ${data.scenarios.scenario3.economieAnnuelle} €/an` : ""}
-                </p> */}
-              </div>
-            )}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <ScenarioCardPdf
+              title="Scénario 1"
+              scenario={data.scenarios.scenario1}
+              color="border-primary/30 bg-primary/5"
+            />
+            <ScenarioCardPdf
+              title="Scénario 2"
+              scenario={data.scenarios.scenario2}
+              color="border-accent/30 bg-accent/5"
+            />
+            <ScenarioCardPdf
+              title="Scénario 3"
+              scenario={data.scenarios.scenario3}
+              color="border-secondary-foreground/20 bg-secondary/50"
+            />
           </div>
         </SectionCard>
         <div className="mt-6 text-xs text-center">Estimatif non contractuel</div>

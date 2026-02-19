@@ -40,7 +40,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.nom}
               onChange={(v) => onChange("nom", v)}
               placeholder="Jean Dupont"
-              required
               className="mb-4"
             />
           </div>
@@ -61,7 +60,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             onChange={(v) => onChange("telephone", v)}
             type="tel"
             placeholder="06 00 00 00 00"
-            required
             className="mb-4"
           />
         </div>
@@ -73,7 +71,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.adresse}
               onChange={(v) => onChange("adresse", v)}
               placeholder="Adresse du client"
-              required
             />
           </div>
           <FormInput
@@ -82,7 +79,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.codePostal}
             onChange={(v) => onChange("codePostal", v)}
             placeholder="Code postal"
-            required
           />
           <FormInput
             label="Ville"
@@ -90,7 +86,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             value={data.ville}
             onChange={(v) => onChange("ville", v)}
             placeholder="Ville"
-            required
           />
 
         </div>

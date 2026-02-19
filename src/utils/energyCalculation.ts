@@ -39,10 +39,10 @@ export const computeTotalChauffage = (
   return Math.round(total).toString();
 };
 export const computeTotalNrj = (
-  evolution: FormData["evolution"], montantChauffage:string
+ montantChauffage:string, montantElecDomestique
 ): string => {
   const total =
-    toNumber(montantChauffage) + toNumber(evolution.montantElecDomestique);
+    toNumber(montantChauffage) + toNumber(montantElecDomestique);
   return Math.round(total).toString();
 };
 /*Projection cout énergie avant travaux*/

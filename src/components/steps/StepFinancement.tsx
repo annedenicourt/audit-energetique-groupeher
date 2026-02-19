@@ -50,7 +50,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
               suffix="€"
               readonly={true}
             />
-            <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+            <div className="p-4 bg-lime-300 rounded-lg border border-primary/20">
               <div className="font-bold">Gain ou faible effort financier</div>
               <FormInput
                 label=""

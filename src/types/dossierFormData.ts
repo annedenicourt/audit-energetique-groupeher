@@ -71,7 +71,7 @@ export interface DossierFormData {
   nbEtages: string;
   sousSol: boolean;
   videSanitaire: boolean;
-  videSanitaireAccessible: string;
+  videSanitaireAccessible: boolean;
   typeMur: string;
   epaisseurMur: string;
   // Combles
@@ -281,7 +281,7 @@ export const defaultDossierFormData: DossierFormData = {
   nbEtages: "",
   sousSol: false,
   videSanitaire: false,
-  videSanitaireAccessible: "",
+  videSanitaireAccessible: false,
   typeMur: "",
   epaisseurMur: "",
   comblePerdu: false,
