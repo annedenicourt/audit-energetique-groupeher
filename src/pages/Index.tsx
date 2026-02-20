@@ -10,22 +10,40 @@ import { DimensionnementData, ExponentielData, FormData, initialFormData, Scenar
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
 import StepExponentiel from "@/components/steps/StepExponentiel";
-import { computeCoutNrj10ans, computeCoutNrj5ans, computeDepenseTotale10ans, computeEcoAnnuellesMoy, computeEcoMensuellesMoy, computefacture10Ans, computefacture5Ans, computeFactureTotale10ans, computeTotalNrj, computeEcoTotal10ans, computeDispoMPR, computeTotalAides, computeResteaChargeAvant, computeResteaChargeApres, computeGain10ans, computeEcoMoinsMensualite, computeCoutNrjMoins5ans, computeNRJAnnuel, computeTotalChauffage, computefactureApres } from "@/utils/energyCalculation";
+import {
+  computeCoutNrjMoins5ans,
+  computeCoutNrj5ans,
+  computeCoutNrj10ans,
+  computeDepenseTotale10ans,
+  computeEcoAnnuellesMoy,
+  computeEcoMensuellesMoy,
+  computefacture5Ans,
+  computefacture10Ans,
+  computeFactureTotale10ans,
+  computeEcoTotal10ans,
+  computeDispoMPR,
+  computeTotalAides,
+  computeResteaChargeAvant,
+  computeResteaChargeApres,
+  computeGain10ans,
+  computeEcoMoinsMensualite,
+  computeNRJAnnuel,
+  computeTotalChauffage,
+  computefactureApres,
+} from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
 import StepDossier from "@/components/steps/StepDossier";
 
 const Index: React.FC = () => {
-  // État global du formulaire - toutes les données sont stockées ici
   const [formData, setFormData] = useState<FormData>(initialFormData);
-  // État pour la navigation entre les étapesc
   const [currentStep, setCurrentStep] = useState(1);
 
   const STORAGE_KEY = "simulation_form";
 
+  // Chargement depuis localStorage
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
-
     if (stored) {
       try {
         setFormData(JSON.parse(stored));
@@ -35,12 +53,129 @@ const Index: React.FC = () => {
     }
   }, []);
 
+  // Sauvegarde dans localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
 
+  // ─── EFFET 1 : recalcule les champs dérivés de client ───────────────────
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      client: {
+        ...prev.client,
+        dispoMaPrimeRenov: computeDispoMPR(prev.client),
+        montantAides: computeTotalAides(prev.client),
+        factureEnergieAnnuelle: computeNRJAnnuel(prev.client),
+        montantChauffage: computeTotalChauffage(prev.client),
+      },
+    }));
+  }, [
+    formData.client.aidesMaPrimeRenov,
+    formData.client.aidesCEE,
+    formData.client.aidesAutre,
+    formData.client.coutAnnuelChauffage,
+    formData.client.coutAnnuelChauffageAppoint,
+    formData.client.factureElecAnnuelle,
+  ]);
 
-  // Handlers pour la navigation
+  // ─── EFFET 2 : recalcule les projections NRJ (evolution) ────────────────
+  // Se déclenche aussi si factureEnergieAnnuelle change (cascade depuis client)
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      evolution: {
+        ...prev.evolution,
+        totalFactureNRJ: prev.client.factureEnergieAnnuelle,
+        coutNrjMoins5ans: computeCoutNrjMoins5ans(prev.evolution),
+        coutNrj5Ans: computeCoutNrj5ans(prev.evolution),
+        coutNrj10Ans: computeCoutNrj10ans(prev.evolution),
+        depenseTotal10ans: computeDepenseTotale10ans(prev.evolution),
+      },
+    }));
+  }, [
+    formData.client.factureEnergieAnnuelle,
+    formData.evolution.coutNrjAujourdhui,
+  ]);
+
+  // ─── EFFET 3 : recalcule les projections après travaux (exponentiel) ─────
+  // Se déclenche aussi si depenseTotal10ans change (cascade depuis evolution)
+  useEffect(() => {
+    setFormData((prev) => {
+      const facture5Ans = computefacture5Ans(prev.exponentiel);
+      const facture10Ans = computefacture10Ans(prev.exponentiel);
+      const consommation10AnsApresTravaux = computeFactureTotale10ans(prev.exponentiel);
+      const withFresh = {
+        ...prev.exponentiel,
+        facture5Ans,
+        facture10Ans,
+        consommation10AnsSansTravaux: prev.evolution.depenseTotal10ans,
+        consommation10AnsApresTravaux,
+      };
+      const economiesRealisees10Ans = computeEcoTotal10ans(withFresh);
+      const economiesAnnuellesMoyennes = computeEcoAnnuellesMoy(withFresh);
+      const economiesMensuellesMoyennes = computeEcoMensuellesMoy({
+        ...withFresh,
+        economiesAnnuellesMoyennes,
+      });
+      return {
+        ...prev,
+        exponentiel: {
+          ...withFresh,
+          economiesRealisees10Ans,
+          economiesAnnuellesMoyennes,
+          economiesMensuellesMoyennes,
+        },
+      };
+    });
+  }, [
+    formData.evolution.depenseTotal10ans,
+    formData.exponentiel.factureAujourdhui,
+  ]);
+
+  // ─── EFFET 4 : recalcule reste à charge & gain (aides) ──────────────────
+  // Se déclenche aussi si economiesRealisees10Ans change (cascade depuis exponentiel)
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      aides: {
+        ...prev.aides,
+        economiesSur10Ans: prev.exponentiel.economiesRealisees10Ans,
+        resteAChargeAvantMpr: computeResteaChargeAvant(prev.aides),
+        resteAChargeApresMpr: computeResteaChargeApres(prev.aides),
+        gainSur10Ans: computeGain10ans({
+          ...prev.aides,
+          economiesSur10Ans: prev.exponentiel.economiesRealisees10Ans,
+        }),
+      },
+    }));
+  }, [
+    formData.exponentiel.economiesRealisees10Ans,
+    formData.aides.coutTotalInstallation,
+    formData.aides.primeCEE,
+    formData.aides.maPrimeRenov,
+  ]);
+
+  // ─── EFFET 5 : recalcule mensualité nette (financement) ─────────────────
+  // Se déclenche aussi si economiesMensuellesMoyennes change (cascade depuis exponentiel)
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      financement: {
+        ...prev.financement,
+        economiesMoyennesMensuelles: prev.exponentiel.economiesMensuellesMoyennes,
+        mensualiteMoinsEconomies: computeEcoMoinsMensualite({
+          ...prev.financement,
+          economiesMoyennesMensuelles: prev.exponentiel.economiesMensuellesMoyennes,
+        }),
+      },
+    }));
+  }, [
+    formData.exponentiel.economiesMensuellesMoyennes,
+    formData.financement.mensualiteConfort,
+  ]);
+
+  // ─── Navigation ──────────────────────────────────────────────────────────
   const goToNextStep = () => {
     if (currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
@@ -55,58 +190,15 @@ const Index: React.FC = () => {
     }
   };
 
-  // Handlers génériques pour mettre à jour les différentes sections
-  const updateClient = (field: keyof FormData["client"], value: string) => {
-    setFormData((prev) => {
-      const updatedClient = {
-        ...prev.client,
-        [field]: value,
-      };
+  // ─── SETTERS SIMPLES ─────────────────────────────────────────────────────
+  const updateClient = (field: keyof FormData["client"], value: string) =>
+    setFormData((prev) => ({ ...prev, client: { ...prev.client, [field]: value } }));
 
-      return {
-        ...prev,
-        client: {
-          ...updatedClient,
-          dispoMaPrimeRenov: computeDispoMPR(updatedClient),
-          montantAides: computeTotalAides(updatedClient),
-          factureEnergieAnnuelle: computeNRJAnnuel(updatedClient),
-          montantChauffage: computeTotalChauffage(updatedClient)
-        },
-      };
-    });
-  };
-  const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) => {
-    setFormData((prev) => {
-      const updatedEvolution = {
-        ...prev.evolution,
-        [field]: value,
-      };
+  const updateEvolutionNrj = (field: keyof FormData["evolution"], value: string) =>
+    setFormData((prev) => ({ ...prev, evolution: { ...prev.evolution, [field]: value } }));
 
-      const montantChauffage = computeTotalChauffage(prev.client)
-      const montantNRJAnnuelle = prev.client.factureEnergieAnnuelle
-
-      return {
-        ...prev,
-        evolution: {
-          ...updatedEvolution,
-          // montantChauffage: prev.client.montantChauffage,
-          totalFactureNRJ: montantNRJAnnuelle,
-          coutNrjMoins5ans: computeCoutNrjMoins5ans(updatedEvolution),
-          coutNrj5Ans: computeCoutNrj5ans(updatedEvolution),
-          coutNrj10Ans: computeCoutNrj10ans(updatedEvolution),
-          depenseTotal10ans: computeDepenseTotale10ans(updatedEvolution)
-        },
-      };
-    });
-  };
-
-
-  const updateBilan = (field: keyof FormData["bilan"], value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      bilan: { ...prev.bilan, [field]: value },
-    }));
-  };
+  const updateBilan = (field: keyof FormData["bilan"], value: string) =>
+    setFormData((prev) => ({ ...prev, bilan: { ...prev.bilan, [field]: value } }));
 
   const updateScenarios = (scenarioKey: keyof FormData["scenarios"] | string, updatedScenario: ScenarioData) => {
     setFormData((prev) => {
@@ -126,102 +218,26 @@ const Index: React.FC = () => {
 
   const updateDimensionnement = (
     field: keyof FormData["dimensionnement"],
-    value: string | DimensionnementData[keyof DimensionnementData] // inclut fenetres
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      dimensionnement: { ...prev.dimensionnement, [field]: value },
-    }));
-  };
+    value: string | DimensionnementData[keyof DimensionnementData]
+  ) =>
+    setFormData((prev) => ({ ...prev, dimensionnement: { ...prev.dimensionnement, [field]: value } }));
 
-  const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) => {
-    setFormData((prev) => {
-      const updatedExponentiel = {
-        ...prev.exponentiel,
-        [field]: value,
-      };
+  const updateExponentiel = (field: keyof FormData["exponentiel"] | string, value: string | ExponentielData) =>
+    setFormData((prev) => ({ ...prev, exponentiel: { ...prev.exponentiel, [field]: value } }));
 
-      // Calculs chaînés dans le bon ordre
-      const facture5Ans = computefacture5Ans(updatedExponentiel);
-      const facture10Ans = computefacture10Ans(updatedExponentiel);
-      const consommation10AnsSansTravaux = prev.evolution.depenseTotal10ans;
-      const consommation10AnsApresTravaux = computeFactureTotale10ans(updatedExponentiel);
+  const updateAides = (field: keyof FormData["aides"], value: string) =>
+    setFormData((prev) => ({ ...prev, aides: { ...prev.aides, [field]: value } }));
 
-      // Injecter les valeurs fraîches pour les calculs suivants
-      const withFreshValues = {
-        ...updatedExponentiel,
-        facture5Ans,
-        facture10Ans,
-        consommation10AnsSansTravaux,
-        consommation10AnsApresTravaux,
-      };
+  const updateFinancement = (field: keyof FormData["financement"], value: string) =>
+    setFormData((prev) => ({ ...prev, financement: { ...prev.financement, [field]: value } }));
 
-      const economiesRealisees10Ans = computeEcoTotal10ans(withFreshValues);
-      const economiesAnnuellesMoyennes = computeEcoAnnuellesMoy(withFreshValues);
-      const withEcoAnnuelles = {
-        ...withFreshValues,
-        economiesRealisees10Ans,
-        economiesAnnuellesMoyennes,
-      };
-      const economiesMensuellesMoyennes = computeEcoMensuellesMoy(withEcoAnnuelles);
-
-      return {
-        ...prev,
-        exponentiel: {
-          ...withEcoAnnuelles,
-          economiesMensuellesMoyennes,
-        },
-      };
-    });
-  };
-
-  const updateAides = (field: keyof FormData["aides"], value: string) => {
-    setFormData((prev) => {
-      const updatedAides = {
-        ...prev.aides,
-        [field]: value,
-        economiesSur10Ans: prev.exponentiel.economiesRealisees10Ans,
-      };
-
-      return {
-        ...prev,
-        aides: {
-          ...updatedAides,
-          resteAChargeAvantMpr: computeResteaChargeAvant(updatedAides),
-          resteAChargeApresMpr: computeResteaChargeApres(updatedAides),
-          gainSur10Ans: computeGain10ans(updatedAides)
-        },
-      };
-    });
-  };
-
-  const updateFinancement = (field: keyof FormData["financement"], value: string) => {
-    setFormData((prev) => {
-      const updatedFinancement = {
-        ...prev.financement,
-        [field]: value,
-        economiesMoyennesMensuelles: prev.exponentiel.economiesMensuellesMoyennes,
-      };
-
-      return {
-        ...prev,
-        financement: {
-          ...updatedFinancement,
-          mensualiteMoinsEconomies: computeEcoMoinsMensualite(updatedFinancement),
-        },
-      };
-    });
-  };
-
-  // Rendu du composant d'étape actuel
+  // ─── Rendu ───────────────────────────────────────────────────────────────
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
         return <StepPresentation />;
       case 2:
         return <StepClient data={formData.client} onChange={updateClient} />;
-      /* case 2:
-        return <StepHabitation data={formData.habitation} onChange={updateHabitation} />; */
       case 3:
         return <StepBilan data={formData.bilan} onChange={updateBilan} factureNrjAnnuelle={formData.client.factureEnergieAnnuelle} />;
       case 4:
@@ -260,4 +276,3 @@ const Index: React.FC = () => {
 };
 
 export default Index;
-
