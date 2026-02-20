@@ -67,6 +67,7 @@ const Admin: React.FC = () => {
           profiles={profiles}
           loading={loading}
           onDeleteProfile={(id) => setProfiles((prev) => prev.filter((p) => p.id !== id))}
+          onAddProfile={(profile) => setProfiles((prev) => [...prev, profile])}
         />
       )}
     </FormLayoutAdmin >
