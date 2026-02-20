@@ -62,7 +62,13 @@ const Admin: React.FC = () => {
           <AdminPdfView studies={studies} profiles={profiles} loading={loading} />
         )
       }
-      {view === "users" && <AdminUsersView profiles={profiles} loading={loading} />}
+      {view === "users" && (
+        <AdminUsersView
+          profiles={profiles}
+          loading={loading}
+          onDeleteProfile={(id) => setProfiles((prev) => prev.filter((p) => p.id !== id))}
+        />
+      )}
     </FormLayoutAdmin >
   );
 };
