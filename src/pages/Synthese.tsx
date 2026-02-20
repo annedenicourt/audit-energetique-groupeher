@@ -1,16 +1,6 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Skeleton } from "@/components/ui/skeleton";
-import { LayoutList, LayoutGrid, FileText, Search, ArrowUpDown } from "lucide-react";
 import { toast } from "sonner";
-import { NavLink } from "@/components/NavLink";
 import { useNavigate } from "react-router-dom";
-import StepSynthese from "@/components/steps/StepSynthese";
 import { FormData, initialFormData } from "@/types/formData";
 import { saveStudy } from "@/utils/saveStudy";
 import html2pdf from "html2pdf.js";
@@ -18,11 +8,16 @@ import PreviewCommercial from "@/components/PreviewCommercial";
 import PreviewDossier from "@/components/PreviewDossier";
 import { DossierFormData } from "@/types/dossierFormData";
 import { saveDossier } from "@/utils/saveDossier";
+import { Check, FileCheck, X } from "lucide-react";
+import AppModal from "@/components/Modal";
+import PdfContentDossier from "@/components/PdfContentDossier";
+import PdfContentCommercial from "@/components/PdfContentCommercial";
 
 
 const Synthese: React.FC = () => {
   const navigate = useNavigate();
-  const [pdfMode, setPdfMode] = useState("etude");
+  const [pdfMode, setPdfMode] = useState("dossier");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const [formSim, setFormSim] = useState<FormData>(() => {
@@ -44,60 +39,87 @@ const Synthese: React.FC = () => {
   const downloadPdfGeneric = async () => {
     setIsSaving(true);
     document.body.classList.add("exporting");
-    const el = document.getElementById("pdf-content");
 
-    const storageKey = pdfMode === "etude" ? "simulation_form" : "dossier_form";
-    const raw = localStorage.getItem(storageKey);
-    const payload = raw ? JSON.parse(raw) : null;
-
-    if (!el || !payload) {
-      toast.error("Contenu PDF ou données introuvables");
-      document.body.classList.remove("exporting");
-      setIsSaving(false);
-      return;
-    }
-
-    const filename =
-      pdfMode === "etude"
-        ? `Etude_NRJ_${formSim.client.nom}.pdf`
-        : `Dossier_Liaison_${formDossier.nomClient}.pdf`;
-
-    try {
-      const pdfBlob: Blob = await html2pdf()
+    const buildPdfBlob = async (node: HTMLElement, filename: string) => {
+      return (await html2pdf()
         .set({
           filename,
           margin: 0,
           html2canvas: { scale: 2, useCORS: true },
           jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
         })
-        .from(el)
-        .outputPdf("blob");
+        .from(node)
+        .outputPdf("blob")) as Blob;
+    };
 
-      const result =
-        pdfMode === "etude"
-          ? await saveStudy(pdfBlob, payload, filename)
-          : await saveDossier(pdfBlob, payload, filename);
+    const downloadBlob = (blob: Blob, filename: string) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    };
 
-      if (!result.success) {
-        toast.error(`Sauvegarde échouée : ${result.error}`);
+
+    try {
+      // ETUDE (upload only)
+      const dataStudy = localStorage.getItem("simulation_form");
+      const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
+      if (studyPayload) {
+        const etudeEl = document.getElementById("pdf-content-etude");
+        if (!etudeEl) {
+          toast.error("Contenu PDF étude introuvable");
+          document.body.classList.remove("exporting");
+          setIsSaving(false);
+          return;
+        }
+        const etudeFilename = `Etude_NRJ_${formSim.client.nom}.pdf`;
+        const etudeBlob = await buildPdfBlob(etudeEl, etudeFilename);
+        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename);
+        if (!resStudy.success) {
+          toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
+          return;
+        }
+        localStorage.removeItem("simulation_form");
+      }
+
+      // DOSSIER (upload + download)
+      const dataDossier = localStorage.getItem("dossier_form");
+      const dossierPayload = dataDossier ? JSON.parse(dataDossier) : null;
+
+      if (dossierPayload) {
+        const dossierEl = document.getElementById("pdf-content-dossier");
+        if (!dossierEl) {
+          toast.error("Contenu PDF dossier introuvable");
+          document.body.classList.remove("exporting");
+          setIsSaving(false);
+          return;
+        }
+
+        const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
+        const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
+        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename);
+        if (!resDossier.success) {
+          toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
+          return;
+        }
+
+        downloadBlob(dossierBlob, dossierFilename);
+        localStorage.removeItem("dossier_form");
+      }
+
+      if (!studyPayload && !dossierPayload) {
+        toast.error("Aucune donnée à exporter");
         return;
       }
-
-      /* SI DOSSIER LIAISON TELECHARGEMENT DU PDF SUR ORDI*/
-      if (pdfMode === "dossier") {
-        const url = URL.createObjectURL(pdfBlob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      }
-
-      localStorage.removeItem(storageKey);
-      toast.success("PDF téléchargé et sauvegardé !");
-      navigate("/")
+      toast.success("PDF(s) généré(s) et sauvegardé(s) !", {
+        position: "top-center",
+        className: "text-xl px-8 py-6 w-[480px] font-semibold",
+      });
+      navigate("/");
     } catch (err) {
       console.error("[downloadPdfGeneric] Erreur", err);
       toast.error("Erreur lors de la génération du PDF");
@@ -106,8 +128,6 @@ const Synthese: React.FC = () => {
       setIsSaving(false);
     }
   };
-
-
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -119,19 +139,91 @@ const Synthese: React.FC = () => {
           ← Retour Simulateur
         </button>
       </div>
-      <div className="mt-8 flex items-center">
-        <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "etude" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("etude") }}>
-          Synthèse simulateur
+      <div className="mt-8 flex items-center justify-between">
+        <div className="flex items-center">
+          <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "etude" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("etude") }}>
+            Synthèse simulateur
+          </div>
+          <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "dossier" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("dossier") }}>
+            Synthèse dossier de liaison
+          </div>
         </div>
-        <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "dossier" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("dossier") }}>
-          Synthèse dossier de liaison
+        <div>
+          <button
+            className="nav-button nav-button--primary px-6"
+            disabled={isSaving}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <FileCheck className="w-5 h-5" />
+            Valider et clôturer le dossier
+          </button>
         </div>
       </div>
+
       {pdfMode === "etude" ? (
         <PreviewCommercial data={formSim} downloadPdf={downloadPdfGeneric} isSaving={isSaving} />
       ) : (
         <PreviewDossier data={formDossier} downloadPdf={downloadPdfGeneric} isSaving={isSaving} />
       )}
+
+      {/* ZONE PDF OFF-SCREEN */}
+      <div className="fixed -left-[10000px] top-0">
+        <div id="pdf-content-etude">
+          <div className="a4-page">
+            <img src="/images/couv_pdf.png" alt="couverture pdf" />
+          </div>
+          <PdfContentCommercial data={formSim} />
+        </div>
+      </div>
+      <div className="fixed -left-[10000px] top-0">
+        <div id="pdf-content-dossier">
+          <div className="a4-page">
+            <img src="/images/couv_dossier_liaison.png" alt="couverture pdf" />
+          </div>
+          <PdfContentDossier data={formDossier} />
+        </div>
+      </div>
+
+
+      {/* AFFICHAGE MODALE */}
+      <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="">
+        {isModalOpen && (
+          <div className="flex flex-col gap-6">
+            <div className="mx-auto">
+              <img src="./images/Logo-HER-WEB.webp" alt="" className="w-56" />
+            </div>
+            <div className="mx-auto">
+              <div className="text-center uppercase">Dossier client</div>
+              <div className="text-center text-xl font-bold uppercase">
+                {formDossier.nomClient}
+              </div>
+            </div>
+            <div className="text-center">
+              Une fois clôturé, le dossier de liaison  <br />et les données entrées dans le simulateur ne seront plus modifiables. <br />
+              Assurez-vous que les données envoyées sont exactes avant validation
+            </div>
+            <div className="mx-auto">
+              <button
+                className="nav-button bg-slate-300 font-bold px-6 mr-3"
+                onClick={() => setIsModalOpen(false)}
+              >
+                <X className="w-5 h-5" />
+                Annuler
+              </button>
+              <button
+                className="nav-button bg-green-500 text-white font-bold px-6"
+                disabled={isSaving}
+                onClick={() => { requestAnimationFrame(() => downloadPdfGeneric()); }}
+              >
+                <Check className="w-5 h-5" />
+                {isSaving ? "Sauvegarde en cours…" : "Confirmer la validation"}
+              </button>
+            </div>
+
+          </div>
+        )}
+      </AppModal>
+
     </div>
   );
 };

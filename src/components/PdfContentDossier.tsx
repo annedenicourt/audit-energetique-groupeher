@@ -17,7 +17,8 @@ const SummaryRow: React.FC<{ label: string; value }> = ({ label, value }) => (
   </div>
 );
 const DisplayTrue = <Check className="text-lime-500" strokeWidth={6} />
-const DisplayFalse = <X className="text-red-500" strokeWidth={6} />
+//const DisplayFalse = <X className="text-red-500" strokeWidth={6} />
+const DisplayFalse = "—"
 
 const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
 

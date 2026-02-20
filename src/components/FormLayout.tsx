@@ -185,7 +185,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
             className="nav-button nav-button--primary disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <span className="hidden sm:inline">
-              {currentStep === totalSteps ? "Terminer" : "Suivant"}
+              {currentStep === 9 ? "Monter le dossier" : currentStep === 10 ? "Aperçu avant validation" : "Suivant"}
             </span>
             <ChevronRight className="w-5 h-5" />
           </button>

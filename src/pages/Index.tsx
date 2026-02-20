@@ -5,7 +5,6 @@ import StepBilan from "@/components/steps/StepBilan";
 import StepScenarios from "@/components/steps/StepScenarios";
 import StepAides from "@/components/steps/StepAides";
 import StepFinancement from "@/components/steps/StepFinancement";
-import StepSynthese from "@/components/steps/StepSynthese";
 import { DimensionnementData, ExponentielData, FormData, initialFormData, ScenarioData } from "@/types/formData";
 import StepEvolutionNrj from "@/components/steps/StepEvolutionNrj";
 import StepDimensionnement from "@/components/steps/StepDimensionnement";
