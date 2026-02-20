@@ -1,10 +1,11 @@
-import { ArrowUpDown, LayoutGrid, LayoutList, Search, Trash2 } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, LayoutList, Plus, Search, Trash2 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { useMemo, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import {
   AlertDialog,
@@ -16,6 +17,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "../ui/dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -32,12 +40,20 @@ const AdminUsersView: React.FC<{
   profiles: Profile[];
   loading: boolean;
   onDeleteProfile: (id: string) => void;
-}> = ({ profiles, loading, onDeleteProfile }) => {
+  onAddProfile: (profile: Profile) => void;
+}> = ({ profiles, loading, onDeleteProfile, onAddProfile }) => {
   const [view, setView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("display_name_asc");
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  // Create user dialog state
+  const [createOpen, setCreateOpen] = useState(false);
+  const [creating, setCreating] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newDisplayName, setNewDisplayName] = useState("");
+  const [newRole, setNewRole] = useState<"commercial" | "admin">("commercial");
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
@@ -64,16 +80,10 @@ const AdminUsersView: React.FC<{
     if (!confirmId) return;
     setDeleting(true);
     try {
-      const { data: sessionData } = await supabase.auth.getSession();
-      const token = sessionData.session?.access_token;
-      if (!token) throw new Error("Non authentifié");
-
       const res = await supabase.functions.invoke("delete-user", {
         body: { userId: confirmId },
       });
-
       if (res.error) throw new Error(res.error.message);
-
       onDeleteProfile(confirmId);
       toast.success("Utilisateur supprimé avec succès.");
     } catch (err: any) {
@@ -84,11 +94,49 @@ const AdminUsersView: React.FC<{
     }
   };
 
+  const handleCreate = async () => {
+    if (!newEmail.trim()) {
+      toast.error("L'email est requis.");
+      return;
+    }
+    setCreating(true);
+    try {
+      const res = await supabase.functions.invoke("create-user", {
+        body: { email: newEmail.trim(), display_name: newDisplayName.trim() || null, role: newRole },
+      });
+      if (res.error) throw new Error(res.error.message);
+      if (res.data?.error) throw new Error(res.data.error);
+
+      const newProfile: Profile = {
+        id: res.data.userId,
+        display_name: newDisplayName.trim() || null,
+        role: newRole,
+        created_at: new Date().toISOString(),
+      };
+      onAddProfile(newProfile);
+      toast.success("Utilisateur créé avec succès.");
+      setCreateOpen(false);
+      setNewEmail("");
+      setNewDisplayName("");
+      setNewRole("commercial");
+    } catch (err: any) {
+      toast.error("Erreur : " + err.message);
+    } finally {
+      setCreating(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Utilisateurs</h1>
-        <p className="text-sm text-muted-foreground mt-1">Gestion des comptes commerciaux.</p>
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">Utilisateurs</h1>
+          <p className="text-sm text-muted-foreground mt-1">Gestion des comptes commerciaux.</p>
+        </div>
+        <Button onClick={() => setCreateOpen(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nouvel utilisateur
+        </Button>
       </div>
 
       {/* Toolbar */}
@@ -187,7 +235,7 @@ const AdminUsersView: React.FC<{
         </div>
       )}
 
-      {/* Confirmation dialog */}
+      {/* Confirmation suppression */}
       <AlertDialog open={!!confirmId} onOpenChange={(open) => { if (!open) setConfirmId(null); }}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -208,6 +256,56 @@ const AdminUsersView: React.FC<{
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Dialog création utilisateur */}
+      <Dialog open={createOpen} onOpenChange={(open) => { if (!open && !creating) setCreateOpen(false); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Nouvel utilisateur</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="new-email">Email <span className="text-destructive">*</span></Label>
+              <Input
+                id="new-email"
+                type="email"
+                placeholder="prenom.nom@example.com"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                disabled={creating}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-display-name">Nom d'affichage</Label>
+              <Input
+                id="new-display-name"
+                placeholder="Prénom Nom"
+                value={newDisplayName}
+                onChange={(e) => setNewDisplayName(e.target.value)}
+                disabled={creating}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-role">Rôle</Label>
+              <Select value={newRole} onValueChange={(v) => setNewRole(v as "commercial" | "admin")} disabled={creating}>
+                <SelectTrigger id="new-role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="commercial">Commercial</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={creating}>Annuler</Button>
+            <Button onClick={handleCreate} disabled={creating}>
+              {creating ? "Création..." : "Créer"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
