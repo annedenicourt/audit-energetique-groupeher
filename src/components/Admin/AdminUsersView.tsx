@@ -1,12 +1,23 @@
-import { ArrowUpDown, Database, FileText, LayoutGrid, LayoutList, Search } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, LayoutList, Search, Trash2 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { useMemo, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 import { Button } from "@/components/ui/button";
-import { formatDate } from "date-fns";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface Profile {
   id: string;
@@ -15,22 +26,21 @@ interface Profile {
   created_at: string;
 }
 
-type SortKey = "display_name_asc" | "display_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
+type SortKey = "display_name_asc" | "display_name_desc" | "date_desc" | "date_asc";
 
-const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ profiles, loading }) => {
+const AdminUsersView: React.FC<{
+  profiles: Profile[];
+  loading: boolean;
+  onDeleteProfile: (id: string) => void;
+}> = ({ profiles, loading, onDeleteProfile }) => {
   const [view, setView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("display_name_asc");
-
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-
-  const profileMap = useMemo(() => {
-    const map = new Map<string, string>();
-    profiles.forEach((p) => map.set(p.id, p.display_name ?? "—"));
-    return map;
-  }, [profiles]);
 
   const filtered = useMemo(() => {
     let result = profiles;
@@ -38,18 +48,41 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
       const v = search.toLowerCase();
       result = result.filter((s) => s.display_name?.toLowerCase().includes(v));
     }
-
-    const gc = (uid: string) => (profileMap.get(uid) ?? "").toLowerCase();
     return [...result].sort((a, b) => {
       switch (sortKey) {
         case "display_name_asc": return (a.display_name ?? "").localeCompare(b.display_name ?? "");
         case "display_name_desc": return (b.display_name ?? "").localeCompare(a.display_name ?? "");
+        case "date_asc": return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
         default: return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
     });
-  }, [profiles, search, profileMap, sortKey]);
+  }, [profiles, search, sortKey]);
 
+  const confirmProfile = profiles.find((p) => p.id === confirmId);
 
+  const handleDelete = async () => {
+    if (!confirmId) return;
+    setDeleting(true);
+    try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (!token) throw new Error("Non authentifié");
+
+      const res = await supabase.functions.invoke("delete-user", {
+        body: { userId: confirmId },
+      });
+
+      if (res.error) throw new Error(res.error.message);
+
+      onDeleteProfile(confirmId);
+      toast.success("Utilisateur supprimé avec succès.");
+    } catch (err: any) {
+      toast.error("Erreur : " + err.message);
+    } finally {
+      setDeleting(false);
+      setConfirmId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -70,8 +103,10 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="display_name_asc">Client A→Z</SelectItem>
-            <SelectItem value="display_name_desc">Client Z→A</SelectItem>
+            <SelectItem value="display_name_asc">Nom A→Z</SelectItem>
+            <SelectItem value="display_name_desc">Nom Z→A</SelectItem>
+            <SelectItem value="date_desc">Plus récent</SelectItem>
+            <SelectItem value="date_asc">Plus ancien</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-1 border rounded-md p-1">
@@ -83,6 +118,7 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
           </Button>
         </div>
       </div>
+
       {loading && (
         <div className="space-y-3">
           {Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-14 w-full rounded-md" />)}
@@ -90,7 +126,7 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
       )}
 
       {!loading && filtered.length === 0 && (
-        <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">Aucune étude trouvée.</div>
+        <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">Aucun utilisateur trouvé.</div>
       )}
 
       {!loading && filtered.length > 0 && view === "list" && (
@@ -101,14 +137,25 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
                 <TableHead>Nom</TableHead>
                 <TableHead>Rôle</TableHead>
                 <TableHead>Créé le</TableHead>
+                <TableHead className="w-12"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((s) => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
-                  <TableCell className="font-medium capitalize">{s.role ?? "—"}</TableCell>
+                  <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
                   <TableCell>{formatDate(s.created_at)}</TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => setConfirmId(s.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -121,16 +168,48 @@ const AdminUsersView: React.FC<{ profiles: Profile[], loading: boolean }> = ({ p
           {filtered.map((s) => (
             <Card key={s.id}>
               <CardContent className="p-5 space-y-3">
-                <p className="font-semibold text-foreground truncate">{s.display_name ?? "—"}</p>
-                <p className="text-sm text-muted-foreground">Role : {s.role}</p>
+                <div className="flex items-start justify-between">
+                  <p className="font-semibold text-foreground truncate">{s.display_name ?? "—"}</p>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/10 -mt-1 -mr-1 shrink-0"
+                    onClick={() => setConfirmId(s.id)}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground capitalize">Rôle : {s.role}</p>
                 <p className="text-sm text-muted-foreground">Créé le : {formatDate(s.created_at)}</p>
               </CardContent>
             </Card>
           ))}
         </div>
       )}
+
+      {/* Confirmation dialog */}
+      <AlertDialog open={!!confirmId} onOpenChange={(open) => { if (!open) setConfirmId(null); }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Supprimer l'utilisateur ?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Vous êtes sur le point de supprimer <strong>{confirmProfile?.display_name ?? confirmId}</strong>. Cette action est irréversible et supprimera également toutes ses données.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deleting}>Annuler</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={deleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {deleting ? "Suppression..." : "Supprimer"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
-  )
-}
+  );
+};
 
 export default AdminUsersView;
