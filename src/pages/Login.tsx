@@ -84,7 +84,7 @@ const Login: React.FC = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center space-y-2">
           <img
-            src="/images/logo-blanc-her-enr-.webp"
+            src="/images/logo-blanc-her-enr.webp"
             alt="Groupe HER-ENR"
             className="h-14 mx-auto rounded-lg bg-primary p-2"
           />

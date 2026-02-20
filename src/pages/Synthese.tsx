@@ -219,11 +219,9 @@ const Synthese: React.FC = () => {
                 {isSaving ? "Sauvegarde en cours…" : "Confirmer la validation"}
               </button>
             </div>
-
           </div>
         )}
       </AppModal>
-
     </div>
   );
 };

@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2, SquareArrowOutUpRight } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { ScenariosData, ScenarioData, DimensionnementData, FenetreData } from "@/types/formData";
 import { fenetreMatiereOptions, fenetreOuvrantOptions, fenetreTypeOptions } from "@/utils/handleForm";
+import AppModal from "../Modal";
 
 interface StepDimensionnementProps {
   data: DimensionnementData;
@@ -21,6 +22,20 @@ const emptyFenetre = (): FenetreData => ({
 });
 
 const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChange }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string, caption: string } | null>(null);
+
+  const images = useMemo(
+    () => [
+      {
+        src: "/images/plan_ite_cote.png", alt: "exemple plan isolation par l'extérieur", caption: "Exemple plan pour ITE",
+      },
+      {
+        src: "/images/photo_exemple_ite.png", alt: "photo exemple ite", caption: "Exemple photo ITE",
+      }
+    ],
+    []
+  );
 
   const fenetres: FenetreData[] = data.dimensionnementFenetres?.length ? data.dimensionnementFenetres : [{ type: "", ouverture: "", matiere: "" }];
 
@@ -308,10 +323,57 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       {/* Dimensionnement ITE */}
       <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
         <div>Faire photos et plans de façade pour devis R2</div>
-        <div>
-          <img src="" alt="" />
+        {/* Illustrations */}
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {images.map((img, idx) => (
+            <div
+              key={`${img.src}-${idx}`}
+              className="border border-slate-200 rounded-lg overflow-hidden transition-transform duration-300 ease-out hover:scale-105"
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage(img);
+                  setIsModalOpen(true);
+                }}
+                className="block w-full"
+                title="Cliquer pour agrandir"
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  className="w-full h-40 object-cover"
+                  loading="lazy"
+                />
+              </button>
+              <div className="p-2 text-xs text-center text-muted-foreground">
+                {img.caption}
+              </div>
+            </div>
+          ))}
         </div>
       </SectionCard>
+      <AppModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setSelectedImage(null);
+          setIsModalOpen(false);
+        }}
+        title="Exemple"
+      >
+        {selectedImage && (
+          <div className="flex flex-col gap-3">
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="w-full max-h-[75vh] object-contain rounded-lg"
+            />
+            <div className="text-sm text-center text-muted-foreground">
+              {selectedImage.caption}
+            </div>
+          </div>
+        )}
+      </AppModal>
 
       {/* Fenêtres / Portes-fenêtres */}
       <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2} link="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
