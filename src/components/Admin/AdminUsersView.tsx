@@ -86,7 +86,7 @@ const AdminUsersView: React.FC<{
       if (res.error) throw new Error(res.error.message);
       onDeleteProfile(confirmId);
       toast.success("Utilisateur supprimé avec succès.");
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Erreur : " + err.message);
     } finally {
       setDeleting(false);
@@ -119,7 +119,7 @@ const AdminUsersView: React.FC<{
       setNewEmail("");
       setNewDisplayName("");
       setNewRole("commercial");
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Erreur : " + err.message);
     } finally {
       setCreating(false);

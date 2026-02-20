@@ -36,6 +36,43 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <SummaryRow label="Commentaire" value={data.commentaires} />
           </div>
         </SectionCard>
+        {/* Aides / Mails */}
+        <SectionCard title="Aides / Accès" icon={BadgeEuro} className="mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <SummaryRow label="Mail Prime EDF" value={data.mailPrimeEDF} />
+            <SummaryRow label="Montant Prime EDF" value={data.montantPrimeEDF ? `${data.montantPrimeEDF} €` : ""} />
+            <SummaryRow label="MDP Prime EDF" value={data.mdpPrimeEDF} />
+            <SummaryRow label="Mail MaPrimeRénov" value={data.mailPrimeRenov} />
+            <SummaryRow label="Montant MaPrimeRénov" value={data.montantPrimeRenov ? `${data.montantPrimeRenov} €` : ""} />
+            <SummaryRow label="MDP MaPrimeRénov" value={data.mdpPrimeRenov} />
+            <SummaryRow label="Gmail créé" value={data.gmailCree} />
+            <SummaryRow label="MDP Gmail" value={data.mdpGmail} />
+          </div>
+        </SectionCard>
+        {/* Règlement */}
+        <SectionCard title="Règlement" icon={CreditCard} className="mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : DisplayFalse} />
+          </div>
+        </SectionCard>
+        {/* Pièces / Attestations */}
+        <SectionCard title="Pièces / Attestations" icon={FileText} className="mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
+            <SummaryRow label="Carte identité" value={data.carteIdentite ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="2 derniers avis d'impôts" value={data.deuxDerniersAvisImpots ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="RIB" value={data.rib ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Attestation indivisionnaire" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Attestation bailleur" value={data.attestationProprietaireBailleur ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : DisplayFalse} />
+          </div>
+        </SectionCard>
+      </div>
+      <div className="a4-page">
         {/* Habitation */}
         <SectionCard title="Habitation" icon={Home} className="mb-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
@@ -207,6 +244,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <div className="text-sm text-muted-foreground">Aucun radiateur renseigné.</div>
           )}
         </SectionCard>
+
       </div>
       <div className="a4-page">
         {/* PV */}
@@ -229,43 +267,6 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <SummaryRow label="Docs : parcelle" value={data.pvDocParcelle ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Docs : pouvoir" value={data.pvDocPouvoir ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Docs : taxe foncière" value={data.pvDocTaxeFonciere ? DisplayTrue : DisplayFalse} />
-          </div>
-        </SectionCard>
-        {/* Aides / Mails */}
-        <SectionCard title="Aides / Accès" icon={BadgeEuro} className="mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Mail Prime EDF" value={data.mailPrimeEDF} />
-            <SummaryRow label="Montant Prime EDF" value={data.montantPrimeEDF ? `${data.montantPrimeEDF} €` : ""} />
-            <SummaryRow label="MDP Prime EDF" value={data.mdpPrimeEDF} />
-            <SummaryRow label="Mail MaPrimeRénov" value={data.mailPrimeRenov} />
-            <SummaryRow label="Montant MaPrimeRénov" value={data.montantPrimeRenov ? `${data.montantPrimeRenov} €` : ""} />
-            <SummaryRow label="MDP MaPrimeRénov" value={data.mdpPrimeRenov} />
-            <SummaryRow label="Gmail créé" value={data.gmailCree} />
-            <SummaryRow label="MDP Gmail" value={data.mdpGmail} />
-          </div>
-        </SectionCard>
-        {/* Pièces / Attestations */}
-        <SectionCard title="Pièces / Attestations" icon={FileText} className="mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Carte identité" value={data.carteIdentite ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="2 derniers avis d'impôts" value={data.deuxDerniersAvisImpots ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="RIB" value={data.rib ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Attestation indivisionnaire" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Attestation bailleur" value={data.attestationProprietaireBailleur ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : DisplayFalse} />
-          </div>
-        </SectionCard>
-      </div>
-      <div className="a4-page">
-        {/* Règlement */}
-        <SectionCard title="Règlement" icon={CreditCard} className="mb-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : DisplayFalse} />
           </div>
         </SectionCard>
       </div>
