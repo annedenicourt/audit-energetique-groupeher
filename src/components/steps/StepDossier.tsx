@@ -163,22 +163,22 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <div className="underline">Compte Prime CEE EDF</div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <FormInput label="Montant Prime EDF" name="montantPrimeEDF" value={form.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" />
+          <FormInput type="number" label="Montant Prime EDF" name="montantPrimeEDF" value={form.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" />
           <FormInput label="Mail" name="mailPrimeEDF" value={form.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
           <FormInput label="MDP" name="mdpPrimeEDF" value={form.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
         </div>
 
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime Rénov</h3>
         <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="underline">Non éligible</div>
+          <CheckboxField label="Non éligible" checked={form.nonEligibleMpr} onChange={(v) => update("nonEligibleMpr", v)} />
           <div className="underline">Compte MaPrimeRenov'</div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <FormInput label="Montant Prime Rénov" name="montantPrimeRenov" value={form.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" />
-          <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" />
-          <FormInput label="MDP" name="mdpPrimeRenov" value={form.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} />
+          <FormInput type="number" label="Montant Prime Rénov" name="montantPrimeRenov" value={form.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" readonly={form.nonEligibleMpr} />
+          <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={form.nonEligibleMpr} />
+          <FormInput label="MDP" name="mdpPrimeRenov" value={form.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={form.nonEligibleMpr} />
         </div>
-        <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail</h3>
+        <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail, ne pas oubliez de lui communiquer</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput label="Gmail créé" name="gmailCree" value={form.gmailCree} onChange={(v) => update("gmailCree", v)} type="email" />
           <FormInput label="MDP" name="mdpGmail" value={form.mdpGmail} onChange={(v) => update("mdpGmail", v)} />

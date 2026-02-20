@@ -83,14 +83,17 @@ const Synthese: React.FC = () => {
         return;
       }
 
-      const url = URL.createObjectURL(pdfBlob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      /* SI DOSSIER LIAISON TELECHARGEMENT DU PDF SUR ORDI*/
+      if (pdfMode === "dossier") {
+        const url = URL.createObjectURL(pdfBlob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
 
       localStorage.removeItem(storageKey);
       toast.success("PDF téléchargé et sauvegardé !");

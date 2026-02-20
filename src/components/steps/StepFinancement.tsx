@@ -15,6 +15,15 @@ interface StepFinancementProps {
 
 const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, economiesMensuellesMoyennes, aidesMaPrimeRenov, aidesCEE }) => {
 
+  const getBackground = (mensualite) => {
+    let result = ""
+    const numMensualite = Number(mensualite)
+    if (mensualite && numMensualite >= -50) {
+      result = "bg-lime-500"
+    }
+    return result
+  }
+
   return (
     <div className="">
       {/* Page title */}
@@ -50,7 +59,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
               suffix="€"
               readonly={true}
             />
-            <div className="p-4 bg-lime-300 rounded-lg border border-primary/20">
+            <div className={`p-4 rounded-lg border border-primary/20 ${getBackground(data.mensualiteMoinsEconomies)}`}>
               <div className="font-bold">Gain ou faible effort financier</div>
               <FormInput
                 label=""

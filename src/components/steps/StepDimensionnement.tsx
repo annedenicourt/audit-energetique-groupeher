@@ -225,14 +225,14 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           </a>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput
+          {/* <FormInput
             label="Résultat REVOLT"
             name="resultatRevolt"
             value={data.resultatRevolt}
             onChange={(v) => onChange("resultatRevolt", v)}
             type="text"
             placeholder="0"
-          />
+          /> */}
           <FormInput
             label="Consommation électrique annuelle"
             name="consommationPVElecAnnuelle"

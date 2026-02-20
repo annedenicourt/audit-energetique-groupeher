@@ -15,9 +15,9 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { view: "dashboard", label: "Dashboard",     icon: LayoutDashboard },
-  { view: "pdf",       label: "PDFs",          icon: FolderOpen },
-  { view: "users",     label: "Utilisateurs",  icon: Users },
+  { view: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { view: "pdf", label: "PDFs", icon: FolderOpen },
+  { view: "users", label: "Utilisateurs", icon: Users },
 ];
 
 // ─── Sidebar inner nav ──────────────────────────────────────────────────────────
@@ -31,10 +31,8 @@ interface SidebarNavProps {
 const SidebarNav: React.FC<SidebarNavProps> = ({ current, onChange, onBack }) => (
   <nav className="flex flex-col h-full">
     <div className="px-6 py-5 border-b border-border">
-      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground mb-1">
-        Groupe HER-ENR
-      </p>
-      <h2 className="text-lg font-bold text-foreground">Espace admin</h2>
+      <img src="./images/Logo-HER-WEB.webp" alt="" />
+      <h2 className="mt-4 text-center text-lg font-bold text-foreground">Espace admin</h2>
     </div>
 
     <ul className="flex-1 px-3 py-4 space-y-1">

@@ -55,7 +55,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="w-full flex items-center justify-between gap-3">
               <div className="w-52">
-                <img className="object-contain" src="/images/logo-blanc-her-enr-.webp" alt="logo groupe HER" />
+                <img className="object-contain" src="/images/logo-blanc-her-enr.webp" alt="logo groupe HER" />
               </div>
               <div>
                 <p className="font-bold text-lg text-white">
