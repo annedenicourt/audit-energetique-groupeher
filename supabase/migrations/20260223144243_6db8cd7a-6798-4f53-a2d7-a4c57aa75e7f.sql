@@ -1,0 +1,1 @@
+DROP VIEW IF EXISTS public.etudes_energetiques_with_email;
