@@ -91,18 +91,7 @@ export type Database = {
       }
     }
     Views: {
-      etudes_energetiques_with_email: {
-        Row: {
-          client_name: string | null
-          created_at: string | null
-          email: string | null
-          id: string | null
-          payload: Json | null
-          pdf_path: string | null
-          user_id: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       is_admin: { Args: never; Returns: boolean }
