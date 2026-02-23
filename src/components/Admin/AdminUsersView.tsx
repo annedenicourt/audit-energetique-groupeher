@@ -1,4 +1,4 @@
-import { ArrowUpDown, LayoutGrid, LayoutList, Plus, Search, Trash2 } from "lucide-react";
+import { ArrowUpDown, LayoutGrid, LayoutList, Pencil, Plus, Search, Trash2 } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import { useMemo, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
@@ -41,7 +41,8 @@ const AdminUsersView: React.FC<{
   loading: boolean;
   onDeleteProfile: (id: string) => void;
   onAddProfile: (profile: Profile) => void;
-}> = ({ profiles, loading, onDeleteProfile, onAddProfile }) => {
+  onUpdateProfile: (id: string, data: { display_name?: string | null; role?: string }) => void;
+}> = ({ profiles, loading, onDeleteProfile, onAddProfile, onUpdateProfile }) => {
   const [view, setView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("display_name_asc");
@@ -54,6 +55,39 @@ const AdminUsersView: React.FC<{
   const [newEmail, setNewEmail] = useState("");
   const [newDisplayName, setNewDisplayName] = useState("");
   const [newRole, setNewRole] = useState<"commercial" | "admin">("commercial");
+
+  // Edit user dialog state
+  const [editOpen, setEditOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editDisplayName, setEditDisplayName] = useState("");
+  const [editRole, setEditRole] = useState<"commercial" | "admin">("commercial");
+
+  const openEdit = (profile: Profile) => {
+    setEditId(profile.id);
+    setEditDisplayName(profile.display_name ?? "");
+    setEditRole(profile.role as "commercial" | "admin");
+    setEditOpen(true);
+  };
+
+  const handleEdit = async () => {
+    if (!editId) return;
+    setEditing(true);
+    try {
+      const res = await supabase.functions.invoke("update-user", {
+        body: { userId: editId, display_name: editDisplayName.trim() || null, role: editRole },
+      });
+      if (res.error) throw new Error(res.error.message);
+      if (res.data?.error) throw new Error(res.data.error);
+      onUpdateProfile(editId, { display_name: editDisplayName.trim() || null, role: editRole });
+      toast.success("Utilisateur mis à jour.");
+      setEditOpen(false);
+    } catch (err: any) {
+      toast.error("Erreur : " + err.message);
+    } finally {
+      setEditing(false);
+    }
+  };
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
@@ -185,7 +219,7 @@ const AdminUsersView: React.FC<{
                 <TableHead>Nom</TableHead>
                 <TableHead>Rôle</TableHead>
                 <TableHead>Créé le</TableHead>
-                <TableHead className="w-12"></TableHead>
+                <TableHead className="w-24"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -194,7 +228,15 @@ const AdminUsersView: React.FC<{
                   <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
                   <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
                   <TableCell>{formatDate(s.created_at)}</TableCell>
-                  <TableCell>
+                  <TableCell className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => openEdit(s)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
                     <Button
                       variant="ghost"
                       size="icon"
@@ -218,14 +260,24 @@ const AdminUsersView: React.FC<{
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-start justify-between">
                   <p className="font-semibold text-foreground truncate">{s.display_name ?? "—"}</p>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-destructive hover:text-destructive hover:bg-destructive/10 -mt-1 -mr-1 shrink-0"
-                    onClick={() => setConfirmId(s.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                  <div className="flex gap-1 -mt-1 -mr-1 shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-muted-foreground hover:text-foreground"
+                      onClick={() => openEdit(s)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      onClick={() => setConfirmId(s.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <p className="text-sm text-muted-foreground capitalize">Rôle : {s.role}</p>
                 <p className="text-sm text-muted-foreground">Créé le : {formatDate(s.created_at)}</p>
@@ -302,6 +354,45 @@ const AdminUsersView: React.FC<{
             <Button variant="outline" onClick={() => setCreateOpen(false)} disabled={creating}>Annuler</Button>
             <Button onClick={handleCreate} disabled={creating}>
               {creating ? "Création..." : "Créer"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog édition utilisateur */}
+      <Dialog open={editOpen} onOpenChange={(open) => { if (!open && !editing) setEditOpen(false); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Modifier l'utilisateur</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="edit-display-name">Nom d'affichage</Label>
+              <Input
+                id="edit-display-name"
+                placeholder="Prénom Nom"
+                value={editDisplayName}
+                onChange={(e) => setEditDisplayName(e.target.value)}
+                disabled={editing}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-role">Rôle</Label>
+              <Select value={editRole} onValueChange={(v) => setEditRole(v as "commercial" | "admin")} disabled={editing}>
+                <SelectTrigger id="edit-role">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="commercial">Commercial</SelectItem>
+                  <SelectItem value="admin">Admin</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditOpen(false)} disabled={editing}>Annuler</Button>
+            <Button onClick={handleEdit} disabled={editing}>
+              {editing ? "Enregistrement..." : "Enregistrer"}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -42,25 +42,38 @@ const Admin: React.FC = () => {
     fetchData();
   }, []);
 
+  const recentStudies = useMemo(
+    () => [...studies].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()).slice(0, 5),
+    [studies]
+  );
+
   return (
     <FormLayoutAdmin currentView={view} onViewChange={setView}>
       {view === "dashboard" && (
-        <AdminDashboardView studyCount={studies.length} profileCount={profiles.length} />
+        <AdminDashboardView
+          studyCount={studies.length}
+          profileCount={profiles.length}
+          recentStudies={recentStudies}
+          profiles={profiles}
+        />
       )}
-      {
-        view === "pdf" && (
-          <AdminPdfView studies={studies} profiles={profiles} loading={loading} />
-        )
-      }
+      {view === "pdf" && (
+        <AdminPdfView studies={studies} profiles={profiles} loading={loading} />
+      )}
       {view === "users" && (
         <AdminUsersView
           profiles={profiles}
           loading={loading}
           onDeleteProfile={(id) => setProfiles((prev) => prev.filter((p) => p.id !== id))}
           onAddProfile={(profile) => setProfiles((prev) => [...prev, profile])}
+          onUpdateProfile={(id, data) =>
+            setProfiles((prev) =>
+              prev.map((p) => (p.id === id ? { ...p, ...data } : p))
+            )
+          }
         />
       )}
-    </FormLayoutAdmin >
+    </FormLayoutAdmin>
   );
 };
 
