@@ -49,6 +49,8 @@ export interface DossierFormData {
   revolt: boolean;
   pouvoir: boolean;
   // Prime EDF
+  primeCeeDeduite: boolean;
+  compteCeeEdf: boolean;
   montantPrimeEDF: string;
   mailPrimeEDF: string;
   mdpPrimeEDF: string;
@@ -263,6 +265,8 @@ export const defaultDossierFormData: DossierFormData = {
   noteDimensionnement: false,
   revolt: false,
   pouvoir: false,
+  primeCeeDeduite: false,
+  compteCeeEdf: false,
   montantPrimeEDF: "",
   mailPrimeEDF: "",
   mdpPrimeEDF: "",

@@ -139,7 +139,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
       </SectionCard>
 
       {/* PIECES CHECKLITS*/}
-      <SectionCard title="Éléments pour dossier de financement">
+      <SectionCard title="Éléments obligatoires pour pose">
         <h3 className="font-semibold text-lime-600 mb-2">Pièces / checklist</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
           <CheckboxField label="Devis non signé" checked={form.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} />
@@ -159,24 +159,33 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime EDF</h3>
         <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="underline">Prime CEE déduite</div>
-          <div className="underline">Compte Prime CEE EDF</div>
+          <div>
+            {/* <div className="underline">Prime CEE déduite</div> */}
+            <CheckboxField label="Prime CEE déduite" checked={form.primeCeeDeduite} onChange={(v) => update("primeCeeDeduite", v)} />
+            <FormInput type="number" label="Montant Prime EDF" name="montantPrimeEDF" value={form.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" />
+          </div>
+          <div className="md:col-span-2">
+            {/* <div className="underline">Compte Prime CEE EDF</div> */}
+            <CheckboxField label="Compte Prime CEE EDF" checked={form.compteCeeEdf} onChange={(v) => update("compteCeeEdf", v)} />
+            <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput label="Mail" name="mailPrimeEDF" value={form.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
+              <FormInput label="MDP" name="mdpPrimeEDF" value={form.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
+            </div>
+          </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <FormInput type="number" label="Montant Prime EDF" name="montantPrimeEDF" value={form.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" />
-          <FormInput label="Mail" name="mailPrimeEDF" value={form.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
-          <FormInput label="MDP" name="mdpPrimeEDF" value={form.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
-        </div>
-
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime Rénov</h3>
         <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
-          <CheckboxField label="Non éligible" checked={form.nonEligibleMpr} onChange={(v) => update("nonEligibleMpr", v)} />
-          <div className="underline">Compte MaPrimeRenov'</div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          <FormInput type="number" label="Montant Prime Rénov" name="montantPrimeRenov" value={form.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" readonly={form.nonEligibleMpr} />
-          <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={form.nonEligibleMpr} />
-          <FormInput label="MDP" name="mdpPrimeRenov" value={form.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={form.nonEligibleMpr} />
+          <div>
+            <CheckboxField label="Non éligible" checked={form.nonEligibleMpr} onChange={(v) => update("nonEligibleMpr", v)} />
+            <FormInput type="number" label="Montant Prime Rénov" name="montantPrimeRenov" value={form.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" readonly={form.nonEligibleMpr} />
+          </div>
+          <div className="md:col-span-2">
+            <div className="underline">Compte MaPrimeRenov'</div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormInput label="Mail" name="mailPrimeRenov" value={form.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={form.nonEligibleMpr} />
+              <FormInput label="MDP" name="mdpPrimeRenov" value={form.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={form.nonEligibleMpr} />
+            </div>
+          </div>
         </div>
         <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail, ne pas oubliez de lui communiquer</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -217,11 +226,6 @@ const StepDossier: React.FC<StepDossierProps> = () => {
             </div>
           }
         </div>
-        {/*  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-          {form.etages && <FormInput label="Nombre d'étages" name="nbEtages" value={form.nbEtages} onChange={(v) => update("nbEtages", v)} />}
-          {form.videSanitaire && <FormInput label="Accessible" name="videSanitaireAccessible" value={form.videSanitaireAccessible} onChange={(v) => update("videSanitaireAccessible", v)} />}
-        </div> */}
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
           <FormInput label="Type de mur" name="typeMur_d" value={form.typeMur} onChange={(v) => update("typeMur", v)} />
           <FormInput type="number" label="Épaisseur mur" name="epaisseurMur_d" value={form.epaisseurMur} onChange={(v) => update("epaisseurMur", v)} suffix="cm" />
@@ -229,12 +233,12 @@ const StepDossier: React.FC<StepDossierProps> = () => {
 
         <h3 className="font-semibold text-lime-600 mt-4 mb-2">Combles</h3>
         <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Comble perdu" checked={form.comblePerdu} onChange={(v) => update("comblePerdu", v)} />
-          <CheckboxField label="Comble aménagé (sous rampant)" checked={form.combleAmenage} onChange={(v) => update("combleAmenage", v)} />
+          <CheckboxField label="Combles perdus" checked={form.comblePerdu} onChange={(v) => update("comblePerdu", v)} />
+          <CheckboxField label="Combles aménagés (sous rampant)" checked={form.combleAmenage} onChange={(v) => update("combleAmenage", v)} />
         </div>
         {form.comblePerdu && (
           <div className="flex flex-wrap gap-6 mb-2 ml-4">
-            <div>Accessible par : </div>
+            <div>Accessibles par : </div>
             <CheckboxField label="Trappe" checked={form.comblePerduTrappe} onChange={(v) => update("comblePerduTrappe", v)} />
             <CheckboxField label="Toit" checked={form.comblePerduToit} onChange={(v) => update("comblePerduToit", v)} />
             <CheckboxField label="Autre" checked={form.comblePerduAutre} onChange={(v) => update("comblePerduAutre", v)} />
@@ -520,7 +524,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Maison vue de la rue" checked={form.photoMaison} onChange={(v) => update("photoMaison", v)} />
           <CheckboxField label="Combles" checked={form.photoCombles} onChange={(v) => update("photoCombles", v)} />
           <CheckboxField label="Système ECS" checked={form.photoECS} onChange={(v) => update("photoECS", v)} />
-          <CheckboxField label="Disjoncteur" checked={form.photoDisjoncteur} onChange={(v) => update("photoDisjoncteur", v)} />          <CheckboxField label="RIB" checked={form.rib} onChange={(v) => update("rib", v)} />
+          <CheckboxField label="Disjoncteur" checked={form.photoDisjoncteur} onChange={(v) => update("photoDisjoncteur", v)} />
           <CheckboxField label="Tuyauterie de la chaudière" checked={form.photoTuyauterie} onChange={(v) => update("photoTuyauterie", v)} />
           <CheckboxField label="Radiateurs" checked={form.photoRadiateurs} onChange={(v) => update("photoRadiateurs", v)} />
           <CheckboxField label="Plafonds" checked={form.photoPlafonds} onChange={(v) => update("photoPlafonds", v)} />
@@ -531,7 +535,6 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Planchers" checked={form.photoPlancher} onChange={(v) => update("photoPlancher", v)} />
           <CheckboxField label="Rez-de-chaussée" checked={form.photoRDC} onChange={(v) => update("photoRDC", v)} />
         </div>
-
         <h3 className="font-semibold text-lime-600 mb-2">Menuiseries et isolation extérieure</h3>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <CheckboxField label="Fenêtres" checked={form.photoFenetres} onChange={(v) => update("photoFenetres", v)} />
