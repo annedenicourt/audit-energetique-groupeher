@@ -55,6 +55,7 @@ const Admin: React.FC = () => {
           profileCount={profiles.length}
           recentStudies={recentStudies}
           profiles={profiles}
+          allStudies={studies}
         />
       )}
       {view === "pdf" && (
