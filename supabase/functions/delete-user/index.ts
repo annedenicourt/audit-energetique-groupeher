@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,13 +7,16 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const DeleteUserSchema = z.object({
+  userId: z.string().uuid("userId must be a valid UUID"),
+});
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Vérification de l'authentification
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -21,7 +25,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Client avec le JWT de l'appelant pour vérifier son rôle
     const supabaseUser = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!,
@@ -39,7 +42,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Vérification que l'appelant est admin
     const { data: profile, error: profileError } = await supabaseUser
       .from("profiles")
       .select("role")
@@ -53,16 +55,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Récupération du userId à supprimer
-    const { userId } = await req.json();
-    if (!userId) {
-      return new Response(JSON.stringify({ error: "userId is required" }), {
+    // Validate input with zod
+    const body = await req.json();
+    const validation = DeleteUserSchema.safeParse(body);
+
+    if (!validation.success) {
+      return new Response(JSON.stringify({ error: "userId must be a valid UUID" }), {
         status: 400,
         headers: corsHeaders,
       });
     }
 
-    // Client admin avec service role pour supprimer l'utilisateur
+    const { userId } = validation.data;
+
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
@@ -83,7 +88,7 @@ Deno.serve(async (req) => {
       headers: corsHeaders,
     });
   } catch (err) {
-    return new Response(JSON.stringify({ error: String(err) }), {
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
       status: 500,
       headers: corsHeaders,
     });

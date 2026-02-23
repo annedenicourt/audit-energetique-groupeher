@@ -41,16 +41,6 @@ const Admin: React.FC = () => {
     };
     fetchData();
   }, []);
-  const session = supabase.auth.getSession()
-    .then((response) => {
-      /* console.log(response.data.session.access_token)
-      console.log("session?", !!data.session);
-      console.log("user id?", data.session?.user?.id);
-      console.log("token len", t.length);
-      console.log("token has sub?", t.includes('"sub"') || t.includes("sub"));
-      console.log("token parts", t.split(".").length); */
-    })
-  //console.log(session)
 
   return (
     <FormLayoutAdmin currentView={view} onViewChange={setView}>

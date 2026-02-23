@@ -1,4 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { z } from "https://deno.land/x/zod@v3.23.8/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -6,13 +7,18 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const CreateUserSchema = z.object({
+  email: z.string().email("Email invalide").max(255),
+  display_name: z.string().max(100).nullable().optional(),
+  role: z.enum(["commercial", "admin"]),
+});
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    // Vérifier l'authentification
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Non authentifié" }), {
@@ -21,7 +27,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Client avec le token de l'appelant pour vérifier son rôle
     const supabaseUser = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_ANON_KEY")!,
@@ -37,7 +42,6 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Vérifier que l'appelant est admin
     const callerId = claimsData.claims.sub;
     const { data: callerProfile, error: profileError } = await supabaseUser
       .from("profiles")
@@ -52,30 +56,24 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Lire le body
-    const { email, display_name, role } = await req.json();
+    // Validate input with zod
+    const body = await req.json();
+    const validation = CreateUserSchema.safeParse(body);
 
-    if (!email || !role) {
-      return new Response(JSON.stringify({ error: "email et role sont requis" }), {
+    if (!validation.success) {
+      return new Response(JSON.stringify({ error: "Validation échouée", details: validation.error.issues }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    if (!["commercial", "admin"].includes(role)) {
-      return new Response(JSON.stringify({ error: "Rôle invalide" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
-    }
+    const { email, display_name, role } = validation.data;
 
-    // Client admin avec service_role
     const supabaseAdmin = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Créer l'utilisateur sans envoyer d'email
     const { data: newUser, error: createError } = await supabaseAdmin.auth.admin.createUser({
       email,
       email_confirm: true,
@@ -90,7 +88,6 @@ Deno.serve(async (req) => {
 
     const newUserId = newUser.user.id;
 
-    // Mettre à jour le profil créé automatiquement par le trigger
     const { error: updateError } = await supabaseAdmin
       .from("profiles")
       .update({ display_name: display_name ?? null, role })
@@ -108,7 +105,7 @@ Deno.serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message ?? "Erreur inconnue" }), {
+    return new Response(JSON.stringify({ error: "Erreur interne" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
