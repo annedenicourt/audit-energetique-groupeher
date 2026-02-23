@@ -82,7 +82,7 @@ const AdminUsersView: React.FC<{
       onUpdateProfile(editId, { display_name: editDisplayName.trim() || null, role: editRole });
       toast.success("Utilisateur mis à jour.");
       setEditOpen(false);
-    } catch (err: any) {
+    } catch (err) {
       toast.error("Erreur : " + err.message);
     } finally {
       setEditing(false);

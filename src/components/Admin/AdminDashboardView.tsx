@@ -21,9 +21,10 @@ interface Props {
   recentStudies: Study[];
   profiles: Profile[];
   allStudies: Study[];
+  setView: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentStudies, profiles, allStudies }) => {
+const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentStudies, profiles, setView, allStudies }) => {
   const profileMap = new Map(profiles.map((p) => [p.id, p.display_name ?? "Inconnu"]));
 
   const formatDateTime = (d: string) => {
@@ -80,7 +81,10 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
 
       {/* Dernières études */}
       <div>
-        <h2 className="text-lg font-semibold text-foreground mb-3">Dernières études</h2>
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-foreground ">Dernières études réalisées</h2>
+          <div className="font-semibold cursor-pointer" onClick={() => setView("pdf")}>Voir toutes les études</div>
+        </div>
         {recentStudies.length === 0 ? (
           <Card>
             <CardContent className="p-6 flex flex-col items-center justify-center text-center gap-2 min-h-[120px]">

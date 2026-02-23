@@ -56,6 +56,7 @@ const Admin: React.FC = () => {
           recentStudies={recentStudies}
           profiles={profiles}
           allStudies={studies}
+          setView={setView}
         />
       )}
       {view === "pdf" && (
