@@ -1,5 +1,6 @@
 import { Activity, Clock, FileText, TrendingUp, Users } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
+import AdminActivityChart from "./AdminActivityChart";
 
 interface Study {
   id: string;
@@ -19,9 +20,10 @@ interface Props {
   profileCount: number;
   recentStudies: Study[];
   profiles: Profile[];
+  allStudies: Study[];
 }
 
-const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentStudies, profiles }) => {
+const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentStudies, profiles, allStudies }) => {
   const profileMap = new Map(profiles.map((p) => [p.id, p.display_name ?? "Inconnu"]));
 
   const formatDateTime = (d: string) => {
@@ -73,6 +75,8 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
           </CardContent>
         </Card>
       </div>
+
+      <AdminActivityChart studies={allStudies} />
 
       {/* Dernières études */}
       <div>
