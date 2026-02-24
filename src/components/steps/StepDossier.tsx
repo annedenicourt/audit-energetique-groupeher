@@ -112,8 +112,8 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           </div>
           <FormInput label="Nom du client" name="nomClient" value={form.nomClient} onChange={(v) => update("nomClient", v)} />
           <FormInput label="Téléphone" name="telephone" value={form.telephone} type="tel" onChange={(v) => update("telephone", v)} />
-          <FormInput label="Adresse" name="adresseDossier" value={form.adresse} onChange={(v) => update("adresse", v)} className="md:col-span-2" />
-          <FormInput label="Adresse de l'installation (si différente)" name="adresseInstallation" value={form.adresseInstallation} onChange={(v) => update("adresseInstallation", v)} className="md:col-span-2" />
+          <FormInput label="Adresse fiscale" name="adresseDossier" value={form.adresse} onChange={(v) => update("adresse", v)} className="md:col-span-2" />
+          <FormInput label="Adresse de chantier" name="adresseInstallation" value={form.adresseInstallation} onChange={(v) => update("adresseInstallation", v)} className="md:col-span-2" />
         </div>
       </SectionCard>
 
