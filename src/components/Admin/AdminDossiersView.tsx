@@ -11,7 +11,7 @@ import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from ".
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
 
-interface Study {
+interface Dossier {
   id: string;
   user_id: string;
   client_name: string | null;
@@ -24,7 +24,7 @@ interface Profile {
   display_name: string | null;
 }
 
-const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean }> = ({ studies, profiles, loading }) => {
+const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; loading: boolean }> = ({ dossiers, profiles, loading }) => {
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
@@ -37,12 +37,12 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
   }, [profiles]);
 
   const commercials = useMemo(
-    () => profiles.filter((p) => studies.some((s) => s.user_id === p.id)),
-    [profiles, studies]
+    () => profiles.filter((p) => dossiers.some((s) => s.user_id === p.id)),
+    [profiles, dossiers]
   );
 
   const filtered = useMemo(() => {
-    let result = studies;
+    let result = dossiers;
     if (search) {
       const v = search.toLowerCase();
       result = result.filter((s) => s.client_name?.toLowerCase().includes(v));
@@ -62,7 +62,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
         default: return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       }
     });
-  }, [studies, search, filterCommercial, sortKey, profileMap]);
+  }, [dossiers, search, filterCommercial, sortKey, profileMap]);
 
   const handleOpenPdf = async (pdfPath: string | null) => {
     if (!pdfPath) { toast.error("Aucun PDF disponible pour cette étude."); return; }
@@ -77,8 +77,8 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Études réalisées</h1>
-        <p className="text-sm text-muted-foreground mt-1">Toutes les études et leurs PDF</p>
+        <h1 className="text-2xl font-bold text-foreground">Dossiers de liaison</h1>
+        <p className="text-sm text-muted-foreground mt-1">Toutes les dossiers de liaison et leurs PDF</p>
       </div>
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row gap-3 items-start md:items-center flex-wrap">
@@ -128,7 +128,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
       )}
 
       {!loading && filtered.length === 0 && (
-        <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">Aucune étude trouvée.</div>
+        <div className="rounded-lg border border-border p-12 text-center text-muted-foreground">Aucun dossier trouvé.</div>
       )}
 
       {!loading && filtered.length > 0 && listView === "list" && (
@@ -186,4 +186,4 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
   );
 };
 
-export default AdminPdfView;
+export default AdminDossiersView;

@@ -54,24 +54,24 @@ const FormLayout: React.FC<FormLayoutProps> = ({
         <header className="py-4 px-6 shadow-lg">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="w-full flex items-center justify-between gap-3">
-              <div className="w-52">
+              <div className="w-28 md:w-52">
                 <img className="object-contain" src="/images/logo-blanc-her-enr.webp" alt="logo groupe HER" />
               </div>
               <div>
-                <p className="font-bold text-lg text-white">
+                <p className="hidden md:block font-bold text-xs md:text-lg text-white">
                   Étude Énergétique personnalisée
                 </p>
               </div>
               <div className="flex">
                 {isAdmin &&
                   <NavLink to={"/admin"}>
-                    <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
+                    <button className="flex items-center gap-2 p-2 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
                       <LayoutDashboard className="w-4 h-4" />
                       Espace admin
                     </button>
                   </NavLink>
                 }
-                <button className="py-2 px-3 text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => handleLogout()}>
+                <button className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => handleLogout()}>
                   Déconnexion
                 </button>
               </div>

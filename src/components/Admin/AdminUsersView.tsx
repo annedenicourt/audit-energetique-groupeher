@@ -44,7 +44,7 @@ const AdminUsersView: React.FC<{
   onAddProfile: (profile: Profile, email?: string) => void;
   onUpdateProfile: (id: string, data: { display_name?: string | null; role?: string }) => void;
 }> = ({ profiles, loading, emailMap, onDeleteProfile, onAddProfile, onUpdateProfile }) => {
-  const [view, setView] = useState<"list" | "cards">("list");
+  const [view, setView] = useState<"list" | "cards">("cards");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("display_name_asc");
   const [confirmId, setConfirmId] = useState<string | null>(null);
@@ -166,7 +166,7 @@ const AdminUsersView: React.FC<{
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Utilisateurs</h1>
-          <p className="text-sm text-muted-foreground mt-1">Gestion des comptes commerciaux.</p>
+          <p className="text-sm text-muted-foreground mt-1">Gestion des comptes commerciaux</p>
         </div>
         <Button onClick={() => setCreateOpen(true)}>
           <Plus className="h-4 w-4 mr-2" />
@@ -213,23 +213,23 @@ const AdminUsersView: React.FC<{
       )}
 
       {!loading && filtered.length > 0 && view === "list" && (
-        <div className="rounded-lg border">
+        <div className="rounded-lg border table_users">
           <Table>
             <TableHeader>
-             <TableRow>
-                 <TableHead>Nom</TableHead>
-                 <TableHead>Email</TableHead>
-                 <TableHead>Rôle</TableHead>
-                 <TableHead>Créé le</TableHead>
-                 <TableHead className="w-24"></TableHead>
-               </TableRow>
-             </TableHeader>
-             <TableBody>
-               {filtered.map((s) => (
-                 <TableRow key={s.id}>
-                   <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
-                   <TableCell className="text-muted-foreground">{emailMap[s.id] ?? "—"}</TableCell>
-                   <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
+              <TableRow>
+                <TableHead>Nom</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Rôle</TableHead>
+                <TableHead>Créé le</TableHead>
+                <TableHead className="w-24"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filtered.map((s) => (
+                <TableRow key={s.id}>
+                  <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{emailMap[s.id] ?? "—"}</TableCell>
+                  <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
                   <TableCell>{formatDate(s.created_at)}</TableCell>
                   <TableCell className="flex gap-1">
                     <Button

@@ -235,4 +235,8 @@
 .exporting .only-pdf {
   display: block;
 }
+
+.table_users td {
+  padding: 0.5rem;
+}
 }
