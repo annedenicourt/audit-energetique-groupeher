@@ -94,15 +94,15 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
   const handleBack = () => navigate(-1);
 
   return (
-    <div className="min-h-screen flex w-full bg-background">
+    <div className="flex w-full h-screen bg-background overflow-hidden">
       {/* ── Desktop sidebar ── */}
-      <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-border bg-card">
+      <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-border bg-card h-screen sticky top-0">
         <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} />
       </aside>
 
       {/* ── Mobile header + drawer ── */}
-      <div className="flex flex-col flex-1 min-w-0">
-        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
+      <div className="flex flex-col flex-1 min-w-0 h-screen">
+        <header className="md:hidden flex items-center gap-3 px-4 py-3 border-b border-border bg-card shrink-0">
           <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" aria-label="Ouvrir le menu">
@@ -117,7 +117,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
         </header>
 
         {/* ── Content ── */}
-        <main className="flex-1 p-4 md:p-8 overflow-auto">
+        <main className="flex-1 p-4 md:p-8 overflow-y-auto">
           {children}
         </main>
       </div>
