@@ -33,10 +33,18 @@ import {
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
 import StepDossier from "@/components/steps/StepDossier";
+import { useLocation } from "react-router-dom";
 
 const Index: React.FC = () => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const stepLocation = location.state?.step;
+    if (typeof stepLocation === "number") setCurrentStep(stepLocation);
+  }, [location.state]);
 
   const STORAGE_KEY = "simulation_form";
 

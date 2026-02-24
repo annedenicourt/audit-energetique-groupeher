@@ -80,12 +80,12 @@ export const lettreOptions = [
   { value: "E", label: "E" },
 ];
 
-export const categorieOptions = [
+/* export const categorieOptions = [
   { value: "tres_modestes", label: "Très modestes (bleu)" },
   { value: "modestes", label: "Modestes (jaune)" },
   { value: "intermediaires", label: "Intermédiaires (violet)" },
   { value: "superieurs", label: "Supérieurs (rose)" },
-];
+]; */
 
 export const nbrePersonnesOptions = [
   { value: "1", label: "1 personne" },
