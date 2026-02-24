@@ -24,19 +24,22 @@ const Admin: React.FC = () => {
 
   const [studies, setStudies] = useState<Study[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
+  const [emailMap, setEmailMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      const [studiesRes, profilesRes] = await Promise.all([
+      const [studiesRes, profilesRes, emailsRes] = await Promise.all([
         supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
         supabase.from("profiles").select("id, display_name, role, created_at"),
+        supabase.functions.invoke("list-users"),
       ]);
       if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
       else setStudies(studiesRes.data ?? []);
       if (profilesRes.error) toast.error("Erreur chargement profils: " + profilesRes.error.message);
       else setProfiles(profilesRes.data ?? []);
+      if (!emailsRes.error && emailsRes.data?.emails) setEmailMap(emailsRes.data.emails);
       setLoading(false);
     };
     fetchData();
@@ -66,8 +69,12 @@ const Admin: React.FC = () => {
         <AdminUsersView
           profiles={profiles}
           loading={loading}
+          emailMap={emailMap}
           onDeleteProfile={(id) => setProfiles((prev) => prev.filter((p) => p.id !== id))}
-          onAddProfile={(profile) => setProfiles((prev) => [...prev, profile])}
+          onAddProfile={(profile, email) => {
+            setProfiles((prev) => [...prev, profile]);
+            if (email) setEmailMap((prev) => ({ ...prev, [profile.id]: email }));
+          }}
           onUpdateProfile={(id, data) =>
             setProfiles((prev) =>
               prev.map((p) => (p.id === id ? { ...p, ...data } : p))

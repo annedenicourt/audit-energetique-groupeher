@@ -39,10 +39,11 @@ type SortKey = "display_name_asc" | "display_name_desc" | "date_desc" | "date_as
 const AdminUsersView: React.FC<{
   profiles: Profile[];
   loading: boolean;
+  emailMap: Record<string, string>;
   onDeleteProfile: (id: string) => void;
-  onAddProfile: (profile: Profile) => void;
+  onAddProfile: (profile: Profile, email?: string) => void;
   onUpdateProfile: (id: string, data: { display_name?: string | null; role?: string }) => void;
-}> = ({ profiles, loading, onDeleteProfile, onAddProfile, onUpdateProfile }) => {
+}> = ({ profiles, loading, emailMap, onDeleteProfile, onAddProfile, onUpdateProfile }) => {
   const [view, setView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState<SortKey>("display_name_asc");
@@ -147,7 +148,7 @@ const AdminUsersView: React.FC<{
         role: newRole,
         created_at: new Date().toISOString(),
       };
-      onAddProfile(newProfile);
+      onAddProfile(newProfile, newEmail.trim());
       toast.success("Utilisateur créé avec succès.");
       setCreateOpen(false);
       setNewEmail("");
@@ -215,18 +216,20 @@ const AdminUsersView: React.FC<{
         <div className="rounded-lg border">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead>Rôle</TableHead>
-                <TableHead>Créé le</TableHead>
-                <TableHead className="w-24"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filtered.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
-                  <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
+             <TableRow>
+                 <TableHead>Nom</TableHead>
+                 <TableHead>Email</TableHead>
+                 <TableHead>Rôle</TableHead>
+                 <TableHead>Créé le</TableHead>
+                 <TableHead className="w-24"></TableHead>
+               </TableRow>
+             </TableHeader>
+             <TableBody>
+               {filtered.map((s) => (
+                 <TableRow key={s.id}>
+                   <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
+                   <TableCell className="text-muted-foreground">{emailMap[s.id] ?? "—"}</TableCell>
+                   <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
                   <TableCell>{formatDate(s.created_at)}</TableCell>
                   <TableCell className="flex gap-1">
                     <Button
@@ -279,6 +282,7 @@ const AdminUsersView: React.FC<{
                     </Button>
                   </div>
                 </div>
+                <p className="text-sm text-muted-foreground truncate">{emailMap[s.id] ?? ""}</p>
                 <p className="text-sm text-muted-foreground capitalize">Rôle : {s.role}</p>
                 <p className="text-sm text-muted-foreground">Créé le : {formatDate(s.created_at)}</p>
               </CardContent>
