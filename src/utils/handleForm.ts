@@ -78,6 +78,8 @@ export const lettreOptions = [
   { value: "C", label: "C" },
   { value: "D", label: "D" },
   { value: "E", label: "E" },
+  { value: "F", label: "F" },
+  { value: "G", label: "G" },
 ];
 
 /* export const categorieOptions = [

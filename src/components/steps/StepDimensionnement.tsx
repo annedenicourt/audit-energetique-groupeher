@@ -255,7 +255,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             onChange={(v) => onChange("consommationPVElecAnnuelle", v)}
             type="number"
             placeholder="0"
-            suffix="kWh/an"
+            suffix="kW/an"
           />
           <FormInput
             label="Puissance PV recommandée"
@@ -273,7 +273,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             onChange={(v) => onChange("productionPVEstimee", v)}
             type="number"
             placeholder="0"
-            suffix="kWh/an"
+            suffix="kW/an"
           />
           <FormInput
             label="Puissance batterie physique recommandée"
@@ -282,7 +282,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             onChange={(v) => onChange("batteriePhysiqueReco", v)}
             type="text"
             placeholder="0"
-            suffix="kWh/an"
+            suffix="kW"
           />
           <FormInput
             label="Puissance batterie virtuelle recommandée"
@@ -291,7 +291,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             onChange={(v) => onChange("batterieVirtuelleReco", v)}
             type="text"
             placeholder="0"
-            suffix="kWh/an"
+            suffix="kW/mois"
           />
         </div>
       </SectionCard>

@@ -26,7 +26,7 @@ const ScenarioCard: React.FC<{
         name={`${title}-nom`}
         value={scenario.nom}
         onChange={(v) => onChange("nom", v)}
-        placeholder="Ex: Pompe à chaleur + isolation"
+        placeholder=""
       />
       <FormInput
         label="Plus-value du logement"

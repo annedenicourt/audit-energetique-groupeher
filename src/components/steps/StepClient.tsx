@@ -66,11 +66,11 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <FormInput
-              label="Adresse"
+              label="Adresse du chantier"
               name="adresse"
               value={data.adresse}
               onChange={(v) => onChange("adresse", v)}
-              placeholder="Adresse du client"
+              placeholder="Adresse"
             />
           </div>
           <FormInput
