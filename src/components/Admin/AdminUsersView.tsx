@@ -190,6 +190,7 @@ const AdminUsersView: React.FC<{
             <SelectItem value="display_name_desc">Nom Z→A</SelectItem>
             <SelectItem value="date_desc">Plus récent</SelectItem>
             <SelectItem value="date_asc">Plus ancien</SelectItem>
+            <SelectItem value="role_admin">Rôle Administrateur</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-1 border rounded-md p-1">
@@ -259,7 +260,7 @@ const AdminUsersView: React.FC<{
       {!loading && filtered.length > 0 && view === "cards" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((s) => (
-            <Card key={s.id}>
+            <Card key={s.id} className={`${s.role === "admin" && "ring-2 ring-orange-500 ring-offset-2"}`}>
               <CardContent className="p-5 space-y-3">
                 <div className="flex items-start justify-between">
                   <p className="font-semibold text-foreground truncate">{s.display_name ?? "—"}</p>

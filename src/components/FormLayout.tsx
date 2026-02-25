@@ -1,10 +1,12 @@
-import React from "react";
-import { Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf } from "lucide-react";
+import React, { useState } from "react";
+import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "./NavLink";
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
 
 interface Step {
   id: number;
@@ -40,7 +42,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   const { signOut } = useAuth();
   const { isAdmin, loading: adminLoading } = useIsAdmin();
 
-
   const handleLogout = async () => {
     await signOut();
     navigate("/login", { replace: true });
@@ -54,29 +55,41 @@ const FormLayout: React.FC<FormLayoutProps> = ({
         <header className="py-4 px-6 shadow-lg">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <div className="w-full flex items-center justify-between gap-3">
-              <div className="w-28 md:w-52">
+              <div className="w-28 md:w-48">
                 <img className="object-contain" src="/images/logo-blanc-her-enr.webp" alt="logo groupe HER" />
               </div>
               <div>
-                <p className="hidden md:block font-bold text-xs md:text-lg text-white">
+                <p className="hidden md:block font-bold text-xs lg:text-lg text-white">
                   Étude Énergétique personnalisée
                 </p>
               </div>
-              <div className="flex">
+              <div className="flex items-center">
                 {isAdmin &&
                   <NavLink to={"/admin"}>
-                    <button className="flex items-center gap-2 p-2 md:px-4 md:py-2 text-xs md:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
+                    <button className="flex items-center gap-2 p-2 md:px-4 md:py-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
                       <LayoutDashboard className="w-4 h-4" />
                       Espace admin
                     </button>
                   </NavLink>
                 }
-                <button className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
+                <button className="py-2 px-3 flex items-center text-xs lg:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
+                  <Calculator size={20} className="mr-1" />
                   Simulateur MPR
                 </button>
-                <button className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => handleLogout()}>
-                  Déconnexion
-                </button>
+                {/*  <div className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => setIsOpenModal(true)} title={"Déconnexion"} >
+                  <LogOut className="text-white" />
+                </div> */}
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
+                  </PopoverTrigger>
+                  <PopoverContent className="w-80 text-center">
+                    <div className="mb-2 text-sm">Voulez-vous vraiment vous déconnecter ?</div>
+                    <div>
+                      <button className="px-3 py-2 text-sm text-white font-bold bg-orange-500 rounded-md" onClick={() => handleLogout()} >OUI, je me déconnecte</button>
+                    </div>
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
           </div>

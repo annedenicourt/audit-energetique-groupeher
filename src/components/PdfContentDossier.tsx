@@ -333,8 +333,10 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
           </div>
         </SectionCard>
         {/* Commentaires*/}
-        <SectionCard title="Commentaires" icon={NotebookTabs}>
-          <SummaryRow label="Commentaire" value={data.commentaires} />
+        <SectionCard title="Commentaires & particularités chantier" icon={NotebookTabs}>
+          <div className="text-sm">
+            {data.commentaires}
+          </div>
         </SectionCard>
       </div>
       <div className="a4-page space-y-1">

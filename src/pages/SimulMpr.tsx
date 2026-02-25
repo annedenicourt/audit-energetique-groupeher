@@ -7,13 +7,9 @@ import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Info } from "lucide-react";
+import { CATEGORIES_LABELS } from "@/utils/handleForm";
 
-const CATEGORIES_LABELS: Record<string, string> = {
-  TRES_MODESTE: "Très modeste",
-  MODESTE: "Modeste",
-  INTERMEDIAIRE: "Intermédiaire",
-  SUPERIEUR: "Supérieur (non éligible)",
-};
+
 
 const SimulMpr = () => {
   const navigate = useNavigate();
@@ -51,19 +47,21 @@ const SimulMpr = () => {
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   return (
-    <div className="min-h-screen bg-muted p-4 md:p-8">
-      <div className="mx-auto max-w-2xl space-y-6">
+    <div className="min-h-screen bg-orange-100/50 p-4 md:p-8">
+      <div className="mx-auto max-w-2xl space-y-3">
         {/* Header */}
-        <div className="flex items-center gap-3">
+        <div>
           <button
             onClick={() => navigate("/", { replace: true, state: { step: returnStep } })}
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Retour
           </button>
-          <h1 className="text-xl font-semibold text-foreground">
-            Simulateur MaPrimeRénov' 2026 — Monogeste Hors IDF
-          </h1>
+          <div className="text-center">
+            <h1 className="text-xl font-semibold text-foreground">
+              Simulateur MaPrimeRénov' 2026 — Monogeste Hors IDF
+            </h1>
+          </div>
         </div>
 
         {/* Formulaire */}

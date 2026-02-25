@@ -145,3 +145,10 @@ export const MATERIAUX_RADIATEUR = [
   { value: "Fonte Alu", label: "Fonte Alu" },
   { value: "Fonte Tub", label: "Fonte Tub" },
 ];
+
+export const CATEGORIES_LABELS: Record<string, string> = {
+  TRES_MODESTE: "Très modeste",
+  MODESTE: "Modeste",
+  INTERMEDIAIRE: "Intermédiaire",
+  SUPERIEUR: "Supérieur (non éligible)",
+};
