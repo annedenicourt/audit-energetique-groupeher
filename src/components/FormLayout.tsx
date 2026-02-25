@@ -71,8 +71,8 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                     </button>
                   </NavLink>
                 }
-                <button className="hidden py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
-                  Simulateur MaPrimeRénov'
+                <button className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
+                  Simulateur MPR
                 </button>
                 <button className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => handleLogout()}>
                   Déconnexion

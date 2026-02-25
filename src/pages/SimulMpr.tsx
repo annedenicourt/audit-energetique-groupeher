@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { computeMpr } from "@/utils/computeMpr";
 import { TYPES_TRAVAUX_MPR, type TypeTravauxMpr } from "@/types/mpr/listesMpr";
 import { TRAVAUX_MPR } from "@/types/mpr/travauxMpr";
@@ -22,6 +22,7 @@ const SimulMpr = () => {
 
   const [nbPersonnes, setNbPersonnes] = useState("1");
   const [rfr, setRfr] = useState("");
+  const [ageLogement, setAgeLogement] = useState("");
   const [typeTravaux, setTypeTravaux] = useState("");
   const [quantite, setQuantite] = useState("");
   const [cee, setCee] = useState("0");
@@ -35,11 +36,14 @@ const SimulMpr = () => {
     return computeMpr({
       nbPersonnes: Math.max(1, parseInt(nbPersonnes) || 1),
       rfr: parseFloat(rfr) || 0,
+      ageLogement: parseFloat(ageLogement) || 0,
       typeTravaux: typeTravaux as TypeTravauxMpr,
       quantite: needQuantite ? (parseFloat(quantite) || 0) : undefined,
       cee: parseFloat(cee) || 0,
     });
-  }, [nbPersonnes, rfr, typeTravaux, quantite, cee, needQuantite]);
+  }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee]);
+
+  useEffect(() => setQuantite(""), [typeTravaux]);
 
   const travauxOptions = TYPES_TRAVAUX_MPR.map((t) => ({ value: t, label: t }));
 
@@ -85,6 +89,15 @@ const SimulMpr = () => {
               required
             />
           </div>
+          <FormInput
+            label="Âge du logement (années)"
+            name="ageLogement"
+            type="number"
+            value={ageLogement}
+            onChange={setAgeLogement}
+            min="0"
+            required
+          />
 
           <FormSelect
             label="Type de travaux"
@@ -131,6 +144,11 @@ const SimulMpr = () => {
         {result && (
           <div className="rounded-xl border bg-card p-6 shadow-sm space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Résultat</h2>
+            {result.isEligible === false && result.reasons?.length ? (
+              <Alert variant="destructive">
+                <AlertDescription>{result.reasons.join(" ")}</AlertDescription>
+              </Alert>
+            ) : null}
 
             <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm">
               <span className="text-muted-foreground">Catégorie ménage</span>
@@ -139,11 +157,16 @@ const SimulMpr = () => {
               </span>
 
               <span className="text-muted-foreground">Unité</span>
-              <span className="font-medium text-foreground">{result.unite}</span>
+              <span className="font-medium text-foreground">{result.unite === "M2" ? "m2" : result.unite}</span>
 
               <span className="text-muted-foreground">Montant unitaire</span>
-              <span className="font-medium text-foreground">{fmt(result.montantUnitaire)}</span>
-
+              <span className="font-medium text-foreground">
+                {result.unite === "M2"
+                  ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/m²`
+                  : result.unite === "EQ"
+                    ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/éq.`
+                    : fmt(result.montantUnitaire)}
+              </span>
               <span className="text-muted-foreground">MPR brut</span>
               <span className="font-medium text-foreground">{fmt(result.mprBrut)}</span>
 

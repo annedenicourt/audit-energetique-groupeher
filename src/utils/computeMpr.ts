@@ -7,6 +7,7 @@ import { TRAVAUX_MPR } from "@/types/mpr/travauxMpr";
 export type MprInput = {
   nbPersonnes: number;
   rfr: number;
+  ageLogement?:number;
   typeTravaux: TypeTravauxMpr;
   quantite?: number;
   cee?: number;
@@ -22,6 +23,8 @@ export type MprOutput = {
   tauxEcretement?: number;
   capEcretement?: number;
   mprFinal: number;
+  isEligible: boolean;
+  reasons?: string[];
 };
 
 const TAUX_ECRETEMENT: Record<Exclude<CategorieMenage, "SUPERIEUR">, number> = {
@@ -48,11 +51,35 @@ function determinerCategorie(nbPersonnes: number, rfr: number): CategorieMenage 
 
 export function computeMpr(input: MprInput): MprOutput {
   const { nbPersonnes, rfr, typeTravaux, quantite = 0, cee = 0 } = input;
-  const categorie = determinerCategorie(nbPersonnes, rfr);
+
+  const categorie = determinerCategorie(Math.max(1, nbPersonnes), rfr);
   const travail = TRAVAUX_MPR[typeTravaux];
   const unite = travail.unite;
-  const plafondEligibleUnitaire = travail.plafondEligible;
 
+  const plafondEligibleUnitaire = travail.plafondEligible;
+  const plafondEligibleTotal =
+    unite === "FORFAIT" ? plafondEligibleUnitaire : plafondEligibleUnitaire * quantite;
+
+  const age = input.ageLogement ?? 0;
+
+  // 1) Condition d'éligibilité âge logement
+  if (age > 0 && age < 15) {
+    return {
+      categorie, // ✅ on garde la vraie catégorie
+      unite,
+      montantUnitaire: 0,
+      mprBrut: 0,
+      plafondEligibleUnitaire,
+      plafondEligibleTotal,
+      tauxEcretement: categorie === "SUPERIEUR" ? undefined : TAUX_ECRETEMENT[categorie],
+      capEcretement: categorie === "SUPERIEUR" ? undefined : (TAUX_ECRETEMENT[categorie] * plafondEligibleTotal),
+      mprFinal: 0,
+      isEligible: false,
+      reasons: ["Logement achevé depuis moins de 15 ans (non éligible MPR dans la plupart des cas)"],
+    };
+  }
+
+  // 2) Non éligible si catégorie supérieure
   if (categorie === "SUPERIEUR") {
     return {
       categorie,
@@ -60,14 +87,17 @@ export function computeMpr(input: MprInput): MprOutput {
       montantUnitaire: 0,
       mprBrut: 0,
       plafondEligibleUnitaire,
-      plafondEligibleTotal: unite === "FORFAIT" ? plafondEligibleUnitaire : plafondEligibleUnitaire * quantite,
+      plafondEligibleTotal,
       mprFinal: 0,
+      isEligible: false,
+      reasons: ["Catégorie de revenus 'Supérieur' : non éligible à MaPrimeRénov'."],
     };
   }
 
+  // 3) Calcul brut + écrêtement
   const montantUnitaire = travail.montants[categorie];
   const mprBrut = unite === "FORFAIT" ? montantUnitaire : montantUnitaire * quantite;
-  const plafondEligibleTotal = unite === "FORFAIT" ? plafondEligibleUnitaire : plafondEligibleUnitaire * quantite;
+
   const tauxEcretement = TAUX_ECRETEMENT[categorie];
   const capEcretement = tauxEcretement * plafondEligibleTotal;
   const mprFinal = Math.max(0, Math.min(mprBrut, capEcretement - cee));
@@ -82,5 +112,7 @@ export function computeMpr(input: MprInput): MprOutput {
     tauxEcretement,
     capEcretement,
     mprFinal,
+    isEligible: true,
+    reasons: [],
   };
 }
