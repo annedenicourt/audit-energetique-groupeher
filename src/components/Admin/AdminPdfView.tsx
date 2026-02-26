@@ -154,6 +154,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
                       size="sm"
                       onClick={() => handleOpenPdf(s.pdf_path)}
                       disabled={!s.pdf_path}
+                      className="hover:bg-orange-500"
                     >
                       <FileText className="h-4 w-4 mr-1" />
                       Ouvrir

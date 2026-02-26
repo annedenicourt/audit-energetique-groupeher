@@ -239,4 +239,14 @@
 .table_users td {
   padding: 0.5rem;
 }
+.simulateur {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.7)),
+    url("/images/bg_simulateur.jpg");
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
+}
 }

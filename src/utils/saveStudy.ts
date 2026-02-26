@@ -60,7 +60,7 @@ export async function saveStudy(
       return { success: false, error: `Insertion échouée : ${insertError.message}` };
     }
 
-    console.info("[saveStudy] Étude sauvegardée avec succès", { storagePath });
+    //console.info("[saveStudy] Étude sauvegardée avec succès", { storagePath });
     return { success: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";

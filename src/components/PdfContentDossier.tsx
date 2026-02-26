@@ -67,8 +67,8 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <SummaryRow label="Taxe foncière ou acte notarié" value={data.taxeFonciereActeNotarie ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Identité numérique" value={data.idNumerique ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="RIB" value={data.rib ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
+            {/*             <SummaryRow label="RIB" value={data.rib ? DisplayTrue : DisplayFalse} />
+ */}            <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Attestation indivisionnaire" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Attestation bailleur" value={data.attestationProprietaireBailleur ? DisplayTrue : DisplayFalse} />
             <SummaryRow label="Note de dimensionnement" value={data.noteDimensionnement ? DisplayTrue : DisplayFalse} />
@@ -344,26 +344,26 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
         <SectionCard title="Photos à faire (obligatoire)">
           <h3 className="font-semibold text-lime-600 mb-2">Équipement</h3>
           <div className="grid gap-x-8">
-            <SummaryRow label="Compteur" value={data.photoCompteur} />
-            <SummaryRow label="Chaudière à remplacer" value={data.photoChaudiere} />
-            <SummaryRow label="Emplacement du groupe extérieur" value={data.photoGroupeExt} />
-            <SummaryRow label="Maison vue de la rue" value={data.photoMaison} />
-            <SummaryRow label="Combles" value={data.photoCombles} />
-            <SummaryRow label="Système ECS" value={data.photoECS} />
-            <SummaryRow label="Disjoncteur" value={data.photoDisjoncteur} />
-            <SummaryRow label="Tuyauterie de la chaudière" value={data.photoTuyauterie} />
-            <SummaryRow label="Radiateurs" value={data.photoRadiateurs} />
-            <SummaryRow label="Plafonds" value={data.photoPlafonds} />
-            <SummaryRow label="Sous-sol" value={data.photoSousSol} />
-            <SummaryRow label="Tableaux électriques existants" value={data.photoTableauElec} />
-            <SummaryRow label="Ventilation" value={data.photoVentilation} />
-            <SummaryRow label="Emplacement des unités intérieures" value={data.photoUniteInt} />
-            <SummaryRow label="Planchers" value={data.photoPlancher} />
-            <SummaryRow label="Rez-de-chaussée" value={data.photoRDC} />
-            <SummaryRow label="Fenêtres" value={data.photoFenetres} />
-            <SummaryRow label="Portes-fenêtres" value={data.photoPorteFenetre} />
-            <SummaryRow label="Façades extérieures" value={data.photoFacade} />
-            <SummaryRow label="Porte" value={data.photoPorte} />
+            <SummaryRow label="Compteur" value={data.photoCompteur ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Chaudière à remplacer" value={data.photoChaudiere ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Emplacement du groupe extérieur" value={data.photoGroupeExt ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Maison vue de la rue" value={data.photoMaison ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Combles" value={data.photoCombles ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Système ECS" value={data.photoECS ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Disjoncteur" value={data.photoDisjoncteur ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Tuyauterie de la chaudière" value={data.photoTuyauterie ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Radiateurs" value={data.photoRadiateurs ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Plafonds" value={data.photoPlafonds ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Sous-sol" value={data.photoSousSol ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Tableaux électriques existants" value={data.photoTableauElec ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Ventilation" value={data.photoVentilation ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Emplacement des unités intérieures" value={data.photoUniteInt ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Planchers" value={data.photoPlancher ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Rez-de-chaussée" value={data.photoRDC ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Fenêtres" value={data.photoFenetres ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Portes-fenêtres" value={data.photoPorteFenetre ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Façades extérieures" value={data.photoFacade ? DisplayTrue : DisplayFalse} />
+            <SummaryRow label="Porte" value={data.photoPorte ? DisplayTrue : DisplayFalse} />
           </div>
         </SectionCard>
       </div>

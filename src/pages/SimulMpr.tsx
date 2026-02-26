@@ -8,6 +8,7 @@ import FormSelect from "@/components/FormSelect";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Info } from "lucide-react";
 import { CATEGORIES_LABELS } from "@/utils/handleForm";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 
 
 
@@ -47,25 +48,26 @@ const SimulMpr = () => {
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
   return (
-    <div className="min-h-screen bg-orange-100/50 p-4 md:p-8">
+    <div className="simulateur min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-2xl space-y-3">
         {/* Header */}
         <div>
           <button
             onClick={() => navigate("/", { replace: true, state: { step: returnStep } })}
-            className="mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className=" absolute top-4 left-4 mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" /> Retour
           </button>
-          <div className="text-center">
-            <h1 className="text-xl font-semibold text-foreground">
+          <div className="mt-8 md:mt-0 flex flex-col items-center justify-center">
+            <img className="w-28 md:w-36 mb-4" src="/images/logo-HER-seul.png" alt="logo HER" />
+            <h1 className="text-center text-base md:text-xl font-semibold text-foreground">
               Simulateur MaPrimeRénov' 2026 — Monogeste Hors IDF
             </h1>
           </div>
         </div>
 
         {/* Formulaire */}
-        <div className="rounded-xl border bg-card p-6 shadow-sm space-y-4">
+        <div className="p-6 border ring-2 ring-orange-300 ring-offset-2 bg-card rounded-xl shadow-sm space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormInput
               label="Nombre de personnes du foyer"
@@ -140,7 +142,7 @@ const SimulMpr = () => {
 
         {/* Résultats */}
         {result && (
-          <div className="rounded-xl border bg-card p-6 shadow-sm space-y-4">
+          <div className="p-6 border ring-2 ring-cyan-500 ring-offset-2 bg-card rounded-xl shadow-sm space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Résultat</h2>
             {result.isEligible === false && result.reasons?.length ? (
               <Alert variant="destructive">
@@ -148,49 +150,49 @@ const SimulMpr = () => {
               </Alert>
             ) : null}
 
-            <div className="grid grid-cols-2 gap-y-3 gap-x-6 text-sm">
-              <span className="text-muted-foreground">Catégorie ménage</span>
-              <span className="font-medium text-foreground">
-                {CATEGORIES_LABELS[result.categorie] ?? result.categorie}
-              </span>
-
-              <span className="text-muted-foreground">Unité</span>
-              <span className="font-medium text-foreground">{result.unite === "M2" ? "m2" : result.unite}</span>
-
-              <span className="text-muted-foreground">Montant unitaire</span>
-              <span className="font-medium text-foreground">
-                {result.unite === "M2"
-                  ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/m²`
-                  : result.unite === "EQ"
-                    ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/éq.`
-                    : fmt(result.montantUnitaire)}
-              </span>
-              <span className="text-muted-foreground">MPR brut</span>
-              <span className="font-medium text-foreground">{fmt(result.mprBrut)}</span>
-
-              <span className="text-muted-foreground">Plafond éligible total</span>
-              <span className="font-medium text-foreground">{fmt(result.plafondEligibleTotal)}</span>
-
-              {result.tauxEcretement != null && (
-                <>
-                  <span className="text-muted-foreground">Taux d'écrêtement</span>
-                  <span className="font-medium text-foreground">
-                    {(result.tauxEcretement * 100).toFixed(0)} %
-                  </span>
-                </>
-              )}
-
-              {result.capEcretement != null && (
-                <>
-                  <span className="text-muted-foreground">Cap écrêtement</span>
-                  <span className="font-medium text-foreground">{fmt(result.capEcretement)}</span>
-                </>
-              )}
-            </div>
-
-            <div className="border-t pt-4 flex items-center justify-between">
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="text-muted-foreground">Catégorie ménage</TableCell>
+                  <TableCell>{CATEGORIES_LABELS[result.categorie] ?? result.categorie}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="text-muted-foreground">Unité</TableCell>
+                  <TableCell>{result.unite === "M2" ? "m2" : result.unite}</TableCell>
+                </TableRow><TableRow>
+                  <TableCell className="text-muted-foreground">Montant unitaire</TableCell>
+                  <TableCell>
+                    {result.unite === "M2"
+                      ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/m²`
+                      : result.unite === "EQ"
+                        ? `${result.montantUnitaire.toLocaleString("fr-FR")} €/éq.`
+                        : fmt(result.montantUnitaire)}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="text-muted-foreground">MPR brut</TableCell>
+                  <TableCell>{fmt(result.mprBrut)}</TableCell>
+                </TableRow><TableRow>
+                  <TableCell className="text-muted-foreground">Plafond éligible total</TableCell>
+                  <TableCell>{fmt(result.plafondEligibleTotal)}</TableCell>
+                </TableRow>
+                {result.tauxEcretement != null && (
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">Taux d'écrêtement</TableCell>
+                    <TableCell>{(result.tauxEcretement * 100).toFixed(0)} %</TableCell>
+                  </TableRow>
+                )}
+                {result.capEcretement != null && (
+                  <TableRow>
+                    <TableCell className="text-muted-foreground">Cap écrêtement</TableCell>
+                    <TableCell>{fmt(result.capEcretement)}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            <div className="px-4 pt-4 flex items-center justify-between border-t ">
               <span className="text-base font-semibold text-foreground">MaPrimeRénov' finale</span>
-              <span className="text-2xl font-bold text-accent">{fmt(result.mprFinal)}</span>
+              <span className={`${result.mprFinal === 0 ? "text-red-500" : "text-green-500"} text-2xl font-bold`}>{fmt(result.mprFinal)}</span>
             </div>
           </div>
         )}
