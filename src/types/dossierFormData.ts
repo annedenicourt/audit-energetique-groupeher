@@ -109,6 +109,10 @@ export interface DossierFormData {
   thermostatFilaire: boolean;
   thermostatNonFilaire: boolean;
   pasDeThermostat: boolean;
+  quantiteFenetres: string;
+  matiereFenetres: string;
+  quantiteVolets: string;
+  matiereVolets: string;
 
   // 6) ÉLECTRICITÉ
   monophase: boolean;
@@ -316,6 +320,10 @@ export const defaultDossierFormData: DossierFormData = {
   thermostatFilaire: false,
   thermostatNonFilaire: false,
   pasDeThermostat: false,
+  quantiteFenetres: "",
+  matiereFenetres: "",
+  quantiteVolets: "",
+  matiereVolets: "",
 
   monophase: false,
   triphase: false,

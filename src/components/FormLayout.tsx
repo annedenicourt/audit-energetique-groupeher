@@ -63,19 +63,19 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                   Étude Énergétique personnalisée
                 </p>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-4">
                 {isAdmin &&
                   <NavLink to={"/admin"}>
-                    <button className="flex items-center gap-2 p-2 md:px-4 md:py-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
+                    <button className="p-2 md:px-4 md:py-2 flex items-center gap-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
                       <LayoutDashboard className="w-4 h-4" />
                       Espace admin
                     </button>
                   </NavLink>
                 }
-                <button className="py-2 px-3 flex items-center text-xs lg:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
+                {/* <button className="py-2 px-3 flex items-center text-xs lg:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
                   <Calculator size={20} className="mr-1" />
                   Simulateur MPR
-                </button>
+                </button> */}
                 {/*  <div className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => setIsOpenModal(true)} title={"Déconnexion"} >
                   <LogOut className="text-white" />
                 </div> */}

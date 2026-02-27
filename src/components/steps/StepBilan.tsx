@@ -5,7 +5,7 @@ import FormSelect from "../FormSelect";
 import FormTextarea from "../FormTextarea";
 import SectionCard from "../SectionCard";
 import { BilanData } from "@/types/formData";
-import { classeOptions, etatOptions } from "@/utils/handleForm";
+import { classeOptions, etatOptions, typeVitragesOptions } from "@/utils/handleForm";
 
 interface StepBilanProps {
   data: BilanData;
@@ -110,7 +110,7 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange, factureNrjAnnuell
               name="menuiseries"
               value={data.menuiseries}
               onChange={(v) => onChange("menuiseries", v)}
-              options={etatOptions}
+              options={typeVitragesOptions}
             />
             <div className="md:col-span-2">
               <FormInput

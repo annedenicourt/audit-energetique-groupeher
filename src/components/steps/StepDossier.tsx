@@ -35,10 +35,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange 
 );
 
 interface StepDossierProps {
-  data: FormData;
+  simulData: FormData;
 }
 
-const StepDossier: React.FC<StepDossierProps> = () => {
+const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
   const STORAGE_KEY = "dossier_form";
 
   const [formDossier, setForm] = useState<DossierFormData>(() => {
@@ -49,30 +49,27 @@ const StepDossier: React.FC<StepDossierProps> = () => {
     return { ...defaultDossierFormData };
   });
 
-  const [simul, setSimul] = useState<FormData>(() => {
-    try {
-      const storedSimul = localStorage.getItem("simulation_form");
-      if (storedSimul) return { ...initialFormData, ...JSON.parse(storedSimul) };
-    } catch { /* ignore */ }
-    return { ...initialFormData };
-  });
-
   useEffect(() => {
     try {
-      const storedSimul = localStorage.getItem("simulation_form");
-      if (!storedSimul) return;
+      //const storedSimul = localStorage.getItem("simulation_form");
+      //if (!storedSimul) return;
 
-      const simulData = JSON.parse(storedSimul);
+      //const simulData = JSON.parse(storedSimul);
 
       setForm((prev) => ({
         ...prev,
         conseiller: prev.conseiller || simulData?.client?.accompagnateur || "",
         nomClient: prev.nomClient || simulData?.client?.nom || "",
+        adresse: prev.adresse || simulData.client.adresseFiscale,
         adresseInstallation: prev.adresseInstallation || simulData?.client?.adresse || "",
         telephone: prev.telephone || simulData?.client?.telephone || "",
         montantPrimeRenov: prev.montantPrimeRenov || simulData?.aides?.maPrimeRenov || "",
         montantPrimeEDF: prev.montantPrimeEDF || simulData?.aides?.primeCEE || "",
         anneeConstruction: prev.anneeConstruction || simulData?.client?.anneeConstruction || "",
+        quantiteFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.quantite || "",
+        matiereFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.matiere || "",
+        quantiteVolets: simulData?.dimensionnement.quantiteVolets || "",
+        matiereVolets: simulData?.dimensionnement.matiereVolets || "",
       }));
     } catch {/* ignore */ }
   }, []);
@@ -140,7 +137,7 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           </div>
           <FormInput label="Nom / prénom client" name="nomClient" value={formDossier.nomClient} readonly={true} />
           <FormInput label="Téléphone" name="telephone" value={formDossier.telephone} type="tel" readonly={true} />
-          <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresse} onChange={(v) => update("adresse", v)} className="md:col-span-2" />
+          <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresse} readonly={true} className="md:col-span-2" />
           <FormInput label="Adresse de chantier" name="adresseInstallation" value={formDossier.adresseInstallation} readonly={true} className="md:col-span-2" />
         </div>
       </SectionCard>
@@ -313,6 +310,16 @@ const StepDossier: React.FC<StepDossierProps> = () => {
           <CheckboxField label="Thermostat filaire" checked={formDossier.thermostatFilaire} onChange={(v) => update("thermostatFilaire", v)} />
           <CheckboxField label="Thermostat non filaire" checked={formDossier.thermostatNonFilaire} onChange={(v) => update("thermostatNonFilaire", v)} />
           <CheckboxField label="Pas de thermostat" checked={formDossier.pasDeThermostat} onChange={(v) => update("pasDeThermostat", v)} />
+        </div>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Menuiseries à remplacer</h3>
+        <div className="flex flex-wrap gap-6">
+          <FormInput label="Quantité" name="quantiteFenetres" value={simulData.dimensionnement.dimensionnementFenetres[0].quantite || "0"} readonly={true} />
+          <FormInput label="Matière" name="matiereFenetres" value={simulData.dimensionnement.dimensionnementFenetres[0].matiere || "Non renseigné"} readonly={true} />
+        </div>
+        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Volets roulants</h3>
+        <div className="flex flex-wrap gap-6">
+          <FormInput label="Quantité" name="quantiteFenetres" value={simulData.dimensionnement.quantiteVolets || "0"} readonly={true} />
+          <FormInput label="Matière" name="matiereFenetres" value={simulData.dimensionnement.matiereVolets || "Non renseigné"} readonly={true} />
         </div>
       </SectionCard>
 

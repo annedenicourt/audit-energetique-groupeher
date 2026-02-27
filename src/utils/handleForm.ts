@@ -24,6 +24,7 @@ export const typeChauffageOptions = [
   { value: "electrique", label: "Électrique" },
   { value: "gaz", label: "Gaz" },
   { value: "fioul", label: "Fioul" },
+  { value: "petrole", label: "Pétrole" },
   { value: "bois", label: "Bois / Granulés" },
   { value: "pompe_chaleur", label: "Pompe à chaleur" },
   { value: "autre", label: "Autre" },
@@ -44,6 +45,14 @@ export const typeAerationOptions = [
   { value: "vmc_double", label: "VMC double flux" },
   { value: "aucune", label: "Aucune" },
 ];
+
+export const typeVitragesOptions = [
+  {value:"double vitrage apres 2006", label:"Double vitrage après 2006"},
+  {value:"double vitrage avant 2006", label:"Double vitrage avant 2006"},
+  {value:"sur-vitrage", label:"Sur-vitrage"},
+  {value:"simple vitrage", label:"Simple vitrage"},
+  {value:"non existant", label:"Non existant"},
+]
 
 export const classeOptions = [
   { value: "A", label: "A - Très performant" },

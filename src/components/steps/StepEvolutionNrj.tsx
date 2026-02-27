@@ -73,7 +73,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
         </h2>
       </div>
       {/* Répartition facture */}
-      <SectionCard title="Répartition de la facture énergétique" icon={Zap}>
+      {/*  <SectionCard title="Répartition de la facture énergétique" icon={Zap}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput
             label="Chauffage (ECS)"
@@ -85,15 +85,6 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
             suffix="€/an"
             readonly={true}
           />
-          {/* <FormInput
-            label="Eau chaude sanitaire (ECS)"
-            name="montantECS"
-            value={data.montantECS}
-            onChange={(v) => onChange("montantECS", v)}
-            type="number"
-            placeholder="0"
-            suffix="€/an"
-          /> */}
           <FormInput
             label="Électricité domestique (ECS)"
             name="montantElecDomestique"
@@ -124,7 +115,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
             options={energieOptions}
           />
         </div>
-      </SectionCard>
+      </SectionCard> */}
 
       {/* Illustrations */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

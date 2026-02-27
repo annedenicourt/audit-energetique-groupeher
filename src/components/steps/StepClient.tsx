@@ -66,11 +66,19 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2">
             <FormInput
+              label="Adresse fiscale"
+              name="adresseFiscale"
+              value={data.adresseFiscale}
+              onChange={(v) => onChange("adresseFiscale", v)}
+              placeholder="Adresse fiscale"
+              className="mb-4"
+            />
+            <FormInput
               label="Adresse du chantier"
               name="adresse"
               value={data.adresse}
               onChange={(v) => onChange("adresse", v)}
-              placeholder="Adresse"
+              placeholder="Adresse du chantier"
             />
           </div>
           <FormInput
@@ -87,7 +95,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             onChange={(v) => onChange("ville", v)}
             placeholder="Ville"
           />
-
         </div>
       </SectionCard>
 
@@ -174,7 +181,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="0"
           />
           <FormInput
-            label="Dont enfants"
+            label="Dont enfants à charge"
             name="dontEnfants"
             value={data.dontEnfants}
             onChange={(v) => onChange("dontEnfants", v)}
@@ -216,11 +223,13 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             <FormInput
               label="Température jour"
               name="temperatureJour"
-              value={data.temperatureJour}
+              value={data.temperatureJour || "21"}
               onChange={(v) => onChange("temperatureJour", v)}
               type="number"
-              placeholder="20"
+              placeholder=""
               suffix="°C"
+              min={"21"}
+              max={"23"}
             />
             <FormInput
               label="Température nuit"
@@ -228,7 +237,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.temperatureNuit}
               onChange={(v) => onChange("temperatureNuit", v)}
               type="number"
-              placeholder="17"
+              placeholder=""
               suffix="°C"
             />
           </div>
@@ -332,10 +341,10 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             label="Total annuel"
             name="factureEnergieAnnuelle"
             value={data.factureEnergieAnnuelle}
+            onChange={(v) => onChange("factureEnergieAnnuelle", v)}
             type="number"
             placeholder="0"
             suffix="€/an"
-            readonly={true}
           />
         </div>
       </SectionCard>
@@ -427,6 +436,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               type="number"
               placeholder="0"
               suffix="€"
+              readonly={true}
             />
           </div>
         </div>

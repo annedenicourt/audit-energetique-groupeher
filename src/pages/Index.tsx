@@ -73,7 +73,7 @@ const Index: React.FC = () => {
         ...prev.client,
         dispoMaPrimeRenov: computeDispoMPR(prev.client),
         montantAides: computeTotalAides(prev.client),
-        factureEnergieAnnuelle: computeNRJAnnuel(prev.client),
+        //factureEnergieAnnuelle: computeNRJAnnuel(prev.client),
         montantChauffage: computeTotalChauffage(prev.client),
       },
     }));
@@ -256,11 +256,11 @@ const Index: React.FC = () => {
       case 7:
         return <StepExponentiel data={formData.exponentiel} consommation10AnsSansTravaux={formData.evolution.depenseTotal10ans} onChange={updateExponentiel} />;
       case 8:
-        return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} />;
+        return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} dispoMPR={formData.client.dispoMaPrimeRenov} currentStep={currentStep} />;
       case 9:
         return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} />;
       case 10:
-        return <StepDossier data={formData} />;
+        return <StepDossier simulData={formData} />;
       default:
         return null;
     }

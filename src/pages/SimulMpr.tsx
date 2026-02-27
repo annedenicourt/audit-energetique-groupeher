@@ -131,7 +131,7 @@ const SimulMpr = () => {
           )}
 
           <FormInput
-            label="Montant CEE déjà perçu"
+            label="Montant CEE"
             name="cee"
             type="number"
             value={cee}

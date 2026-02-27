@@ -4,6 +4,7 @@
    // Coordonnées
    nom: string;
    telephone: string;
+   adresseFiscale: string;
    adresse: string;
    codePostal: string;
    ville: string;
@@ -92,7 +93,6 @@
    // Notes
    notes: string;
  }
-
  export interface EvolutionData {
   // Répartition facture
    montantECS: string;
@@ -119,6 +119,7 @@
  }
 
  export interface FenetreData {
+   quantite:string;
    type: string;
    ouverture: string;
    matiere: string;
@@ -150,6 +151,8 @@
   dimensionnementRampants: string;
   // Fenêtres / Menuiseries
   dimensionnementFenetres: FenetreData[];
+  quantiteVolets: string;
+  matiereVolets: string;
 }
  export interface ExponentielData {
    consommation10AnsSansTravaux: string;
@@ -208,6 +211,7 @@
    client: {
      nom: "",
      telephone: "",
+     adresseFiscale:"",
      adresse: "",
      codePostal: "",
      ville: "",
@@ -305,7 +309,9 @@
   dimensionnementComblesPerdus: "",
   dimensionnementRampants: "",
 
-  dimensionnementFenetres: [{ type: "", ouverture: "", matiere: "" }],
+  dimensionnementFenetres: [{ quantite: "", type: "", ouverture: "", matiere: "" }],
+  quantiteVolets:"",
+  matiereVolets:""
 },
 
    exponentiel: {

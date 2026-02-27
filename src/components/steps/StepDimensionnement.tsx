@@ -16,6 +16,7 @@ interface StepDimensionnementProps {
 }
 
 const emptyFenetre = (): FenetreData => ({
+  quantite: "",
   type: "",
   ouverture: "",
   matiere: "",
@@ -37,20 +38,20 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
     []
   );
 
-  const fenetres: FenetreData[] = data.dimensionnementFenetres?.length ? data.dimensionnementFenetres : [{ type: "", ouverture: "", matiere: "" }];
+  const fenetres: FenetreData[] = data.dimensionnementFenetres?.length ? data.dimensionnementFenetres : [{ quantite: "", type: "", ouverture: "", matiere: "" }];
 
   const setFenetres = (next: FenetreData[]) => {
     onChange("dimensionnementFenetres", next);
   };
 
-  const addFenetre = () => {
+  /* const addFenetre = () => {
     setFenetres([...fenetres, emptyFenetre()]);
   };
 
   const removeFenetre = (index: number) => {
     if (fenetres.length <= 1) return; // on garde 1 ligne minimum
     setFenetres(fenetres.filter((_, i) => i !== index));
-  };
+  }; */
 
   const updateFenetre = (index: number, field: keyof FenetreData, value: string) => {
     setFenetres(
@@ -376,20 +377,19 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </AppModal>
 
       {/* Fenêtres / Portes-fenêtres */}
-      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres)" icon={Grid2x2} link="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
-        <button
+      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres/Volets roulants)" icon={Grid2x2} link="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
+        {/*  <button
           type="button"
           onClick={addFenetre}
           className="nav-button nav-button--primary px-2 text-xs font-bold"
         >
           Ajouter
-        </button>
-
+        </button> */}
         <div>
           {fenetres.map((fenetre, idx) => (
             <div key={idx} className="p-3 space-y-2">
-              <div className="flex items-center justify-between">
-                <div className=" font-semibold">Menuiserie {idx + 1}</div>
+              <div className=" font-semibold">Menuiseries</div>
+              {/*  <div className="flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => removeFenetre(idx)}
@@ -398,10 +398,9 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
                 >
                   <Trash2 />
                 </button>
-              </div>
-
+              </div> */}
               <div className="grid grid-cols-3 gap-2">
-                <div className="form-field">
+                {/* <div className="form-field">
                   <label className="form-label">Type de menuiserie</label>
                   <select
                     value={fenetre.type}
@@ -416,7 +415,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
                     ))}
                   </select>
                 </div>
-
                 <div className="form-field">
                   <label className="form-label">Type d'ouverture</label>
                   <select
@@ -431,6 +429,17 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
                       </option>
                     ))}
                   </select>
+                </div> */}
+                <div className="form-field">
+                  <FormInput
+                    label="Quantité"
+                    name="quantiteMenuiseries"
+                    value={fenetre.quantite}
+                    onChange={(value) => updateFenetre(idx, "quantite", value)}
+                    type="number"
+                    placeholder=""
+                    min={"0"}
+                  />
                 </div>
 
                 <div className="form-field">
@@ -451,6 +460,37 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
               </div>
             </div>
           ))}
+          <div className="p-3 space-y-2">
+            <div className=" font-semibold">Volets roulants</div>
+            <div className="grid grid-cols-3 gap-2">
+              <div className="form-field">
+                <FormInput
+                  label="Quantité"
+                  name="quantiteVolets"
+                  value={data.quantiteVolets}
+                  onChange={(v) => onChange("quantiteVolets", v)}
+                  type="number"
+                  placeholder=""
+                  min={"0"}
+                />
+              </div>
+              <div className="form-field">
+                <label className="form-label">Matière</label>
+                <select
+                  value={data.matiereVolets}
+                  onChange={(e) => onChange("matiereVolets", e.target.value)}
+                  className="form-select"
+                >
+                  <option value="">Sélectionner</option>
+                  {fenetreMatiereOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </SectionCard>
     </div>

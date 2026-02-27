@@ -5,14 +5,19 @@ import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
 import { AidesData } from "@/types/formData";
 import { plafondsData, nbrePersonnesOptions, plafondParPersonneSupp } from "@/utils/handleForm";
+import SimulMpr from "@/pages/SimulMpr";
+import { useNavigate } from "react-router-dom";
 
 interface StepAidesProps {
   data: AidesData;
   onChange: (field: keyof AidesData, value: string) => void;
   ecoEstimees10ans: string;
+  dispoMPR: string;
+  currentStep: number,
 }
 
-const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans }) => {
+const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans, dispoMPR, currentStep }) => {
+  const navigate = useNavigate()
 
   useEffect(() => {
     const nbPers = Number(data.nbrePersonnesFoyer);
@@ -93,7 +98,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
       </SectionCard>
 
       {/* Informations foyer */}
-      <SectionCard title="Informations du foyer" icon={Users}>
+      {/*   <SectionCard title="Informations du foyer" icon={Users}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormSelect
             label="Nombre de personnes dans le foyer"
@@ -131,6 +136,30 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
         </div>
         <div className="flex text-sm font-bold">
           <a href="https://drive.google.com/drive/u/1/folders/1mfTypbHZmEhCsQuF-x7esMZBXYDky8Lj" target="_blank">MaPrimeRenov'</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
+        </div>
+      </SectionCard> */}
+
+      {/* Simulateur CEE EDF */}
+      <SectionCard title="Simulation CEE EDF (sauf BTD)" icon={Calculator}>
+        <div className="mt-6 flex text-sm font-bold">
+          <a href="https://www.prime-energie-edf.fr/je-simule-ma-prime" target="_blank" title="Accéder au simulateur EDF">Accéder au simulateur EDF</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
+        </div>
+        <div className="flex text-sm font-bold">
+          <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau prime BTD</a>
+          <SquareArrowOutUpRight size={18} className="ml-1" />
+        </div>
+      </SectionCard>
+
+      {/* Simulateur MPR */}
+      <SectionCard title="Simulation MaPrimeRénov' 2026 — Monogeste Hors IDF" icon={Calculator}>
+        <div className="mt-6 flex text-sm font-bold cursor-pointer" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
+          Accéder au simulateur MaPrimeRénov'
+          <SquareArrowOutUpRight size={18} className="ml-1" />
+        </div>
+        <div className="flex text-sm font-bold">
+          <a href="https://drive.google.com/drive/u/1/folders/1mfTypbHZmEhCsQuF-x7esMZBXYDky8Lj" target="_blank">Texte officiel MaPrimeRenov'</a>
           <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
       </SectionCard>
@@ -171,17 +200,17 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans 
               suffix="€"
               readonly={true}
             />
-
           </div>
           <div>
             <FormInput
-              label="MaPrimeRénov' (non déduite)"
+              label="MaPrimeRénov'(non déduite)"
               name="maPrimeRenov"
               min={"0"}
+              max={dispoMPR}
               value={data.maPrimeRenov}
               onChange={(v) => onChange("maPrimeRenov", v)}
               type="number"
-              placeholder="0"
+              placeholder={`${dispoMPR} maxi`}
               suffix="€"
               className="mb-4"
             />

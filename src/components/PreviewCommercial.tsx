@@ -27,7 +27,7 @@ const PreviewCommercial: React.FC<PreviwCommercialProps> = ({ data, downloadPdf,
           {isSaving ? "Sauvegarde en cours…" : "Valider et sauvegarder les données"}
         </button> */}
       </div>
-      <div>
+      <div className="pdf-commercial-visible">
         <PdfContentCommercial data={data} />
       </div>
     </div>
