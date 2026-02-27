@@ -243,7 +243,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           </div>
         </div>
       </div>
-      <div className="a4-page flex flex-col justify-betweenspace-y-1">
+      <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Dimensionnement */}
         <SectionCard title="Dimensionnement" icon={Wallet}>
           <div className="grid gap-x-8">
@@ -274,7 +274,8 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           <div className="mt-4 text-white text-center">
             Page 5 / {totalPages}
           </div>
-        </div>      </div>
+        </div>
+      </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Projection */}
         <SectionCard title="Projection" icon={Wallet}>
