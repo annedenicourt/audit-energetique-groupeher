@@ -127,7 +127,7 @@ const Admin: React.FC = () => {
         <AdminPdfView studies={studies} profiles={profiles} loading={loading} showCommercialFilter={isAdmin} />
       )}
       {view === "dossiers" && (
-        <AdminDossiersView dossiers={dossiers} profiles={profiles} loading={loading} />
+        <AdminDossiersView dossiers={dossiers} profiles={profiles} loading={loading} showCommercialFilter={isAdmin} />
       )}
       {view === "users" && isAdmin && (
         <AdminUsersView
