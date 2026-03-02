@@ -160,26 +160,10 @@ const AdminDocumentsView: React.FC<{
     }
   };
 
-  const handleRegeneratePdf = async (type: "etude" | "dossier", id: string) => {
+  const handleDownloadPdf = async (type: "etude" | "dossier", id: string) => {
     setRegeneratingId(`${type}-${id}`);
     try {
-      const { data, error } = await supabase.functions.invoke("generate-pdf", {
-        body: { type, id },
-      });
-      if (error) {
-        toast.error(`Erreur régénération PDF : ${error.message}`);
-        return;
-      }
-      if (data?.signed_url) {
-        window.open(data.signed_url, "_blank");
-        toast.success("PDF régénéré et téléchargé !");
-      } else if (data?.success) {
-        toast.success("PDF régénéré avec succès !");
-      } else {
-        toast.error(data?.error || "Erreur inconnue");
-      }
-    } catch {
-      toast.error("Erreur lors de la régénération du PDF");
+      await downloadPdfFromDb(type, id);
     } finally {
       setRegeneratingId(null);
     }
