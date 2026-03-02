@@ -32,7 +32,7 @@ export async function downloadPdfFromDb(
         ? React.createElement(EtudeDocument, { data: payload })
         : React.createElement(DossierDocument, { data: payload });
 
-    const blob = await pdf(DocComponent).toBlob();
+    const blob = await pdf(DocComponent as any).toBlob();
 
     // Download
     const prefix = type === "etude" ? "Etude_NRJ" : "Dossier_Liaison";
