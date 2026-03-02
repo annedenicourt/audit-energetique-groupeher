@@ -56,6 +56,7 @@ export async function saveStudy(
         await supabase.storage.from("pdfs").remove([storagePath]);
         return { success: false, error: `Mise à jour échouée : ${updateError.message}` };
       }
+      return { success: true, studyId: existingId };
     } else {
       // INSERT new record
       const { error: insertError } = await supabase
