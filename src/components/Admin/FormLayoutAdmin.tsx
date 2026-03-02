@@ -117,7 +117,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
-              <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} />
+              <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} navItems={navItems} title={title} />
             </SheetContent>
           </Sheet>
           <span className="font-bold text-foreground">Espace admin</span>
