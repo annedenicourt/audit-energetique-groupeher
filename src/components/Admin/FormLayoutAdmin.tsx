@@ -79,6 +79,8 @@ interface FormLayoutAdminProps {
   children: React.ReactNode;
   currentView: AdminView;
   onViewChange: (v: AdminView) => void;
+  navItems?: NavItem[];
+  title?: string;
 }
 
 const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
