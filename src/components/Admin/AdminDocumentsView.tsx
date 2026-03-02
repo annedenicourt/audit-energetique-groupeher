@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, ArrowRightLeft, RefreshCw } from "lucide-react";
+import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, ArrowRightLeft, Download } from "lucide-react";
+import { downloadPdfFromDb } from "@/utils/pdf/generatePdfFromPayload";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
