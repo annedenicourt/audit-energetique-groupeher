@@ -52,8 +52,7 @@ const AdminDocumentsView: React.FC<{
   loading: boolean;
   showCommercialFilter?: boolean;
 }> = ({ studies, dossiers, profiles, loading, showCommercialFilter = true }) => {
-  const { role } = useUserRole();
-  const isAdmin = role === "admin";
+  const navigate = useNavigate();
   const navigate = useNavigate();
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
