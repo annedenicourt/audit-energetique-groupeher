@@ -59,19 +59,22 @@ export async function saveStudy(
       return { success: true, studyId: existingId };
     } else {
       // INSERT new record
-      const { error: insertError } = await supabase
+      const { data: insertData, error: insertError } = await supabase
         .from("etudes_energetiques")
         .insert({
           user_id: userId,
           client_name: formData.client.nom || null,
           pdf_path: storagePath,
           payload: formData as unknown as Json,
-        });
+        })
+        .select("id")
+        .single();
 
-      if (insertError) {
+      if (insertError || !insertData) {
         await supabase.storage.from("pdfs").remove([storagePath]);
-        return { success: false, error: `Insertion échouée : ${insertError.message}` };
+        return { success: false, error: `Insertion échouée : ${insertError?.message}` };
       }
+      return { success: true, studyId: insertData.id };
     }
 
     return { success: true };
