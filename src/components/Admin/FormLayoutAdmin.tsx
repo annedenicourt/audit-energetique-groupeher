@@ -14,7 +14,7 @@ interface NavItem {
   icon: React.FC<{ className?: string }>;
 }
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   { view: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { view: "pdf", label: "Études NRJ", icon: FolderOpen },
   { view: "dossiers", label: "Dossiers de liaison", icon: ArrowRightLeft },
@@ -27,17 +27,19 @@ interface SidebarNavProps {
   current: AdminView;
   onChange: (v: AdminView) => void;
   onBack: () => void;
+  navItems: NavItem[];
+  title: string;
 }
 
-const SidebarNav: React.FC<SidebarNavProps> = ({ current, onChange, onBack }) => (
+const SidebarNav: React.FC<SidebarNavProps> = ({ current, onChange, onBack, navItems, title }) => (
   <nav className="flex flex-col h-full">
     <div className="px-6 py-5 border-b border-border">
       <img src="./images/Logo-HER-WEB.webp" alt="" />
-      <h2 className="mt-4 text-center text-lg font-bold text-foreground">Espace admin</h2>
+      <h2 className="mt-4 text-center text-lg font-bold text-foreground">{title}</h2>
     </div>
 
     <ul className="flex-1 px-3 py-4 space-y-1">
-      {NAV_ITEMS.map(({ view, label, icon: Icon }) => {
+      {navItems.map(({ view, label, icon: Icon }) => {
         const isActive = current === view;
         return (
           <li key={view}>
@@ -77,12 +79,16 @@ interface FormLayoutAdminProps {
   children: React.ReactNode;
   currentView: AdminView;
   onViewChange: (v: AdminView) => void;
+  navItems?: NavItem[];
+  title?: string;
 }
 
 const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
   children,
   currentView,
   onViewChange,
+  navItems = NAV_ITEMS,
+  title = "Espace admin",
 }) => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -98,7 +104,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
     <div className="flex w-full h-screen bg-background overflow-hidden">
       {/* ── Desktop sidebar ── */}
       <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-border bg-card h-screen sticky top-0">
-        <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} />
+        <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} navItems={navItems} title={title} />
       </aside>
 
       {/* ── Mobile header + drawer ── */}
@@ -111,7 +117,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64 p-0">
-              <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} />
+              <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} navItems={navItems} title={title} />
             </SheetContent>
           </Sheet>
           <span className="font-bold text-foreground">Espace admin</span>

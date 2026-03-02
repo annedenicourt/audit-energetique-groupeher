@@ -24,7 +24,7 @@ interface Profile {
   display_name: string | null;
 }
 
-const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean }> = ({ studies, profiles, loading }) => {
+const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean; showCommercialFilter?: boolean }> = ({ studies, profiles, loading, showCommercialFilter = true }) => {
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
@@ -86,17 +86,19 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Rechercher un client…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Select value={filterCommercial} onValueChange={setFilterCommercial}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Tous les commerciaux" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous les commerciaux</SelectItem>
-            {commercials.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {showCommercialFilter && (
+          <Select value={filterCommercial} onValueChange={setFilterCommercial}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Tous les commerciaux" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les commerciaux</SelectItem>
+              {commercials.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         <Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
           <SelectTrigger className="w-[220px]">
             <ArrowUpDown className="h-4 w-4 mr-2" />
@@ -137,7 +139,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
             <TableHeader>
               <TableRow>
                 <TableHead>Client</TableHead>
-                <TableHead>Commercial</TableHead>
+                {showCommercialFilter && <TableHead>Commercial</TableHead>}
                 <TableHead>Date</TableHead>
                 <TableHead className="text-right">PDF</TableHead>
               </TableRow>
@@ -146,7 +148,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
               {filtered.map((s) => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium">{s.client_name ?? "—"}</TableCell>
-                  <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>
+                  {showCommercialFilter && <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>}
                   <TableCell>{formatDate(s.created_at)}</TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -154,7 +156,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
                       size="sm"
                       onClick={() => handleOpenPdf(s.pdf_path)}
                       disabled={!s.pdf_path}
-                      className="hover:bg-orange-500"
+                      className="hover:bg-primary hover:text-primary-foreground"
                     >
                       <FileText className="h-4 w-4 mr-1" />
                       Ouvrir
@@ -173,7 +175,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
             <Card key={s.id}>
               <CardContent className="p-5 space-y-3">
                 <p className="font-semibold text-foreground truncate">{s.client_name ?? "—"}</p>
-                <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>
+                {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>}
                 <p className="text-sm text-muted-foreground">{formatDate(s.created_at)}</p>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => handleOpenPdf(s.pdf_path)} disabled={!s.pdf_path}>
                   <FileText className="h-4 w-4 mr-1" />Ouvrir PDF
