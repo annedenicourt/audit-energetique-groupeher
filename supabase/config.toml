@@ -12,5 +12,3 @@ verify_jwt = false
 [functions.update-user]
 verify_jwt = false
 
-[functions.generate-pdf]
-verify_jwt = false

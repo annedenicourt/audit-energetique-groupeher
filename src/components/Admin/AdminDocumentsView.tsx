@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, ArrowRightLeft, RefreshCw } from "lucide-react";
+import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, ArrowRightLeft, Download } from "lucide-react";
+import { downloadPdfFromDb } from "@/utils/pdf/generatePdfFromPayload";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -10,7 +11,7 @@ import { Skeleton } from "../ui/skeleton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../ui/table";
 import { Badge } from "../ui/badge";
 import { useNavigate } from "react-router-dom";
-import { useUserRole } from "@/hooks/useUserRole";
+
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
 
@@ -51,8 +52,6 @@ const AdminDocumentsView: React.FC<{
   loading: boolean;
   showCommercialFilter?: boolean;
 }> = ({ studies, dossiers, profiles, loading, showCommercialFilter = true }) => {
-  const { role } = useUserRole();
-  const isAdmin = role === "admin";
   const navigate = useNavigate();
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
@@ -159,26 +158,10 @@ const AdminDocumentsView: React.FC<{
     }
   };
 
-  const handleRegeneratePdf = async (type: "etude" | "dossier", id: string) => {
+  const handleDownloadPdf = async (type: "etude" | "dossier", id: string) => {
     setRegeneratingId(`${type}-${id}`);
     try {
-      const { data, error } = await supabase.functions.invoke("generate-pdf", {
-        body: { type, id },
-      });
-      if (error) {
-        toast.error(`Erreur régénération PDF : ${error.message}`);
-        return;
-      }
-      if (data?.signed_url) {
-        window.open(data.signed_url, "_blank");
-        toast.success("PDF régénéré et téléchargé !");
-      } else if (data?.success) {
-        toast.success("PDF régénéré avec succès !");
-      } else {
-        toast.error(data?.error || "Erreur inconnue");
-      }
-    } catch {
-      toast.error("Erreur lors de la régénération du PDF");
+      await downloadPdfFromDb(type, id);
     } finally {
       setRegeneratingId(null);
     }
@@ -282,29 +265,25 @@ const AdminDocumentsView: React.FC<{
                     </div>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
-                    {isAdmin && (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRegeneratePdf("etude", row.study.id)}
-                          disabled={regeneratingId === `etude-${row.study.id}`}
-                        >
-                          <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                          {regeneratingId === `etude-${row.study.id}` ? "…" : "Regen Étude"}
-                        </Button>
-                        {row.dossier && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRegeneratePdf("dossier", row.dossier!.id)}
-                            disabled={regeneratingId === `dossier-${row.dossier!.id}`}
-                          >
-                            <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                            {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "Regen Dossier"}
-                          </Button>
-                        )}
-                      </>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadPdf("etude", row.study.id)}
+                      disabled={regeneratingId === `etude-${row.study.id}`}
+                    >
+                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                    </Button>
+                    {row.dossier && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadPdf("dossier", row.dossier!.id)}
+                        disabled={regeneratingId === `dossier-${row.dossier!.id}`}
+                      >
+                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
+                      </Button>
                     )}
                     <Button
                       variant="outline"
@@ -345,20 +324,18 @@ const AdminDocumentsView: React.FC<{
                     </Badge>
                   )}
                 </div>
-                {isAdmin && (
-                  <div className="flex gap-2 flex-wrap">
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleRegeneratePdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
-                      <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                      {regeneratingId === `etude-${row.study.id}` ? "…" : "Regen Étude"}
+                <div className="flex gap-2 flex-wrap">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
+                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
                     </Button>
                     {row.dossier && (
-                      <Button variant="outline" size="sm" className="flex-1" onClick={() => handleRegeneratePdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
-                        <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "Regen Dossier"}
+                      <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
+                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
                       </Button>
                     )}
                   </div>
-                )}
                 <Button variant="outline" size="sm" className="w-full" onClick={() => handleRestore(row)} disabled={restoringId === row.study.id}>
                   <RotateCcw className="h-4 w-4 mr-1" /> Restaurer
                 </Button>
