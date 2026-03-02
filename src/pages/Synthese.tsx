@@ -68,6 +68,8 @@ const Synthese: React.FC = () => {
       const dataStudy = localStorage.getItem("simulation_form");
       const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
       const existingStudyId = localStorage.getItem("current_study_id");
+      let savedStudyId: string | null = existingStudyId;
+
       if (studyPayload) {
         const etudeEl = document.getElementById("pdf-content-etude");
         if (!etudeEl) {
@@ -83,6 +85,7 @@ const Synthese: React.FC = () => {
           toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
           return;
         }
+        savedStudyId = resStudy.studyId ?? null;
         localStorage.removeItem("simulation_form");
         localStorage.removeItem("current_study_id");
       }
@@ -103,7 +106,7 @@ const Synthese: React.FC = () => {
 
         const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
         const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
-        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId);
+        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId, savedStudyId);
         if (!resDossier.success) {
           toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
           return;

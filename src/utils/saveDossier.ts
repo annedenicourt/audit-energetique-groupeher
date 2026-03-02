@@ -15,7 +15,8 @@ export async function saveDossier(
   pdfBlob: Blob,
   dossierData: DossierFormData,
   filename: string,
-  existingId?: string | null
+  existingId?: string | null,
+  studyId?: string | null
 ): Promise<SaveDossierResult> {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -54,6 +55,7 @@ export async function saveDossier(
           client_name: dossierData?.nomClient || null,
           pdf_path: storagePath,
           payload: dossierData as unknown as Json,
+          ...(studyId ? { study_id: studyId } : {}),
         });
 
       if (insertError) {

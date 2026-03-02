@@ -1,0 +1,1 @@
+ALTER TABLE public.dossiers ADD COLUMN study_id uuid REFERENCES public.etudes_energetiques(id) DEFAULT NULL;
