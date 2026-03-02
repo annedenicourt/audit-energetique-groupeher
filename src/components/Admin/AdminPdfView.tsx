@@ -139,7 +139,7 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
             <TableHeader>
               <TableRow>
                 <TableHead>Client</TableHead>
-                <TableHead>Commercial</TableHead>
+                {showCommercialFilter && <TableHead>Commercial</TableHead>}
                 <TableHead>Date</TableHead>
                 <TableHead className="text-right">PDF</TableHead>
               </TableRow>
