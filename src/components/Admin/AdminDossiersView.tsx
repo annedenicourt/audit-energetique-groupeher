@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText } from "lucide-react";
+import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { Card, CardContent } from "../ui/card";
 import { Skeleton } from "../ui/skeleton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../ui/table";
+import { useNavigate } from "react-router-dom";
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
 
@@ -25,10 +26,12 @@ interface Profile {
 }
 
 const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; loading: boolean; showCommercialFilter?: boolean }> = ({ dossiers, profiles, loading, showCommercialFilter = true }) => {
+  const navigate = useNavigate();
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("date_desc");
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -65,10 +68,35 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
   }, [dossiers, search, filterCommercial, sortKey, profileMap]);
 
   const handleOpenPdf = async (pdfPath: string | null) => {
-    if (!pdfPath) { toast.error("Aucun PDF disponible pour cette étude."); return; }
+    if (!pdfPath) { toast.error("Aucun PDF disponible pour ce dossier."); return; }
     const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(pdfPath, 60);
     if (error || !data?.signedUrl) { toast.error("Impossible de générer le lien PDF."); return; }
     window.open(data.signedUrl, "_blank");
+  };
+
+  const handleRestore = async (dossierId: string) => {
+    setRestoringId(dossierId);
+    try {
+      const { data, error } = await supabase
+        .from("dossiers")
+        .select("id, payload")
+        .eq("id", dossierId)
+        .single();
+
+      if (error || !data) {
+        toast.error("Impossible de récupérer les données du dossier.");
+        return;
+      }
+
+      localStorage.setItem("dossier_form", JSON.stringify(data.payload));
+      localStorage.setItem("current_dossier_id", data.id);
+      toast.success("Dossier restauré dans le formulaire");
+      navigate("/", { state: { step: 10 } });
+    } catch {
+      toast.error("Erreur lors de la restauration");
+    } finally {
+      setRestoringId(null);
+    }
   };
 
   const formatDate = (d: string) =>
@@ -78,7 +106,7 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Dossiers de liaison</h1>
-        <p className="text-sm text-muted-foreground mt-1">Toutes les dossiers de liaison et leurs PDF</p>
+        <p className="text-sm text-muted-foreground mt-1">Tous les dossiers de liaison et leurs PDF</p>
       </div>
       {/* Toolbar */}
       <div className="flex flex-col md:flex-row gap-3 items-start md:items-center flex-wrap">
@@ -141,7 +169,7 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
                 <TableHead>Client</TableHead>
                 {showCommercialFilter && <TableHead>Commercial</TableHead>}
                 <TableHead>Date</TableHead>
-                <TableHead className="text-right">PDF</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -150,7 +178,16 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
                   <TableCell className="font-medium">{s.client_name ?? "—"}</TableCell>
                   {showCommercialFilter && <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>}
                   <TableCell>{formatDate(s.created_at)}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="text-right space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleRestore(s.id)}
+                      disabled={restoringId === s.id}
+                    >
+                      <RotateCcw className="h-4 w-4 mr-1" />
+                      Restaurer
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
@@ -176,9 +213,14 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
                 <p className="font-semibold text-foreground truncate">{s.client_name ?? "—"}</p>
                 {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>}
                 <p className="text-sm text-muted-foreground">{formatDate(s.created_at)}</p>
-                <Button variant="outline" size="sm" className="w-full" onClick={() => handleOpenPdf(s.pdf_path)} disabled={!s.pdf_path}>
-                  <FileText className="h-4 w-4 mr-1" />Ouvrir PDF
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleRestore(s.id)} disabled={restoringId === s.id}>
+                    <RotateCcw className="h-4 w-4 mr-1" />Restaurer
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleOpenPdf(s.pdf_path)} disabled={!s.pdf_path}>
+                    <FileText className="h-4 w-4 mr-1" />Ouvrir PDF
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           ))}
