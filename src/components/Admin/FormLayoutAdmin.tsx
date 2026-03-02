@@ -14,7 +14,7 @@ interface NavItem {
   icon: React.FC<{ className?: string }>;
 }
 
-const NAV_ITEMS: NavItem[] = [
+export const NAV_ITEMS: NavItem[] = [
   { view: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
   { view: "pdf", label: "Études NRJ", icon: FolderOpen },
   { view: "dossiers", label: "Dossiers de liaison", icon: ArrowRightLeft },
