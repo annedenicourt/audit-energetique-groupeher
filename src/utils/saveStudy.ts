@@ -8,29 +8,27 @@ interface SaveStudyResult {
 }
 
 /**
- * Sauvegarde une étude énergétique dans Supabase :
- * 1. Upload du PDF blob dans le bucket `pdfs`
- * 2. Insert d'un enregistrement dans `etudes_energetiques`
+ * Sauvegarde ou met à jour une étude énergétique dans Supabase.
+ * Si existingId est fourni, met à jour l'enregistrement existant (PDF + payload).
  */
 export async function saveStudy(
   pdfBlob: Blob,
   formData: FormData,
-  filename: string
+  filename: string,
+  existingId?: string | null
 ): Promise<SaveStudyResult> {
   try {
-    // 1. Récupérer l'utilisateur connecté
     const { data: { user }, error: authError } = await supabase.auth.getUser();
     if (authError || !user) {
-      console.error("[saveStudy] Utilisateur non authentifié", authError);
       return { success: false, error: "Utilisateur non authentifié" };
     }
 
     const now = new Date();
-    const formattedDate = now.toISOString().slice(0,19).replace(/[:T]/g, "-");// 2026-02-18-11-42-30
+    const formattedDate = now.toISOString().slice(0, 19).replace(/[:T]/g, "-");
     const userId = user.id;
     const storagePath = `${userId}/etudes/${filename}-${formattedDate}`;
 
-    // 2. Upload du PDF dans le bucket privé `pdfs/etudes`
+    // Upload du PDF
     const { error: uploadError } = await supabase.storage
       .from("pdfs")
       .upload(storagePath, pdfBlob, {
@@ -39,32 +37,44 @@ export async function saveStudy(
       });
 
     if (uploadError) {
-      console.error("[saveStudy] Échec upload PDF", uploadError);
       return { success: false, error: `Upload échoué : ${uploadError.message}` };
     }
 
-    // 3. Insérer l'enregistrement en base
-    const { error: insertError } = await supabase
-      .from("etudes_energetiques")
-      .insert({
-        user_id: userId,
-        client_name: formData.client.nom || null,
-        pdf_path: storagePath,
-        payload: formData as unknown as Json,
-      });
+    if (existingId) {
+      // UPDATE existing record
+      const { error: updateError } = await supabase
+        .from("etudes_energetiques")
+        .update({
+          client_name: formData.client.nom || null,
+          pdf_path: storagePath,
+          payload: formData as unknown as Json,
+        })
+        .eq("id", existingId);
 
-    if (insertError) {
-      // Nettoyage : supprimer le PDF uploadé si l'insert échoue
-      await supabase.storage.from("pdfs").remove([storagePath]);
-      console.error("[saveStudy] Échec insertion DB", insertError);
-      return { success: false, error: `Insertion échouée : ${insertError.message}` };
+      if (updateError) {
+        await supabase.storage.from("pdfs").remove([storagePath]);
+        return { success: false, error: `Mise à jour échouée : ${updateError.message}` };
+      }
+    } else {
+      // INSERT new record
+      const { error: insertError } = await supabase
+        .from("etudes_energetiques")
+        .insert({
+          user_id: userId,
+          client_name: formData.client.nom || null,
+          pdf_path: storagePath,
+          payload: formData as unknown as Json,
+        });
+
+      if (insertError) {
+        await supabase.storage.from("pdfs").remove([storagePath]);
+        return { success: false, error: `Insertion échouée : ${insertError.message}` };
+      }
     }
 
-    //console.info("[saveStudy] Étude sauvegardée avec succès", { storagePath });
     return { success: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
-    console.error("[saveStudy] Erreur inattendue", err);
     return { success: false, error: message };
   }
 }
