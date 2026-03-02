@@ -22,6 +22,7 @@ export type Database = {
           payload: Json
           pdf_path: string
           study_id: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -31,6 +32,7 @@ export type Database = {
           payload: Json
           pdf_path: string
           study_id?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -40,6 +42,7 @@ export type Database = {
           payload?: Json
           pdf_path?: string
           study_id?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: [
@@ -59,6 +62,7 @@ export type Database = {
           id: string
           payload: Json
           pdf_path: string | null
+          updated_at: string | null
           user_id: string
         }
         Insert: {
@@ -67,6 +71,7 @@ export type Database = {
           id?: string
           payload: Json
           pdf_path?: string | null
+          updated_at?: string | null
           user_id: string
         }
         Update: {
@@ -75,6 +80,7 @@ export type Database = {
           id?: string
           payload?: Json
           pdf_path?: string | null
+          updated_at?: string | null
           user_id?: string
         }
         Relationships: []
