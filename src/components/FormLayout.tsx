@@ -40,7 +40,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
 
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isAdmin, loading: adminLoading } = useIsAdmin();
+  const { role } = useUserRole();
 
   const handleLogout = async () => {
     await signOut();
