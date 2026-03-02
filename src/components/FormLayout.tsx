@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "./NavLink";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useUserRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
