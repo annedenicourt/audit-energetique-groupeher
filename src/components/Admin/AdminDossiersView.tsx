@@ -174,7 +174,7 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
             <Card key={s.id}>
               <CardContent className="p-5 space-y-3">
                 <p className="font-semibold text-foreground truncate">{s.client_name ?? "—"}</p>
-                <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>
+                {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(s.user_id) ?? "—"}</p>}
                 <p className="text-sm text-muted-foreground">{formatDate(s.created_at)}</p>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => handleOpenPdf(s.pdf_path)} disabled={!s.pdf_path}>
                   <FileText className="h-4 w-4 mr-1" />Ouvrir PDF
