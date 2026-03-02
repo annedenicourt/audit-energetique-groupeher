@@ -24,7 +24,7 @@ interface Profile {
   display_name: string | null;
 }
 
-const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; loading: boolean }> = ({ dossiers, profiles, loading }) => {
+const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; loading: boolean; showCommercialFilter?: boolean }> = ({ dossiers, profiles, loading, showCommercialFilter = true }) => {
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
