@@ -15,7 +15,8 @@ export async function saveDossier(
   pdfBlob: Blob,
   dossierData: DossierFormData,
   filename: string,
-  existingId?: string | null
+  existingId?: string | null,
+  studyId?: string | null
 ): Promise<SaveDossierResult> {
   try {
     const { data: { user }, error: authError } = await supabase.auth.getUser();
