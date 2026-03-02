@@ -53,7 +53,6 @@ const AdminDocumentsView: React.FC<{
   showCommercialFilter?: boolean;
 }> = ({ studies, dossiers, profiles, loading, showCommercialFilter = true }) => {
   const navigate = useNavigate();
-  const navigate = useNavigate();
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
