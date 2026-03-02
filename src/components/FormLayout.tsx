@@ -64,11 +64,11 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                {isAdmin &&
+                {(role === "admin" || role === "commercial") &&
                   <NavLink to={"/admin"}>
                     <button className="p-2 md:px-4 md:py-2 flex items-center gap-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
                       <LayoutDashboard className="w-4 h-4" />
-                      Espace admin
+                      {role === "admin" ? "Espace admin" : "Mes documents"}
                     </button>
                   </NavLink>
                 }
