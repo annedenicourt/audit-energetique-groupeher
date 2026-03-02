@@ -148,7 +148,7 @@ const AdminDossiersView: React.FC<{ dossiers: Dossier[]; profiles: Profile[]; lo
               {filtered.map((s) => (
                 <TableRow key={s.id}>
                   <TableCell className="font-medium">{s.client_name ?? "—"}</TableCell>
-                  <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>
+                  {showCommercialFilter && <TableCell>{profileMap.get(s.user_id) ?? "—"}</TableCell>}
                   <TableCell>{formatDate(s.created_at)}</TableCell>
                   <TableCell className="text-right">
                     <Button
