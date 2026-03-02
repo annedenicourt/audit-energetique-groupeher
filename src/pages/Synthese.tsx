@@ -67,6 +67,7 @@ const Synthese: React.FC = () => {
       // ETUDE (upload only)
       const dataStudy = localStorage.getItem("simulation_form");
       const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
+      const existingStudyId = localStorage.getItem("current_study_id");
       if (studyPayload) {
         const etudeEl = document.getElementById("pdf-content-etude");
         if (!etudeEl) {
@@ -77,17 +78,19 @@ const Synthese: React.FC = () => {
         }
         const etudeFilename = `Etude_NRJ_${formSim.client.nom}.pdf`;
         const etudeBlob = await buildPdfBlob(etudeEl, etudeFilename);
-        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename);
+        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename, existingStudyId);
         if (!resStudy.success) {
           toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
           return;
         }
         localStorage.removeItem("simulation_form");
+        localStorage.removeItem("current_study_id");
       }
 
       // DOSSIER (upload + download)
       const dataDossier = localStorage.getItem("dossier_form");
       const dossierPayload = dataDossier ? JSON.parse(dataDossier) : null;
+      const existingDossierId = localStorage.getItem("current_dossier_id");
 
       if (dossierPayload) {
         const dossierEl = document.getElementById("pdf-content-dossier");
@@ -100,7 +103,7 @@ const Synthese: React.FC = () => {
 
         const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
         const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
-        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename);
+        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId);
         if (!resDossier.success) {
           toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
           return;
@@ -108,6 +111,7 @@ const Synthese: React.FC = () => {
 
         downloadBlob(dossierBlob, dossierFilename);
         localStorage.removeItem("dossier_form");
+        localStorage.removeItem("current_dossier_id");
       }
 
       if (!studyPayload && !dossierPayload) {

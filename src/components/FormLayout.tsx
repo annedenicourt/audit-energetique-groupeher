@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "./NavLink";
-import { useIsAdmin } from "@/hooks/useIsAdmin";
+import { useUserRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -40,7 +40,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
 
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const { isAdmin, loading: adminLoading } = useIsAdmin();
+  const { role } = useUserRole();
 
   const handleLogout = async () => {
     await signOut();
@@ -64,11 +64,11 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                {isAdmin &&
+                {(role === "admin" || role === "commercial") &&
                   <NavLink to={"/admin"}>
                     <button className="p-2 md:px-4 md:py-2 flex items-center gap-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
                       <LayoutDashboard className="w-4 h-4" />
-                      Espace admin
+                      {role === "admin" ? "Espace admin" : "Mes documents"}
                     </button>
                   </NavLink>
                 }
