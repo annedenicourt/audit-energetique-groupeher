@@ -266,7 +266,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
                 <SummaryRow key={`menuiserie-${index}`} label={`Menuiseries (Quantité-Matière)`} value={`${el.quantite} - ${el.matiere}`} />
               ))
             }
-            <SummaryRow label="Volets roulants (Quantité-Matière)" value={`${data.dimensionnement.quantiteVolets} - ${data.dimensionnement.matiereVolets}`} />
+            <SummaryRow label="Volets roulants (Quantité)" value={`${data.dimensionnement.quantiteVolets}`} />
           </div>
         </SectionCard>
         <div>

@@ -112,7 +112,6 @@ export interface DossierFormData {
   quantiteFenetres: string;
   matiereFenetres: string;
   quantiteVolets: string;
-  matiereVolets: string;
 
   // 6) ÉLECTRICITÉ
   monophase: boolean;
@@ -323,7 +322,6 @@ export const defaultDossierFormData: DossierFormData = {
   quantiteFenetres: "",
   matiereFenetres: "",
   quantiteVolets: "",
-  matiereVolets: "",
 
   monophase: false,
   triphase: false,

@@ -69,7 +69,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
         quantiteFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.quantite || "",
         matiereFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.matiere || "",
         quantiteVolets: simulData?.dimensionnement.quantiteVolets || "",
-        matiereVolets: simulData?.dimensionnement.matiereVolets || "",
       }));
     } catch {/* ignore */ }
   }, []);
@@ -319,7 +318,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
         <h3 className="font-semibold text-lime-600 mt-4 mb-2">Volets roulants</h3>
         <div className="flex flex-wrap gap-6">
           <FormInput label="Quantité" name="quantiteFenetres" value={simulData.dimensionnement.quantiteVolets || "0"} readonly={true} />
-          <FormInput label="Matière" name="matiereFenetres" value={simulData.dimensionnement.matiereVolets || "Non renseigné"} readonly={true} />
         </div>
       </SectionCard>
 

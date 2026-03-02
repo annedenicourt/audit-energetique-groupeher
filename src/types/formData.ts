@@ -152,7 +152,6 @@
   // Fenêtres / Menuiseries
   dimensionnementFenetres: FenetreData[];
   quantiteVolets: string;
-  matiereVolets: string;
 }
  export interface ExponentielData {
    consommation10AnsSansTravaux: string;
@@ -311,7 +310,6 @@
 
   dimensionnementFenetres: [{ quantite: "", type: "", ouverture: "", matiere: "" }],
   quantiteVolets:"",
-  matiereVolets:""
 },
 
    exponentiel: {

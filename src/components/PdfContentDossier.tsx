@@ -127,7 +127,6 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
               <SummaryRow label="Menuiseries à changer (quantité)" value={data.quantiteFenetres} />
               <SummaryRow label="Menuiseries à changer (matière)" value={data.matiereFenetres} />
               <SummaryRow label="Volets roulants (quantité)" value={data.quantiteVolets} />
-              <SummaryRow label="Volets roulants (matière)" value={data.matiereVolets} />
             </div>
           </SectionCard>
           {/* Murs */}
