@@ -51,12 +51,15 @@ const AdminDocumentsView: React.FC<{
   loading: boolean;
   showCommercialFilter?: boolean;
 }> = ({ studies, dossiers, profiles, loading, showCommercialFilter = true }) => {
+  const { role } = useUserRole();
+  const isAdmin = role === "admin";
   const navigate = useNavigate();
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
   const [sortKey, setSortKey] = useState<SortKey>("date_desc");
   const [restoringId, setRestoringId] = useState<string | null>(null);
+  const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
