@@ -345,6 +345,20 @@ const AdminDocumentsView: React.FC<{
                     </Badge>
                   )}
                 </div>
+                {isAdmin && (
+                  <div className="flex gap-2 flex-wrap">
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleRegeneratePdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
+                      <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `etude-${row.study.id}` ? "…" : "Regen Étude"}
+                    </Button>
+                    {row.dossier && (
+                      <Button variant="outline" size="sm" className="flex-1" onClick={() => handleRegeneratePdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
+                        <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "Regen Dossier"}
+                      </Button>
+                    )}
+                  </div>
+                )}
                 <Button variant="outline" size="sm" className="w-full" onClick={() => handleRestore(row)} disabled={restoringId === row.study.id}>
                   <RotateCcw className="h-4 w-4 mr-1" /> Restaurer
                 </Button>
