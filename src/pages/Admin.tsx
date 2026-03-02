@@ -5,9 +5,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUserRole } from "@/hooks/useUserRole";
 import FormLayoutAdmin, { AdminView, NAV_ITEMS } from "@/components/Admin/FormLayoutAdmin";
 import AdminDashboardView from "@/components/Admin/AdminDashboardView";
-import AdminPdfView from "@/components/Admin/AdminPdfView";
+import AdminDocumentsView from "@/components/Admin/AdminDocumentsView";
 import AdminUsersView from "@/components/Admin/AdminUsersView";
-import AdminDossiersView from "@/components/Admin/AdminDossiersView";
 
 interface Study {
   id: string;
@@ -22,6 +21,7 @@ interface Dossier {
   client_name: string | null;
   pdf_path: string | null;
   created_at: string;
+  study_id: string | null;
 }
 
 interface Profile {
@@ -31,7 +31,7 @@ interface Profile {
   created_at: string;
 }
 
-const COMMERCIAL_VIEWS: AdminView[] = ["pdf", "dossiers"];
+const COMMERCIAL_VIEWS: AdminView[] = ["documents"];
 
 const Admin: React.FC = () => {
   const { user } = useAuth();
@@ -43,13 +43,12 @@ const Admin: React.FC = () => {
     [isAdmin]
   );
 
-  const defaultView = isAdmin ? "dashboard" : "pdf";
+  const defaultView = isAdmin ? "dashboard" : "documents";
   const [view, setView] = useState<AdminView>(defaultView);
 
-  // Reset view if role changes and current view is not allowed
   useEffect(() => {
     if (!roleLoading && !isAdmin && !COMMERCIAL_VIEWS.includes(view)) {
-      setView("pdf");
+      setView("documents");
     }
   }, [roleLoading, isAdmin, view]);
 
@@ -70,7 +69,7 @@ const Admin: React.FC = () => {
           supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
           supabase.from("profiles").select("id, display_name, role, created_at"),
           supabase.functions.invoke("list-users"),
-          supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at"),
+          supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);
         if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
         else setStudies(studiesRes.data ?? []);
@@ -80,10 +79,9 @@ const Admin: React.FC = () => {
         else setDossiers(dossiersRes.data ?? []);
         if (!emailsRes.error && emailsRes.data?.emails) setEmailMap(emailsRes.data.emails);
       } else {
-        // Commercial: RLS already filters to own data
         const [studiesRes, dossiersRes] = await Promise.all([
           supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
-          supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at"),
+          supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);
         if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
         else setStudies(studiesRes.data ?? []);
@@ -123,11 +121,14 @@ const Admin: React.FC = () => {
           setView={setView}
         />
       )}
-      {view === "pdf" && (
-        <AdminPdfView studies={studies} profiles={profiles} loading={loading} showCommercialFilter={isAdmin} />
-      )}
-      {view === "dossiers" && (
-        <AdminDossiersView dossiers={dossiers} profiles={profiles} loading={loading} showCommercialFilter={isAdmin} />
+      {view === "documents" && (
+        <AdminDocumentsView
+          studies={studies}
+          dossiers={dossiers}
+          profiles={profiles}
+          loading={loading}
+          showCommercialFilter={isAdmin}
+        />
       )}
       {view === "users" && isAdmin && (
         <AdminUsersView
