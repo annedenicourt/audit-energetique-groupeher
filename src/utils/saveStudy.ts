@@ -5,6 +5,7 @@ import type { Json } from "@/integrations/supabase/types";
 interface SaveStudyResult {
   success: boolean;
   error?: string;
+  studyId?: string;
 }
 
 /**
