@@ -24,7 +24,7 @@ interface Profile {
   display_name: string | null;
 }
 
-const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean }> = ({ studies, profiles, loading }) => {
+const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: boolean; showCommercialFilter?: boolean }> = ({ studies, profiles, loading, showCommercialFilter = true }) => {
   const [listView, setListView] = useState<"list" | "cards">("list");
   const [search, setSearch] = useState("");
   const [filterCommercial, setFilterCommercial] = useState("all");
