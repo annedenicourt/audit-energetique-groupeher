@@ -67,6 +67,7 @@ const Synthese: React.FC = () => {
       // ETUDE (upload only)
       const dataStudy = localStorage.getItem("simulation_form");
       const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
+      const existingStudyId = localStorage.getItem("current_study_id");
       if (studyPayload) {
         const etudeEl = document.getElementById("pdf-content-etude");
         if (!etudeEl) {
@@ -77,12 +78,13 @@ const Synthese: React.FC = () => {
         }
         const etudeFilename = `Etude_NRJ_${formSim.client.nom}.pdf`;
         const etudeBlob = await buildPdfBlob(etudeEl, etudeFilename);
-        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename);
+        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename, existingStudyId);
         if (!resStudy.success) {
           toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
           return;
         }
         localStorage.removeItem("simulation_form");
+        localStorage.removeItem("current_study_id");
       }
 
       // DOSSIER (upload + download)
