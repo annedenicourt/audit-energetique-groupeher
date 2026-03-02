@@ -1,74 +1,76 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Document, Page, View, Text } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image } from "@react-pdf/renderer";
 import { styles } from "./styles";
 import PdfSection, { val } from "./PdfSection";
+import { Check } from "lucide-react";
 
-const b = (v: unknown) => (v ? "✓" : "—");
+/* const b = (v: unknown) => (v ? "✓" : "—");
+ */
 
 const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
+
   const splitRows = Array.isArray(d.splits)
     ? d.splits.flatMap((s: any, i: number) => [
-        { label: `Split ${i + 1} — Pièce`, value: val(s.nomPiece) },
-        { label: `Split ${i + 1} — Puissance`, value: val(s.puissanceKw, " kW") },
-        { label: `Split ${i + 1} — Dos à dos`, value: val(s.dosADos) },
-        { label: `Split ${i + 1} — Pompe relevage`, value: val(s.pompeRelevage) },
-      ])
+      { label: `Split ${i + 1} — Pièce`, value: val(s.nomPiece) },
+      { label: `Split ${i + 1} — Puissance`, value: val(s.puissanceKw, " kW") },
+      { label: `Split ${i + 1} — Dos à dos`, value: val(s.dosADos) },
+      { label: `Split ${i + 1} — Pompe relevage`, value: val(s.pompeRelevage) },
+    ])
     : [];
 
   const radRows = Array.isArray(d.radiateurs)
     ? d.radiateurs.flatMap((r: any, i: number) => [
-        { label: `Radiateur ${i + 1} — Matériau`, value: val(r.materiau) },
-        { label: `Radiateur ${i + 1} — H×L×E`, value: `${val(r.hauteur)}×${val(r.largeur)}×${val(r.epaisseur)} cm` },
-      ])
+      { label: `Radiateur ${i + 1} — Matériau`, value: val(r.materiau) },
+      { label: `Radiateur ${i + 1} — Dimensions`, value: `${val(r.hauteur)}×${val(r.largeur)}×${val(r.epaisseur)} cm` },
+    ])
     : [];
 
   return (
     <Document>
       {/* Cover */}
       <Page size="A4" style={[styles.page, styles.coverPage]}>
-        <Text style={styles.coverTitle}>Groupe HER</Text>
-        <Text style={styles.coverSubtitle}>{val(d.nomClient) || "Client"}</Text>
-        <Text style={styles.coverNote}>Dossier de liaison — Document généré automatiquement</Text>
+        <Image src={"/images/couv_dossier_liaison.png"}></Image>
       </Page>
 
       {/* Content */}
       <Page size="A4" style={styles.page}>
         <PdfSection title="Client" rows={[
-          { label: "Conseiller", value: val(d.conseiller) },
-          { label: "Perso", value: b(d.perso) },
+          { label: "Accompagnateur", value: val(d.conseiller) },
+          { label: "Perso", value: d.perso },
           { label: "Nom client", value: val(d.nomClient) },
           { label: "Téléphone", value: val(d.telephone) },
           { label: "Adresse fiscale", value: val(d.adresse) },
-          { label: "Adresse installation", value: val(d.adresseInstallation) },
+          { label: "Adresse de chantier", value: val(d.adresseInstallation) },
         ]} />
 
         <PdfSection title="Règlement" rows={[
-          { label: "Chèque", value: b(d.reglementCheque) },
-          { label: "Financement", value: b(d.reglementFinancement) },
-          { label: "PTZ", value: b(d.reglementPTZ) },
+          { label: "Chèque", value: d.reglementCheque },
+          { label: "Financement", value: d.reglementFinancement },
+          { label: "PTZ", value: d.reglementPTZ },
         ]} />
 
         <PdfSection title="Dossier de prime" rows={[
-          { label: "Propriétaire occupant", value: b(d.proprietaireOccupant) },
-          { label: "Propriétaire bailleur", value: b(d.proprietaireBailleur) },
-          { label: "Résidence secondaire", value: b(d.residSecondaire) },
-          { label: "SCI", value: b(d.sci) },
+          { label: "Propriétaire occupant", value: d.proprietaireOccupant },
+          { label: "Propriétaire bailleur", value: d.proprietaireBailleur },
+          { label: "Résidence secondaire", value: d.residSecondaire },
+          { label: "SCI", value: d.sci },
         ]} />
 
         <PdfSection title="Pièces / Attestations" rows={[
-          { label: "Devis non signé", value: b(d.devisNonSigne) },
-          { label: "Devis signé", value: b(d.devisSigne) },
-          { label: "Carte identité", value: b(d.carteIdentite) },
-          { label: "2 derniers avis d'impôts", value: b(d.deuxDerniersAvisImpots) },
-          { label: "Taxe foncière / acte notarié", value: b(d.taxeFonciereActeNotarie) },
-          { label: "Mandat MaPrimeRénov", value: b(d.mandatMaPrimeRenov) },
-          { label: "Identité numérique", value: b(d.idNumerique) },
-          { label: "Attestation fioul", value: b(d.attestationFioul) },
-          { label: "Attestation indivisionnaire", value: b(d.attestationIndivisionnaire) },
-          { label: "Attestation bailleur", value: b(d.attestationProprietaireBailleur) },
-          { label: "Note dimensionnement", value: b(d.noteDimensionnement) },
-          { label: "Revolt", value: b(d.revolt) },
-          { label: "Pouvoir", value: b(d.pouvoir) },
+          { label: "Devis non signé", value: d.devisNonSigne },
+          { label: "Devis signé", value: d.devisSigne },
+          { label: "Carte identité", value: d.carteIdentite },
+          { label: "2 derniers avis d'impôts", value: d.deuxDerniersAvisImpots },
+          { label: "Taxe foncière / acte notarié", value: d.taxeFonciereActeNotarie },
+          { label: "Mandat MaPrimeRénov", value: d.mandatMaPrimeRenov },
+          { label: "Identité numérique", value: d.idNumerique },
+          { label: "Attestation fioul", value: d.attestationFioul },
+          { label: "Attestation indivisionnaire", value: d.attestationIndivisionnaire },
+          { label: "Attestation bailleur", value: d.attestationProprietaireBailleur },
+          { label: "Note dimensionnement", value: d.noteDimensionnement },
+          { label: "Revolt", value: d.revolt },
+          { label: "Pouvoir", value: d.pouvoir },
         ]} />
 
         <PdfSection title="Prime EDF / MaPrimeRénov'" rows={[
@@ -83,19 +85,19 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         ]} />
 
         <PdfSection title="Dossier de financement" rows={[
-          { label: "Justificatif domicile", value: b(d.justificatifDomicile) },
-          { label: "Bulletins salaires", value: b(d.bulletinsSalaires) },
-          { label: "Bilan (entrepreneur)", value: b(d.bilanEntrepreneur) },
+          { label: "Justificatif domicile", value: d.justificatifDomicile },
+          { label: "Bulletins salaires", value: d.bulletinsSalaires },
+          { label: "Bilan (entrepreneur)", value: d.bilanEntrepreneur },
         ]} />
 
         <PdfSection title="Habitation" rows={[
           { label: "Année de construction", value: val(d.anneeConstruction) },
-          { label: "Plain-pied", value: b(d.plainPied) },
-          { label: "Étages", value: b(d.etages) },
+          { label: "Plain-pied", value: d.plainPied },
+          { label: "Étages", value: d.etages },
           { label: "Nombre d'étages", value: val(d.nbEtages) },
-          { label: "Sous-sol", value: b(d.sousSol) },
-          { label: "Vide sanitaire", value: b(d.videSanitaire) },
-          { label: "VS accessible", value: b(d.videSanitaireAccessible) },
+          { label: "Sous-sol", value: d.sousSol },
+          { label: "Vide sanitaire", value: d.videSanitaire },
+          { label: "VS accessible", value: d.videSanitaireAccessible },
           { label: "Menuiseries à changer (qté)", value: val(d.quantiteFenetres) },
           { label: "Menuiseries (matière)", value: val(d.matiereFenetres) },
           { label: "Volets roulants (qté)", value: val(d.quantiteVolets) },
@@ -107,46 +109,46 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         ]} />
 
         <PdfSection title="Combles" rows={[
-          { label: "Combles perdus", value: b(d.comblePerdu) },
-          { label: "Combles aménagés", value: b(d.combleAmenage) },
-          { label: "Perdus accessibles", value: b(d.comblePerduAccessible) },
-          { label: "Accès trappe", value: b(d.comblePerduTrappe) },
-          { label: "Accès toit", value: b(d.comblePerduToit) },
-          { label: "Accès autre", value: b(d.comblePerduAutre) },
+          { label: "Combles perdus", value: d.comblePerdu },
+          { label: "Combles aménagés", value: d.combleAmenage },
+          { label: "Perdus accessibles", value: d.comblePerduAccessible },
+          { label: "Accès trappe", value: d.comblePerduTrappe },
+          { label: "Accès toit", value: d.comblePerduToit },
+          { label: "Accès autre", value: d.comblePerduAutre },
           { label: "Précision autre", value: val(d.comblePerduAutreTexte) },
         ]} />
 
         <PdfSection title="Planchers" rows={[
-          { label: "Plancher bois", value: b(d.plancherBois) },
-          { label: "Plancher placo", value: b(d.plancherPlaco) },
-          { label: "Plancher hourdis", value: b(d.plancherHourdis) },
+          { label: "Plancher bois", value: d.plancherBois },
+          { label: "Plancher placo", value: d.plancherPlaco },
+          { label: "Plancher hourdis", value: d.plancherHourdis },
         ]} />
 
         <PdfSection title="Chauffage actuel" rows={[
-          { label: "Fioul", value: b(d.chauffageFioul) },
-          { label: "Gaz", value: b(d.chauffageGaz) },
-          { label: "Radiateurs élec", value: b(d.chauffageRadiateursElec) },
-          { label: "Bois", value: b(d.chauffageBois) },
-          { label: "Autre", value: b(d.chauffageAutre) },
+          { label: "Fioul", value: d.chauffageFioul },
+          { label: "Gaz", value: d.chauffageGaz },
+          { label: "Radiateurs élec", value: d.chauffageRadiateursElec },
+          { label: "Bois", value: d.chauffageBois },
+          { label: "Autre", value: d.chauffageAutre },
           { label: "Précision autre", value: val(d.chauffageAutreTexte) },
           { label: "Circuit hydraulique", value: val(d.circuitHydraulique) },
-          { label: "Radiateur acier", value: b(d.radiateurAcier) },
-          { label: "Radiateur alu", value: b(d.radiateurAlu) },
-          { label: "Radiateur fonte", value: b(d.radiateurFonte) },
+          { label: "Radiateur acier", value: d.radiateurAcier },
+          { label: "Radiateur alu", value: d.radiateurAlu },
+          { label: "Radiateur fonte", value: d.radiateurFonte },
           { label: "Nombre radiateurs", value: val(d.nombreRadiateurs) },
-          { label: "Plancher chauffant", value: b(d.plancherChauffant) },
+          { label: "Plancher chauffant", value: d.plancherChauffant },
         ]} />
 
         <PdfSection title="Thermostats" rows={[
-          { label: "Bi-zone", value: b(d.thermostatBiZone) },
-          { label: "Filaire", value: b(d.thermostatFilaire) },
-          { label: "Non filaire", value: b(d.thermostatNonFilaire) },
-          { label: "Pas de thermostat", value: b(d.pasDeThermostat) },
+          { label: "Bi-zone", value: d.thermostatBiZone },
+          { label: "Filaire", value: d.thermostatFilaire },
+          { label: "Non filaire", value: d.thermostatNonFilaire },
+          { label: "Pas de thermostat", value: d.pasDeThermostat },
         ]} />
 
         <PdfSection title="Électricité" rows={[
-          { label: "Monophasé", value: b(d.monophase) },
-          { label: "Triphasé", value: b(d.triphase) },
+          { label: "Monophasé", value: d.monophase },
+          { label: "Triphasé", value: d.triphase },
           { label: "Aux normes", value: val(d.installationAuxNormes) },
           { label: "Ampérage disjoncteur", value: val(d.amperageDisjoncteur) },
           { label: "Ampérage max", value: val(d.amperageMax) },
@@ -156,29 +158,31 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         ]} />
 
         <PdfSection title="PAC air-eau" rows={[
-          { label: "Monobloc Hybea", value: b(d.pacMonoblocHybea) },
-          { label: "Bi-bloc", value: b(d.pacBiBloc) },
+          { label: "Monobloc Hybea", value: d.pacMonoblocHybea },
+          { label: "Bi-bloc", value: d.pacBiBloc },
           { label: "Unité ext.", value: val(d.emplacementUniteExterieure) },
           { label: "Unité int.", value: val(d.emplacementUniteInterieure) },
           { label: "Distance modules", value: val(d.distanceEntreModules) },
           { label: "Distance PAC-tableau", value: val(d.distancePacTableau) },
-          { label: "Passage liaisons", value: [
-            d.passageLiaisonsComble ? "Comble" : "",
-            d.passageLiaisonsDirect ? "Direct" : "",
-            d.passageLiaisonsInterieur ? "Intérieur" : "",
-            d.passageLiaisonsAutres ? d.passageLiaisonsAutresTexte || "Autres" : "",
-          ].filter(Boolean).join(", ") || "—" },
+          {
+            label: "Passage liaisons", value: [
+              d.passageLiaisonsComble ? "Comble" : "",
+              d.passageLiaisonsDirect ? "Direct" : "",
+              d.passageLiaisonsInterieur ? "Intérieur" : "",
+              d.passageLiaisonsAutres ? d.passageLiaisonsAutresTexte || "Autres" : "",
+            ].filter(Boolean).join(", ") || "—"
+          },
           { label: "Tranchée", value: val(d.trancheeAFairePac) },
-          { label: "Pose sol", value: b(d.typePosePacSol) },
-          { label: "Pose mur", value: b(d.typePosePacMur) },
+          { label: "Pose sol", value: d.typePosePacSol },
+          { label: "Pose mur", value: d.typePosePacMur },
           { label: "Hauteur local", value: val(d.hauteurLocalPac) },
         ]} />
 
         <PdfSection title="BTD" rows={[
-          { label: "Monobloc", value: b(d.btdMonobloc) },
-          { label: "Bi-bloc", value: b(d.btdBiBloc) },
-          { label: "Groupe ext. sol", value: b(d.btdGroupeExtSol) },
-          { label: "Groupe ext. mur", value: b(d.btdGroupeExtMur) },
+          { label: "Monobloc", value: d.btdMonobloc },
+          { label: "Bi-bloc", value: d.btdBiBloc },
+          { label: "Groupe ext. sol", value: d.btdGroupeExtSol },
+          { label: "Groupe ext. mur", value: d.btdGroupeExtMur },
           { label: "Hauteur", value: val(d.btdGroupeExtHauteur) },
           { label: "Dalle existe", value: val(d.btdDalleExiste) },
           { label: "Accessible", value: val(d.btdAccessible) },
@@ -189,27 +193,27 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         )}
 
         <PdfSection title="PAC air-air" rows={[
-          { label: "Mono-split", value: b(d.pacAirAirMonoSplit) },
-          { label: "Multi-split", value: b(d.pacAirAirMultiSplit) },
-          { label: "Console", value: b(d.pacAirAirConsole) },
-          { label: "Gainable", value: b(d.pacAirAirGainable) },
-          { label: "Groupe ext. sol", value: b(d.pacAirAirGroupeExtSol) },
-          { label: "Groupe ext. mur", value: b(d.pacAirAirGroupeExtMur) },
+          { label: "Mono-split", value: d.pacAirAirMonoSplit },
+          { label: "Multi-split", value: d.pacAirAirMultiSplit },
+          { label: "Console", value: d.pacAirAirConsole },
+          { label: "Gainable", value: d.pacAirAirGainable },
+          { label: "Groupe ext. sol", value: d.pacAirAirGroupeExtSol },
+          { label: "Groupe ext. mur", value: d.pacAirAirGroupeExtMur },
           { label: "Distance", value: val(d.pacAirAirDistance) },
           { label: "Tranchée", value: val(d.pacAirAirTranchee) },
         ]} />
 
         <PdfSection title="PV / SSC" rows={[
-          { label: "Pose au sol", value: b(d.pvTypePoseAuSol) },
-          { label: "Pose toiture", value: b(d.pvTypePoseToiture) },
-          { label: "Murale SSC", value: b(d.pvTypePoseMuraleSsc) },
-          { label: "Format portrait", value: b(d.pvFormatPortrait) },
-          { label: "Format paysage", value: b(d.pvFormatPaysage) },
-          { label: "Bac acier", value: b(d.pvToitureBacAcier) },
-          { label: "Everite", value: b(d.pvToitureEverite) },
-          { label: "Tuile", value: b(d.pvToitureTuile) },
-          { label: "Raccordement enterré", value: b(d.pvRaccordementEnterre) },
-          { label: "Raccordement aérien", value: b(d.pvRaccordementAerien) },
+          { label: "Pose au sol", value: d.pvTypePoseAuSol },
+          { label: "Pose toiture", value: d.pvTypePoseToiture },
+          { label: "Murale SSC", value: d.pvTypePoseMuraleSsc },
+          { label: "Format portrait", value: d.pvFormatPortrait },
+          { label: "Format paysage", value: d.pvFormatPaysage },
+          { label: "Bac acier", value: d.pvToitureBacAcier },
+          { label: "Everite", value: d.pvToitureEverite },
+          { label: "Tuile", value: d.pvToitureTuile },
+          { label: "Raccordement enterré", value: d.pvRaccordementEnterre },
+          { label: "Raccordement aérien", value: d.pvRaccordementAerien },
           { label: "Taille SSC", value: val(d.pvSscTaille) },
         ]} />
 

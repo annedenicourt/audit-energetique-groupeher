@@ -1,40 +1,67 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
-import { Document, Page, View, Text } from "@react-pdf/renderer";
+import { Document, Page, View, Text, Image } from "@react-pdf/renderer";
 import { styles } from "./styles";
 import PdfSection, { val } from "./PdfSection";
+import { FormData, ScenarioData } from "@/types/formData";
 
-const EtudeDocument: React.FC<{ data: any }> = ({ data }) => {
-  const c = data.client || {};
-  const b = data.bilan || {};
-  const ev = data.evolution || {};
-  const sc = data.scenarios || {};
-  const dim = data.dimensionnement || {};
-  const exp = data.exponentiel || {};
-  const ai = data.aides || {};
-  const fin = data.financement || {};
+export interface ScenarioProps {
+  title: string;
+  scenario: ScenarioData;
+}
 
-  const scenarioRows = (s: any, name: string) => [
-    { label: `${name} — Nom`, value: val(s?.nom) },
-    { label: `${name} — Plus-value logement`, value: val(s?.plusValueLogement, "%") },
-    { label: `${name} — Économies`, value: val(s?.economieAnnuelle, "%") },
-    { label: `${name} — Facture après travaux`, value: val(s?.factureApres, " €/an") },
-    { label: `${name} — Lettre après travaux`, value: val(s?.lettreApres) },
-  ];
+const EtudeDocument: React.FC<{ data: FormData }> = ({ data }) => {
+  const c = data.client;
+  const b = data.bilan;
+  const ev = data.evolution;
+  const sc = data.scenarios;
+  const dim = data.dimensionnement;
+  const exp = data.exponentiel;
+  const ai = data.aides;
+  const fin = data.financement;
+
+  console.log(data)
+  console.log(sc)
+
+  const ScenarioRows: React.FC<ScenarioProps> = ({ title, scenario }) => {
+    return (
+      <View >
+        <Text>{title}</Text>
+        <View style={styles.row}>
+          <Text style={styles.label}>Nom</Text>
+          <Text style={styles.value}>{scenario.nom || "-"}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Plus-value logement</Text>
+          <Text style={styles.value}>{scenario.plusValueLogement || "-"}</Text>
+        </View><View style={styles.row}>
+          <Text style={styles.label}>Economies annuelles</Text>
+          <Text style={styles.value}>{scenario.economieAnnuelle || "-"}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Facture après</Text>
+          <Text style={styles.value}>{scenario.factureApres || "-"}</Text>
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Lettre après</Text>
+          <Text style={styles.value}>{scenario.factureApres || "-"}</Text>
+        </View>
+      </View>
+    );
+  }
 
   const fenetresRows = Array.isArray(dim.dimensionnementFenetres)
     ? dim.dimensionnementFenetres.map((f: any, i: number) => ({
-        label: `Menuiseries ${i + 1} (Qté-Matière)`,
-        value: `${val(f.quantite)} - ${val(f.matiere)}`,
-      }))
+      label: `Menuiseries ${i + 1} (Qté-Matière)`,
+      value: `${val(f.quantite)} - ${val(f.matiere)}`,
+    }))
     : [];
 
   return (
     <Document>
       {/* Cover */}
       <Page size="A4" style={[styles.page, styles.coverPage]}>
-        <Text style={styles.coverTitle}>Groupe HER</Text>
-        <Text style={styles.coverSubtitle}>{val(c.nom, "") || "Client"}</Text>
-        <Text style={styles.coverNote}>Étude énergétique — Document généré automatiquement</Text>
+        <Image src={"/images/couv_pdf.png"}></Image>
       </Page>
 
       {/* Content */}
@@ -46,12 +73,12 @@ const EtudeDocument: React.FC<{ data: any }> = ({ data }) => {
           { label: "Téléphone", value: val(c.telephone) },
           { label: "Adresse fiscale", value: val(c.adresseFiscale) },
           { label: "Adresse chantier", value: `${val(c.adresse)}—${val(c.codePostal)} ${val(c.ville)}` },
-          { label: "Situation pro C1", value: val(c.situationConjoint1) },
-          { label: "Âge C1", value: val(c.ageConjoint1) },
-          { label: "Situation pro C2", value: val(c.situationConjoint2) },
-          { label: "Âge C2", value: val(c.ageConjoint2) },
+          { label: "Situation pro Conjoint 1", value: val(c.situationConjoint1) },
+          { label: "Âge Conjoint 1", value: val(c.ageConjoint1) },
+          { label: "Situation pro Conjoint 2", value: val(c.situationConjoint2) },
+          { label: "Âge Conjoint 2", value: val(c.ageConjoint2) },
           { label: "Nombre de personnes", value: val(c.nbrePersonnes) },
-          { label: "Dont enfants", value: val(c.dontEnfants) },
+          { label: "Dont enfants à charge", value: val(c.dontEnfants) },
         ]} />
 
         <PdfSection title="Habitation" rows={[
@@ -97,11 +124,12 @@ const EtudeDocument: React.FC<{ data: any }> = ({ data }) => {
           { label: "Dépense cumulée 10 ans", value: val(ev.depenseTotal10ans, " €") },
         ]} />
 
-        <PdfSection title="Scénarios proposés" rows={[
-          ...scenarioRows(sc.scenario1, "Scénario 1"),
-          ...scenarioRows(sc.scenario2, "Scénario 2"),
-          ...scenarioRows(sc.scenario3, "Scénario 3"),
-        ]} />
+        <View wrap={false}>
+          <Text style={styles.sectionTitle}>{"Scénarios proposés"}</Text>
+          <ScenarioRows title="Scénario 1" scenario={sc.scenario1} />
+          <ScenarioRows title="Scénario 2" scenario={sc.scenario2} />
+          <ScenarioRows title="Scénario 3" scenario={sc.scenario3} />
+        </View>
 
         <PdfSection title="Dimensionnement" rows={[
           { label: "PAC air-eau", value: val(dim.dimensionnementPACaireau) },

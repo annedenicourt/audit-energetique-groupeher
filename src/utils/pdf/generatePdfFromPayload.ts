@@ -23,7 +23,7 @@ export async function downloadPdfFromDb(
       return false;
     }
 
-    const payload = data.payload as any;
+    const payload = data.payload;
     const clientName = data.client_name || "Client";
 
     // Build PDF document
@@ -35,7 +35,7 @@ export async function downloadPdfFromDb(
     const blob = await pdf(DocComponent as any).toBlob();
 
     // Download
-    const prefix = type === "etude" ? "Etude_NRJ" : "Dossier_Liaison";
+    /* const prefix = type === "etude" ? "Etude_NRJ" : "Dossier_Liaison";
     const filename = `${prefix}_${clientName}.pdf`;
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -44,9 +44,13 @@ export async function downloadPdfFromDb(
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+    URL.revokeObjectURL(url); */
 
-    toast.success("PDF téléchargé !");
+    // Ouvrir dans un nouvel onglet
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+
+    //toast.success("PDF téléchargé !");
     return true;
   } catch (err) {
     console.error("[downloadPdfFromDb]", err);

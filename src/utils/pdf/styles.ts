@@ -55,7 +55,7 @@ export const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingVertical: 3,
+    paddingVertical: 5,
     paddingHorizontal: 6,
     borderBottomWidth: 0.5,
     borderBottomColor: colors.border,
@@ -72,6 +72,9 @@ export const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     flex: 1,
     textAlign: "right",
+  },
+  iconBoolean: {
+    width: "10px",
   },
   footer: {
     position: "absolute",

@@ -250,7 +250,7 @@ const AdminDocumentsView: React.FC<{
                   <TableCell>{formatDate(row.latestDate)}</TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
+                      {/* <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
                         <FolderOpen className="h-3 w-3" /> Étude
                       </Badge>
                       {row.dossier ? (
@@ -261,30 +261,31 @@ const AdminDocumentsView: React.FC<{
                         <Badge variant="secondary" className="gap-1 opacity-50">
                           <ArrowRightLeft className="h-3 w-3" /> Pas de dossier
                         </Badge>
+                      )} */}
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadPdf("etude", row.study.id)}
+                        disabled={regeneratingId === `etude-${row.study.id}`}
+                      >
+                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                        {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                      </Button>
+                      {row.dossier && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDownloadPdf("dossier", row.dossier!.id)}
+                          disabled={regeneratingId === `dossier-${row.dossier!.id}`}
+                        >
+                          <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                          {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
+                        </Button>
                       )}
                     </div>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleDownloadPdf("etude", row.study.id)}
-                      disabled={regeneratingId === `etude-${row.study.id}`}
-                    >
-                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
-                    </Button>
-                    {row.dossier && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownloadPdf("dossier", row.dossier!.id)}
-                        disabled={regeneratingId === `dossier-${row.dossier!.id}`}
-                      >
-                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
-                      </Button>
-                    )}
+
                     <Button
                       variant="outline"
                       size="sm"
@@ -325,17 +326,17 @@ const AdminDocumentsView: React.FC<{
                   )}
                 </div>
                 <div className="flex gap-2 flex-wrap">
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
-                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
+                    <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                    {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                  </Button>
+                  {row.dossier && (
+                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
+                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
                     </Button>
-                    {row.dossier && (
-                      <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
-                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
-                      </Button>
-                    )}
-                  </div>
+                  )}
+                </div>
                 <Button variant="outline" size="sm" className="w-full" onClick={() => handleRestore(row)} disabled={restoringId === row.study.id}>
                   <RotateCcw className="h-4 w-4 mr-1" /> Restaurer
                 </Button>

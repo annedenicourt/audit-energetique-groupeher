@@ -227,7 +227,7 @@ const AdminUsersView: React.FC<{
             </TableHeader>
             <TableBody>
               {filtered.map((s) => (
-                <TableRow key={s.id}>
+                <TableRow key={s.id} className={`${s.role === "admin" && "bg-orange-100/60"}`}>
                   <TableCell className="font-medium">{s.display_name ?? "—"}</TableCell>
                   <TableCell className="text-muted-foreground">{emailMap[s.id] ?? "—"}</TableCell>
                   <TableCell className="capitalize">{s.role ?? "—"}</TableCell>
