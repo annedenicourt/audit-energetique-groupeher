@@ -6,7 +6,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-export type AdminView = "dashboard" | "pdf" | "dossiers" | "users";
+export type AdminView = "dashboard" | "documents" | "users";
 
 interface NavItem {
   view: AdminView;
@@ -16,8 +16,7 @@ interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { view: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { view: "pdf", label: "Études NRJ", icon: FolderOpen },
-  { view: "dossiers", label: "Dossiers de liaison", icon: ArrowRightLeft },
+  { view: "documents", label: "Documents clients", icon: FolderOpen },
   { view: "users", label: "Utilisateurs", icon: Users },
 ];
 
