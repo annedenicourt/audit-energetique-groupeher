@@ -86,17 +86,19 @@ const AdminPdfView: React.FC<{ studies: Study[]; profiles: Profile[]; loading: b
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Rechercher un client…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
         </div>
-        <Select value={filterCommercial} onValueChange={setFilterCommercial}>
-          <SelectTrigger className="w-[200px]">
-            <SelectValue placeholder="Tous les commerciaux" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">Tous les commerciaux</SelectItem>
-            {commercials.map((c) => (
-              <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {showCommercialFilter && (
+          <Select value={filterCommercial} onValueChange={setFilterCommercial}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Tous les commerciaux" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tous les commerciaux</SelectItem>
+              {commercials.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         <Select value={sortKey} onValueChange={(v) => setSortKey(v as SortKey)}>
           <SelectTrigger className="w-[220px]">
             <ArrowUpDown className="h-4 w-4 mr-2" />
