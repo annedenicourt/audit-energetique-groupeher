@@ -267,29 +267,25 @@ const AdminDocumentsView: React.FC<{
                     </div>
                   </TableCell>
                   <TableCell className="text-right space-x-2">
-                    {isAdmin && (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleRegeneratePdf("etude", row.study.id)}
-                          disabled={regeneratingId === `etude-${row.study.id}`}
-                        >
-                          <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                          {regeneratingId === `etude-${row.study.id}` ? "…" : "Regen Étude"}
-                        </Button>
-                        {row.dossier && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRegeneratePdf("dossier", row.dossier!.id)}
-                            disabled={regeneratingId === `dossier-${row.dossier!.id}`}
-                          >
-                            <RefreshCw className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                            {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "Regen Dossier"}
-                          </Button>
-                        )}
-                      </>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleDownloadPdf("etude", row.study.id)}
+                      disabled={regeneratingId === `etude-${row.study.id}`}
+                    >
+                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                    </Button>
+                    {row.dossier && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownloadPdf("dossier", row.dossier!.id)}
+                        disabled={regeneratingId === `dossier-${row.dossier!.id}`}
+                      >
+                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                        {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
+                      </Button>
                     )}
                     <Button
                       variant="outline"
