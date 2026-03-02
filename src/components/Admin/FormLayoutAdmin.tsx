@@ -104,7 +104,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
     <div className="flex w-full h-screen bg-background overflow-hidden">
       {/* ── Desktop sidebar ── */}
       <aside className="hidden md:flex flex-col w-60 shrink-0 border-r border-border bg-card h-screen sticky top-0">
-        <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} />
+        <SidebarNav current={currentView} onChange={handleNav} onBack={handleBack} navItems={navItems} title={title} />
       </aside>
 
       {/* ── Mobile header + drawer ── */}
