@@ -76,8 +76,6 @@ export async function saveStudy(
       }
       return { success: true, studyId: insertData.id };
     }
-
-    return { success: true };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Erreur inconnue";
     return { success: false, error: message };

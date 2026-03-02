@@ -106,7 +106,7 @@ const Synthese: React.FC = () => {
 
         const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
         const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
-        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId);
+        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId, savedStudyId);
         if (!resDossier.success) {
           toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
           return;
