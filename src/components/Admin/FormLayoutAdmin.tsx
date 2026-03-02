@@ -87,6 +87,8 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
   children,
   currentView,
   onViewChange,
+  navItems = NAV_ITEMS,
+  title = "Espace admin",
 }) => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
