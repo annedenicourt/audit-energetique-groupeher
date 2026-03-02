@@ -21,6 +21,7 @@ export type Database = {
           id: string
           payload: Json
           pdf_path: string
+          study_id: string | null
           user_id: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           payload: Json
           pdf_path: string
+          study_id?: string | null
           user_id: string
         }
         Update: {
@@ -37,9 +39,18 @@ export type Database = {
           id?: string
           payload?: Json
           pdf_path?: string
+          study_id?: string | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "dossiers_study_id_fkey"
+            columns: ["study_id"]
+            isOneToOne: false
+            referencedRelation: "etudes_energetiques"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       etudes_energetiques: {
         Row: {
