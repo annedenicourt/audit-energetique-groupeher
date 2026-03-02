@@ -27,17 +27,19 @@ interface SidebarNavProps {
   current: AdminView;
   onChange: (v: AdminView) => void;
   onBack: () => void;
+  navItems: NavItem[];
+  title: string;
 }
 
-const SidebarNav: React.FC<SidebarNavProps> = ({ current, onChange, onBack }) => (
+const SidebarNav: React.FC<SidebarNavProps> = ({ current, onChange, onBack, navItems, title }) => (
   <nav className="flex flex-col h-full">
     <div className="px-6 py-5 border-b border-border">
       <img src="./images/Logo-HER-WEB.webp" alt="" />
-      <h2 className="mt-4 text-center text-lg font-bold text-foreground">Espace admin</h2>
+      <h2 className="mt-4 text-center text-lg font-bold text-foreground">{title}</h2>
     </div>
 
     <ul className="flex-1 px-3 py-4 space-y-1">
-      {NAV_ITEMS.map(({ view, label, icon: Icon }) => {
+      {navItems.map(({ view, label, icon: Icon }) => {
         const isActive = current === view;
         return (
           <li key={view}>
