@@ -83,7 +83,7 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground ">Dernières études réalisées</h2>
-          <div className="text-sm font-semibold hover:underline cursor-pointer" onClick={() => setView("pdf")}>Voir toutes les études</div>
+          <div className="text-sm font-semibold hover:underline cursor-pointer" onClick={() => setView("documents")}>Voir tous les documents</div>
         </div>
         {recentStudies.length === 0 ? (
           <Card>
