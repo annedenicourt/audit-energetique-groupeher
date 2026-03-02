@@ -55,6 +55,7 @@ export async function saveDossier(
           client_name: dossierData?.nomClient || null,
           pdf_path: storagePath,
           payload: dossierData as unknown as Json,
+          ...(studyId ? { study_id: studyId } : {}),
         });
 
       if (insertError) {

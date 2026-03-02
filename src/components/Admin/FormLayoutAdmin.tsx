@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard, FolderOpen, Users, Menu, ArrowRightLeft } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Users, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
