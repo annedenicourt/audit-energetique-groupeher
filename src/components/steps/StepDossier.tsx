@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FileCheck, FileWarning, Plus, Trash2, Triangle, TriangleAlert } from "lucide-react";
-import { FormData, initialFormData } from "@/types/formData";
+import { Plus, Trash2, TriangleAlert } from "lucide-react";
+import { FormData } from "@/types/formData";
 import {
   DossierFormData,
   defaultDossierFormData,
@@ -51,11 +51,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
 
   useEffect(() => {
     try {
-      //const storedSimul = localStorage.getItem("simulation_form");
-      //if (!storedSimul) return;
-
-      //const simulData = JSON.parse(storedSimul);
-
       setForm((prev) => ({
         ...prev,
         conseiller: prev.conseiller || simulData?.client?.accompagnateur || "",

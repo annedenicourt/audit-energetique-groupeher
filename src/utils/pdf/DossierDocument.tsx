@@ -22,7 +22,7 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
   const radRows = Array.isArray(d.radiateurs)
     ? d.radiateurs.flatMap((r: any, i: number) => [
       { label: `Radiateur ${i + 1} — Matériau`, value: val(r.materiau) },
-      { label: `Radiateur ${i + 1} — Dimensions`, value: `${val(r.hauteur)}×${val(r.largeur)}×${val(r.epaisseur)} cm` },
+      { label: `Radiateur ${i + 1} — Dimensions`, value: `${val(r.hauteur)}X${val(r.largeur)}X${val(r.epaisseur)} cm` },
     ])
     : [];
 
@@ -67,7 +67,7 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
           { label: "Identité numérique", value: d.idNumerique },
           { label: "Attestation fioul", value: d.attestationFioul },
           { label: "Attestation indivisionnaire", value: d.attestationIndivisionnaire },
-          { label: "Attestation bailleur", value: d.attestationProprietaireBailleur },
+          { label: "Attestation propriétaire bailleur", value: d.attestationProprietaireBailleur },
           { label: "Note dimensionnement", value: d.noteDimensionnement },
           { label: "Revolt", value: d.revolt },
           { label: "Pouvoir", value: d.pouvoir },
@@ -97,10 +97,7 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
           { label: "Nombre d'étages", value: val(d.nbEtages) },
           { label: "Sous-sol", value: d.sousSol },
           { label: "Vide sanitaire", value: d.videSanitaire },
-          { label: "VS accessible", value: d.videSanitaireAccessible },
-          { label: "Menuiseries à changer (qté)", value: val(d.quantiteFenetres) },
-          { label: "Menuiseries (matière)", value: val(d.matiereFenetres) },
-          { label: "Volets roulants (qté)", value: val(d.quantiteVolets) },
+          { label: "Vide-sanitaire accessible", value: d.videSanitaireAccessible },
         ]} />
 
         <PdfSection title="Murs" rows={[
@@ -111,7 +108,7 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         <PdfSection title="Combles" rows={[
           { label: "Combles perdus", value: d.comblePerdu },
           { label: "Combles aménagés", value: d.combleAmenage },
-          { label: "Perdus accessibles", value: d.comblePerduAccessible },
+          { label: "Combles perdus accessibles", value: d.comblePerduAccessible },
           { label: "Accès trappe", value: d.comblePerduTrappe },
           { label: "Accès toit", value: d.comblePerduToit },
           { label: "Accès autre", value: d.comblePerduAutre },
@@ -146,13 +143,19 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
           { label: "Pas de thermostat", value: d.pasDeThermostat },
         ]} />
 
+        <PdfSection title="Menuiseries à remplacer" rows={[
+          { label: "Menuiseries à changer (qté)", value: val(d.quantiteFenetres) },
+          { label: "Menuiseries (matière)", value: val(d.matiereFenetres) },
+          { label: "Volets roulants (qté)", value: val(d.quantiteVolets) },
+        ]} />
+
         <PdfSection title="Électricité" rows={[
           { label: "Monophasé", value: d.monophase },
           { label: "Triphasé", value: d.triphase },
           { label: "Aux normes", value: val(d.installationAuxNormes) },
           { label: "Ampérage disjoncteur", value: val(d.amperageDisjoncteur) },
           { label: "Ampérage max", value: val(d.amperageMax) },
-          { label: "Emplacement tableau", value: val(d.emplacementTableauPrincipal) },
+          { label: "Emplacement tableau principal", value: val(d.emplacementTableauPrincipal) },
           { label: "Linky", value: val(d.linky) },
           { label: "Abonnement kVA", value: val(d.abonnementKva) },
         ]} />
@@ -160,10 +163,11 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         <PdfSection title="PAC air-eau" rows={[
           { label: "Monobloc Hybea", value: d.pacMonoblocHybea },
           { label: "Bi-bloc", value: d.pacBiBloc },
-          { label: "Unité ext.", value: val(d.emplacementUniteExterieure) },
-          { label: "Unité int.", value: val(d.emplacementUniteInterieure) },
-          { label: "Distance modules", value: val(d.distanceEntreModules) },
-          { label: "Distance PAC-tableau", value: val(d.distancePacTableau) },
+          { label: "Emplacement Unité ext.", value: val(d.emplacementUniteExterieure) },
+          { label: "Emplacement Unité int.", value: val(d.emplacementUniteInterieure) },
+          { label: "Distance entre 2 modules", value: val(d.distanceEntreModules) },
+          { label: "Distance PAC-tableau électrique", value: val(d.distancePacTableau) },
+          { label: "Difficulté de passage entre tableaux", value: val(d.difficultePasaggeTableaux) },
           {
             label: "Passage liaisons", value: [
               d.passageLiaisonsComble ? "Comble" : "",
@@ -172,7 +176,7 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
               d.passageLiaisonsAutres ? d.passageLiaisonsAutresTexte || "Autres" : "",
             ].filter(Boolean).join(", ") || "—"
           },
-          { label: "Tranchée", value: val(d.trancheeAFairePac) },
+          { label: "Tranchée à faire", value: val(d.trancheeAFairePac) },
           { label: "Pose sol", value: d.typePosePacSol },
           { label: "Pose mur", value: d.typePosePacMur },
           { label: "Hauteur local", value: val(d.hauteurLocalPac) },
@@ -181,45 +185,108 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
         <PdfSection title="BTD" rows={[
           { label: "Monobloc", value: d.btdMonobloc },
           { label: "Bi-bloc", value: d.btdBiBloc },
+          { label: "Ballon dans local technique", value: d.btdEmplacementLocalTech },
+          { label: "Ballon dans garage", value: d.btdEmplacementGarage },
+          { label: "Ballon dans cellier", value: d.btdEmplacementCellier },
+          { label: "Emplacement ballon autre", value: d.btdEmplacementAutre },
+          { label: "Précison autre", value: d.btdEmplacementAutreTexte },
           { label: "Groupe ext. sol", value: d.btdGroupeExtSol },
           { label: "Groupe ext. mur", value: d.btdGroupeExtMur },
-          { label: "Hauteur", value: val(d.btdGroupeExtHauteur) },
+          { label: "GRoupe Ext. hauteur", value: val(d.btdGroupeExtHauteur) },
           { label: "Dalle existe", value: val(d.btdDalleExiste) },
           { label: "Accessible", value: val(d.btdAccessible) },
         ]} />
 
+        <PdfSection
+          title="PAC air-air" rows={[
+            { label: "Mono-split", value: d.pacAirAirMonoSplit },
+            { label: "Multi-split", value: d.pacAirAirMultiSplit },
+            { label: "Console", value: d.pacAirAirConsole },
+            { label: "Gainable", value: d.pacAirAirGainable },
+
+            { label: "Groupe ext. sol", value: d.pacAirAirGroupeExtSol },
+            { label: "Groupe ext. mur", value: d.pacAirAirGroupeExtMur },
+            { label: "Lève groupe (+ de 1m et -5m)", value: d.pacAirAirLeveGroupe },
+            { label: "Nacelle (+5m)", value: d.pacAirAirNacelle },
+
+            { label: "Distance", value: val(d.pacAirAirDistance) },
+            { label: "Nature du sol", value: val(d.pacAirAirNatureSol) },
+            { label: "Hauteur", value: val(d.pacAirAirHauteur) },
+            { label: "Type de mur", value: val(d.pacAirAirTypeMur) },
+            { label: "Tranchée (longueur)", value: val(d.pacAirAirTranchee) },
+
+            { label: "Chape existante", value: d.pacAirAirChapeExistante },
+            { label: "Chape à faire", value: d.pacAirAirChapeAFaire },
+          ]}
+        />
         {splitRows.length > 0 && (
           <PdfSection title="PAC air-air — Splits" rows={splitRows} />
         )}
 
-        <PdfSection title="PAC air-air" rows={[
-          { label: "Mono-split", value: d.pacAirAirMonoSplit },
-          { label: "Multi-split", value: d.pacAirAirMultiSplit },
-          { label: "Console", value: d.pacAirAirConsole },
-          { label: "Gainable", value: d.pacAirAirGainable },
-          { label: "Groupe ext. sol", value: d.pacAirAirGroupeExtSol },
-          { label: "Groupe ext. mur", value: d.pacAirAirGroupeExtMur },
-          { label: "Distance", value: val(d.pacAirAirDistance) },
-          { label: "Tranchée", value: val(d.pacAirAirTranchee) },
-        ]} />
+        <PdfSection
+          title="PV / SSC" rows={[
+            // Type de pose
+            { label: "Pose au sol", value: d.pvTypePoseAuSol },
+            { label: "Pose toiture", value: d.pvTypePoseToiture },
+            { label: "Murale SSC", value: d.pvTypePoseMuraleSsc },
 
-        <PdfSection title="PV / SSC" rows={[
-          { label: "Pose au sol", value: d.pvTypePoseAuSol },
-          { label: "Pose toiture", value: d.pvTypePoseToiture },
-          { label: "Murale SSC", value: d.pvTypePoseMuraleSsc },
-          { label: "Format portrait", value: d.pvFormatPortrait },
-          { label: "Format paysage", value: d.pvFormatPaysage },
-          { label: "Bac acier", value: d.pvToitureBacAcier },
-          { label: "Everite", value: d.pvToitureEverite },
-          { label: "Tuile", value: d.pvToitureTuile },
-          { label: "Raccordement enterré", value: d.pvRaccordementEnterre },
-          { label: "Raccordement aérien", value: d.pvRaccordementAerien },
-          { label: "Taille SSC", value: val(d.pvSscTaille) },
-        ]} />
+            // Format
+            { label: "Format portrait", value: d.pvFormatPortrait },
+            { label: "Format paysage", value: d.pvFormatPaysage },
+
+            // Type de toiture
+            { label: "Bac acier", value: d.pvToitureBacAcier },
+            { label: "Éverite", value: d.pvToitureEverite },
+            { label: "Tuile", value: d.pvToitureTuile },
+
+            // Raccordement
+            { label: "Raccordement enterré", value: d.pvRaccordementEnterre },
+            { label: "Raccordement aérien", value: d.pvRaccordementAerien },
+
+            // Documents
+            { label: "Devis signé", value: d.pvDocDevisSigne },
+            { label: "Pouvoir", value: d.pvDocPouvoir },
+            { label: "Taxe foncière", value: d.pvDocTaxeFonciere },
+            { label: "Facture EDF", value: d.pvDocFactureEdf },
+            { label: "Parcelle", value: d.pvDocParcelle },
+
+            // Accès
+            { label: "Nacelle (+4m)", value: d.pvNacellePlus4m },
+          ]}
+        />
 
         {radRows.length > 0 && (
           <PdfSection title="Radiateurs" rows={radRows} />
         )}
+
+        <PdfSection
+          title="Photos à faire (obligatoire)"
+          rows={[
+            // Équipement
+            { label: "Compteur", value: d.photoCompteur },
+            { label: "Chaudière à remplacer", value: d.photoChaudiere },
+            { label: "Emplacement du groupe extérieur", value: d.photoGroupeExt },
+            { label: "Maison vue de la rue", value: d.photoMaison },
+            { label: "Combles", value: d.photoCombles },
+            { label: "Système ECS", value: d.photoECS },
+            { label: "Disjoncteur", value: d.photoDisjoncteur },
+            { label: "Tuyauterie de la chaudière", value: d.photoTuyauterie },
+            { label: "Radiateurs", value: d.photoRadiateurs },
+            { label: "Plafonds", value: d.photoPlafonds },
+            { label: "Sous-sol", value: d.photoSousSol },
+            { label: "Tableaux électriques existants", value: d.photoTableauElec },
+            { label: "Ventilation", value: d.photoVentilation },
+            { label: "Emplacement des unités intérieures", value: d.photoUniteInt },
+            { label: "Planchers", value: d.photoPlancher },
+            { label: "Rez-de-chaussée", value: d.photoRDC },
+
+            // Menuiseries et isolation extérieure
+            { label: "Fenêtres", value: d.photoFenetres },
+            { label: "Portes-fenêtres", value: d.photoPorteFenetre },
+            { label: "Façades extérieures", value: d.photoFacade },
+            { label: "Porte", value: d.photoPorte },
+          ]}
+        />
 
         {d.commentaires && (
           <PdfSection title="Commentaires" rows={[

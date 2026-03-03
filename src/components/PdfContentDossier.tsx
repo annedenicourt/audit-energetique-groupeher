@@ -38,7 +38,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
           {/* Client */}
           <SectionCard title="Client" icon={User} className="">
             <div className="grid gap-x-8">
-              <SummaryRow label="Conseiller" value={data.conseiller} />
+              <SummaryRow label="Accompagnateur" value={data.conseiller} />
               <SummaryRow label="Perso" value={data.perso} />
               <SummaryRow label="Nom client" value={data.nomClient} />
               <SummaryRow label="Téléphone" value={data.telephone} />

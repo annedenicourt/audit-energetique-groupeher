@@ -9,13 +9,14 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Info } from "lucide-react";
 import { CATEGORIES_LABELS } from "@/utils/handleForm";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
-
+import { useAuth } from "@/contexts/AuthContext";
 
 
 const SimulMpr = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const returnStep = location.state?.returnStep ?? 0;
+  const { user, loading } = useAuth();
 
   const [nbPersonnes, setNbPersonnes] = useState("1");
   const [rfr, setRfr] = useState("");
@@ -47,17 +48,21 @@ const SimulMpr = () => {
   const fmt = (n: number) =>
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
+  if (loading) return null;
+
   return (
     <div className="simulateur min-h-screen bg-slate-100 p-4 md:p-8">
       <div className="mx-auto max-w-2xl space-y-3">
         {/* Header */}
         <div>
-          <button
-            onClick={() => navigate("/", { replace: true, state: { step: returnStep } })}
-            className=" absolute top-4 left-4 mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <ArrowLeft className="h-4 w-4" /> Retour
-          </button>
+          {user && (
+            <button
+              onClick={() => navigate("/", { replace: true, state: { step: returnStep } })}
+              className=" absolute top-4 left-4 mb-4 flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" /> Retour
+            </button>
+          )}
           <div className="mt-8 md:mt-0 flex flex-col items-center justify-center">
             <img className="w-28 md:w-36 mb-4" src="/images/logo-HER-seul.png" alt="logo HER" />
             <h1 className="text-center text-base md:text-xl font-semibold text-foreground">

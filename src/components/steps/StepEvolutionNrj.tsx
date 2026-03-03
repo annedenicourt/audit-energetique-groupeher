@@ -246,7 +246,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
         />
 
         <p className="mt-3 font-bold text-center text-xs text-muted-foreground">
-          Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
+          Source CRE : augmentation moyenne estimée à 7% par an sur une durée de 10 ans
         </p>
       </SectionCard>
 

@@ -25,7 +25,7 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/simulateur-mpr" element={<ProtectedRoute><SimulMpr /></ProtectedRoute>} />
+            <Route path="/simulateur-mpr" element={<SimulMpr />} />
             <Route path="/synthese" element={<ProtectedRoute><Synthese /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />

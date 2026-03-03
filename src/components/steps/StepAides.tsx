@@ -252,7 +252,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
           />
         </div> */}
         <div className="mt-8 text-xs text-center font-bold text-muted-foreground">
-          Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
+          Source CRE : augmentation moyenne estimée à 7% par an sur une durée de 10 ans
         </div>
       </SectionCard>
     </div>

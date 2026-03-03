@@ -111,7 +111,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
           readonly={true}
         />
         <p className="text-xs text-center font-bold text-muted-foreground mt-3">
-          Source CRE : augmentation moyenne estimée à 6% par an sur une durée de 10 ans
+          Source CRE : augmentation moyenne estimée à 7% par an sur une durée de 10 ans
         </p>
       </SectionCard>
 

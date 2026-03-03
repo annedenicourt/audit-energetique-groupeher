@@ -98,44 +98,6 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
         </div>
       </SectionCard>
 
-      {/* Situation professionnelle */}
-      <SectionCard title="Situation du foyer" icon={Briefcase}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormSelect
-            label="Situation conjoint 1"
-            name="situationConjoint1"
-            value={data.situationConjoint1}
-            onChange={(v) => onChange("situationConjoint1", v)}
-            options={situationOptions}
-          />
-          <FormInput
-            label="Âge conjoint 1"
-            name="ageConjoint1"
-            value={data.ageConjoint1}
-            onChange={(v) => onChange("ageConjoint1", v)}
-            type="number"
-            placeholder="Âge"
-            suffix="ans"
-          />
-          <FormSelect
-            label="Situation conjoint 2"
-            name="situationConjoint2"
-            value={data.situationConjoint2}
-            onChange={(v) => onChange("situationConjoint2", v)}
-            options={situationOptions}
-          />
-          <FormInput
-            label="Âge conjoint 2"
-            name="ageConjoint2"
-            value={data.ageConjoint2}
-            onChange={(v) => onChange("ageConjoint2", v)}
-            type="number"
-            placeholder="Âge"
-            suffix="ans"
-          />
-        </div>
-      </SectionCard>
-
       {/* Habitation */}
       <SectionCard title="Habitation" icon={Home}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -164,30 +126,15 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="Surface habitable"
             suffix="m²"
           />
-          <FormInput
+          {/* <FormInput
             label="Pièces chauffées"
             name="nbrePiecesChaufees"
             value={data.nbrePiecesChaufees}
             onChange={(v) => onChange("nbrePiecesChaufees", v)}
             type="number"
             placeholder="0"
-          />
-          <FormInput
-            label="Nombre de personnes"
-            name="nbrePersonnes"
-            value={data.nbrePersonnes}
-            onChange={(v) => onChange("nbrePersonnes", v)}
-            type="number"
-            placeholder="0"
-          />
-          <FormInput
-            label="Dont enfants à charge"
-            name="dontEnfants"
-            value={data.dontEnfants}
-            onChange={(v) => onChange("dontEnfants", v)}
-            type="number"
-            placeholder="0"
-          />
+          /> */}
+
         </div>
       </SectionCard>
 
@@ -439,6 +386,60 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               readonly={true}
             />
           </div>
+        </div>
+      </SectionCard>
+
+      {/* Situation du foyer */}
+      <SectionCard title="Situation du foyer" icon={Briefcase}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormSelect
+            label="Situation conjoint 1"
+            name="situationConjoint1"
+            value={data.situationConjoint1}
+            onChange={(v) => onChange("situationConjoint1", v)}
+            options={situationOptions}
+          />
+          <FormInput
+            label="Âge conjoint 1"
+            name="ageConjoint1"
+            value={data.ageConjoint1}
+            onChange={(v) => onChange("ageConjoint1", v)}
+            type="number"
+            placeholder="Âge"
+            suffix="ans"
+          />
+          <FormSelect
+            label="Situation conjoint 2"
+            name="situationConjoint2"
+            value={data.situationConjoint2}
+            onChange={(v) => onChange("situationConjoint2", v)}
+            options={situationOptions}
+          />
+          <FormInput
+            label="Âge conjoint 2"
+            name="ageConjoint2"
+            value={data.ageConjoint2}
+            onChange={(v) => onChange("ageConjoint2", v)}
+            type="number"
+            placeholder="Âge"
+            suffix="ans"
+          />
+          <FormInput
+            label="Nombre de personnes"
+            name="nbrePersonnes"
+            value={data.nbrePersonnes}
+            onChange={(v) => onChange("nbrePersonnes", v)}
+            type="number"
+            placeholder="0"
+          />
+          <FormInput
+            label="Dont enfants à charge"
+            name="dontEnfants"
+            value={data.dontEnfants}
+            onChange={(v) => onChange("dontEnfants", v)}
+            type="number"
+            placeholder="0"
+          />
         </div>
       </SectionCard>
     </div>

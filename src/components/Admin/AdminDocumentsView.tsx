@@ -21,6 +21,7 @@ interface Study {
   client_name: string | null;
   pdf_path: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 interface Dossier {
@@ -42,7 +43,6 @@ interface ClientRow {
   study: Study;
   dossier: Dossier | null;
   /** Most recent date between study and dossier */
-  latestDate: string;
 }
 
 const AdminDocumentsView: React.FC<{
@@ -83,7 +83,7 @@ const AdminDocumentsView: React.FC<{
       const latestDate = dossier && new Date(dossier.created_at) > new Date(study.created_at)
         ? dossier.created_at
         : study.created_at;
-      return { study, dossier, latestDate };
+      return { study, dossier };
     });
   }, [studies, dossiers]);
 
@@ -103,9 +103,9 @@ const AdminDocumentsView: React.FC<{
         case "client_name_desc": return (b.study.client_name ?? "").localeCompare(a.study.client_name ?? "");
         case "commercial_asc": return gc(a.study.user_id).localeCompare(gc(b.study.user_id));
         case "commercial_desc": return gc(b.study.user_id).localeCompare(gc(a.study.user_id));
-        case "date_asc": return new Date(a.latestDate).getTime() - new Date(b.latestDate).getTime();
+        case "date_asc": return new Date(a.study.updated_at).getTime() - new Date(b.study.updated_at).getTime();
         case "date_desc":
-        default: return new Date(b.latestDate).getTime() - new Date(a.latestDate).getTime();
+        default: return new Date(b.study.updated_at).getTime() - new Date(a.study.updated_at).getTime();
       }
     });
   }, [rows, search, filterCommercial, sortKey, profileMap]);
@@ -236,20 +236,22 @@ const AdminDocumentsView: React.FC<{
             <TableHeader>
               <TableRow>
                 <TableHead>Client</TableHead>
-                {showCommercialFilter && <TableHead>Commercial</TableHead>}
-                <TableHead>Date</TableHead>
-                <TableHead>Documents</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                {showCommercialFilter && <TableHead className="text-center">Commercial</TableHead>}
+                <TableHead className="text-center">Créé le</TableHead>
+                <TableHead className="text-center">Modifié le</TableHead>
+                <TableHead className="text-center">Documents</TableHead>
+                <TableHead className="text-center">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filtered.map((row) => (
                 <TableRow key={row.study.id}>
                   <TableCell className="font-medium">{row.study.client_name ?? "—"}</TableCell>
-                  {showCommercialFilter && <TableCell>{profileMap.get(row.study.user_id) ?? "—"}</TableCell>}
-                  <TableCell>{formatDate(row.latestDate)}</TableCell>
+                  {showCommercialFilter && <TableCell className="text-center">{profileMap.get(row.study.user_id) ?? "—"}</TableCell>}
+                  <TableCell className="text-center">{formatDate(row.study.created_at)}</TableCell>
+                  <TableCell className="text-center">{formatDate(row.study.updated_at)}</TableCell>
                   <TableCell>
-                    <div className="flex gap-2">
+                    <div className="flex justify-center gap-2">
                       {/* <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
                         <FolderOpen className="h-3 w-3" /> Étude
                       </Badge>
@@ -284,8 +286,7 @@ const AdminDocumentsView: React.FC<{
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-right space-x-2">
-
+                  <TableCell className="text-center space-x-2">
                     <Button
                       variant="outline"
                       size="sm"
@@ -310,7 +311,8 @@ const AdminDocumentsView: React.FC<{
               <CardContent className="p-5 space-y-3">
                 <p className="font-semibold text-foreground truncate">{row.study.client_name ?? "—"}</p>
                 {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(row.study.user_id) ?? "—"}</p>}
-                <p className="text-sm text-muted-foreground">{formatDate(row.latestDate)}</p>
+                <p className="text-xs text-muted-foreground">Créé le : {formatDate(row.study.created_at)}</p>
+                <p className="text-xs text-muted-foreground">Modifié le : {formatDate(row.study.updated_at)}</p>
                 <div className="flex gap-2 flex-wrap">
                   <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
                     <FolderOpen className="h-3 w-3" /> Étude PDF

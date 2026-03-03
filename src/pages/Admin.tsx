@@ -14,6 +14,7 @@ interface Study {
   client_name: string | null;
   pdf_path: string | null;
   created_at: string;
+  updated_at: string;
 }
 interface Dossier {
   id: string;
@@ -66,7 +67,7 @@ const Admin: React.FC = () => {
 
       if (isAdmin) {
         const [studiesRes, profilesRes, emailsRes, dossiersRes] = await Promise.all([
-          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
+          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
           supabase.from("profiles").select("id, display_name, role, created_at"),
           supabase.functions.invoke("list-users"),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
@@ -80,7 +81,7 @@ const Admin: React.FC = () => {
         if (!emailsRes.error && emailsRes.data?.emails) setEmailMap(emailsRes.data.emails);
       } else {
         const [studiesRes, dossiersRes] = await Promise.all([
-          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at"),
+          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);
         if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
