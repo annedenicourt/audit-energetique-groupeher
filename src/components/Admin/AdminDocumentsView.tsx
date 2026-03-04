@@ -281,7 +281,7 @@ const AdminDocumentsView: React.FC<{
                           disabled={regeneratingId === `dossier-${row.dossier!.id}`}
                         >
                           <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
-                          {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
+                          {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Liaison"}
                         </Button>
                       )}
                     </div>

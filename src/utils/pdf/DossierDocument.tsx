@@ -4,11 +4,12 @@ import { Document, Page, View, Text, Image } from "@react-pdf/renderer";
 import { styles } from "./styles";
 import PdfSection, { val } from "./PdfSection";
 import { Check } from "lucide-react";
+import { DossierFormData } from "@/types/dossierFormData";
 
 /* const b = (v: unknown) => (v ? "✓" : "—");
  */
 
-const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
+const DossierDocument: React.FC<{ data: DossierFormData }> = ({ data: d }) => {
 
   const splitRows = Array.isArray(d.splits)
     ? d.splits.flatMap((s: any, i: number) => [
@@ -296,6 +297,8 @@ const DossierDocument: React.FC<{ data: any }> = ({ data: d }) => {
 
         <View style={styles.footer} fixed>
           <Text>Estimatif non contractuel</Text>
+          <Text style={styles.legend}>Dossier de liaison {d.nomClient}</Text>
+          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber - 1} / ${totalPages - 1}`} />
         </View>
       </Page>
     </Document>

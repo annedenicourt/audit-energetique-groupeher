@@ -149,7 +149,7 @@ const Synthese: React.FC = () => {
             onClick={() => setIsModalOpen(true)}
           >
             <FileCheck className="w-5 h-5" />
-            Valider et clôturer le dossier
+            Valider et sauvegarder le dossier
           </button>
         </div>
       </div>
@@ -193,7 +193,7 @@ const Synthese: React.FC = () => {
               </div>
             </div>
             <div className="text-center">
-              Une fois clôturé, le dossier de liaison  <br />et les données entrées dans le simulateur ne seront plus modifiables. <br />
+              Une fois clôturé, le dossier de liaison  <br />et les données entrées dans le simulateur seront sauvegardés. <br />
               Assurez-vous que les données envoyées sont exactes avant validation
             </div>
             <div className="mx-auto">

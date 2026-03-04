@@ -182,6 +182,8 @@ const EtudeDocument: React.FC<{ data: FormData }> = ({ data }) => {
 
         <View style={styles.footer} fixed>
           <Text>Estimatif non contractuel</Text>
+          <Text style={styles.legend}>Étude énergétique {c.nom}</Text>
+          <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber - 1} / ${totalPages - 1}`} />
         </View>
       </Page>
     </Document>

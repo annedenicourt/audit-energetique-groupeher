@@ -76,6 +76,11 @@ export const styles = StyleSheet.create({
   iconBoolean: {
     width: 10,
   },
+  legend: {
+    margin: 6,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+  },
   footer: {
     position: "absolute",
     bottom: 20,
