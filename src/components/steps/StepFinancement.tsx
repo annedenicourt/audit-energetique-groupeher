@@ -61,7 +61,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
       {/* Transfert de charge */}
       <SectionCard title="Transfert de charge" icon={Banknote}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="mt-0 md:mt-14 lg:mt-8 flex items-center">
+          <div className="mt-0 md:mt-5 flex items-center justify-center">
             <FormInput
               label="Mensualité de confort"
               name="mensualiteConfort"
@@ -73,23 +73,22 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
             />
           </div>
           <div>
-            <div className="mb-4 text-sm font-semibold">Économies moyennes mensuelles sur 10 ans </div>
             <div onClick={() => setIsActive("economiesPremiereAnnee")}>
-              <div className="form-label">La 1ère année</div>
+              <div className="form-label">Économies dès la 1ère année</div>
               <div className={`my-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economiesPremiereAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economiesPremiereAnne || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
               </div>
             </div>
             <div onClick={() => setIsActive("economies5eAnnee")}>
-              <div className="form-label">La 5e année</div>
+              <div className="form-label">Économies moy. mens. sur 10 ans (la 5e année)</div>
               <div className={`my-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economies5eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economiesMensuellesMoyennes || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
               </div>
             </div>
             <div onClick={() => setIsActive("economies10eAnnee")}>
-              <div className="form-label">La 10e année</div>
+              <div className="form-label">Économies la 10e année</div>
               <div className={`mt-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economies10eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economies10eAnnee || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
@@ -98,7 +97,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
           </div>
           <div className={`flex flex-col justify-center items-center`}>
             <div className="font-bold">Gain financier</div>
-            <div className="mt-0 md:mt-14 lg:mt-8">
+            <div className="mt-0 md:mt-5">
               <FormInput
                 label=""
                 name="mensualiteMoinsEconomies"
@@ -134,10 +133,10 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
             <span className="text-primary mt-1">•</span>
             <span>Possibilité de solder tout ou partiellement sans frais jusqu'à 10 000 €</span>
           </li>
-          <li className="flex items-start gap-2">
+          {/* <li className="flex items-start gap-2">
             <span className="text-primary mt-1">•</span>
             <span>Si montant à solder supérieur à 10 000 €, frais limités à 1% mais pris en charge par le Groupe HER-ENR en déduction du devis</span>
-          </li>
+          </li> */}
         </ul>
       </div>
     </div>
