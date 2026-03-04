@@ -1,0 +1,1 @@
+ALTER TABLE public.dossiers ALTER COLUMN pdf_path DROP NOT NULL;

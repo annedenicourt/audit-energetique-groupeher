@@ -9,13 +9,10 @@ interface SaveStudyResult {
 }
 
 /**
- * Sauvegarde ou met à jour une étude énergétique dans Supabase.
- * Si existingId est fourni, met à jour l'enregistrement existant (PDF + payload).
+ * Sauvegarde ou met à jour une étude énergétique dans Supabase (payload JSON uniquement, sans PDF).
  */
 export async function saveStudy(
-  pdfBlob: Blob,
   formData: FormData,
-  filename: string,
   existingId?: string | null
 ): Promise<SaveStudyResult> {
   try {
@@ -24,54 +21,33 @@ export async function saveStudy(
       return { success: false, error: "Utilisateur non authentifié" };
     }
 
-    const now = new Date();
-    const formattedDate = now.toISOString().slice(0, 19).replace(/[:T]/g, "-");
     const userId = user.id;
-    const storagePath = `${userId}/etudes/${filename}-${formattedDate}`;
-
-    // Upload du PDF
-    const { error: uploadError } = await supabase.storage
-      .from("pdfs")
-      .upload(storagePath, pdfBlob, {
-        contentType: "application/pdf",
-        upsert: false,
-      });
-
-    if (uploadError) {
-      return { success: false, error: `Upload échoué : ${uploadError.message}` };
-    }
 
     if (existingId) {
-      // UPDATE existing record
       const { error: updateError } = await supabase
         .from("etudes_energetiques")
         .update({
           client_name: formData.client.nom || null,
-          pdf_path: storagePath,
           payload: formData as unknown as Json,
         })
         .eq("id", existingId);
 
       if (updateError) {
-        await supabase.storage.from("pdfs").remove([storagePath]);
         return { success: false, error: `Mise à jour échouée : ${updateError.message}` };
       }
       return { success: true, studyId: existingId };
     } else {
-      // INSERT new record
       const { data: insertData, error: insertError } = await supabase
         .from("etudes_energetiques")
         .insert({
           user_id: userId,
           client_name: formData.client.nom || null,
-          pdf_path: storagePath,
           payload: formData as unknown as Json,
         })
         .select("id")
         .single();
 
       if (insertError || !insertData) {
-        await supabase.storage.from("pdfs").remove([storagePath]);
         return { success: false, error: `Insertion échouée : ${insertError?.message}` };
       }
       return { success: true, studyId: insertData.id };

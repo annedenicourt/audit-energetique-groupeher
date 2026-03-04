@@ -64,23 +64,14 @@ const Synthese: React.FC = () => {
     };
 
     try {
-      // ETUDE (upload only)
+      // ETUDE — sauvegarde JSON uniquement
       const dataStudy = localStorage.getItem("simulation_form");
       const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
       const existingStudyId = localStorage.getItem("current_study_id");
       let savedStudyId: string | null = existingStudyId;
 
       if (studyPayload) {
-        const etudeEl = document.getElementById("pdf-content-etude");
-        if (!etudeEl) {
-          toast.error("Contenu PDF étude introuvable");
-          document.body.classList.remove("exporting");
-          setIsSaving(false);
-          return;
-        }
-        const etudeFilename = `Etude_NRJ_${formSim.client.nom}.pdf`;
-        const etudeBlob = await buildPdfBlob(etudeEl, etudeFilename);
-        const resStudy = await saveStudy(etudeBlob, studyPayload, etudeFilename, existingStudyId);
+        const resStudy = await saveStudy(studyPayload, existingStudyId);
         if (!resStudy.success) {
           toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
           return;
@@ -90,29 +81,26 @@ const Synthese: React.FC = () => {
         localStorage.removeItem("current_study_id");
       }
 
-      // DOSSIER (upload + download)
+      // DOSSIER — sauvegarde JSON + téléchargement PDF côté client
       const dataDossier = localStorage.getItem("dossier_form");
       const dossierPayload = dataDossier ? JSON.parse(dataDossier) : null;
       const existingDossierId = localStorage.getItem("current_dossier_id");
 
       if (dossierPayload) {
-        const dossierEl = document.getElementById("pdf-content-dossier");
-        if (!dossierEl) {
-          toast.error("Contenu PDF dossier introuvable");
-          document.body.classList.remove("exporting");
-          setIsSaving(false);
-          return;
-        }
-
-        const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
-        const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
-        const resDossier = await saveDossier(dossierBlob, dossierPayload, dossierFilename, existingDossierId, savedStudyId);
+        const resDossier = await saveDossier(dossierPayload, existingDossierId, savedStudyId);
         if (!resDossier.success) {
           toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
           return;
         }
 
-        downloadBlob(dossierBlob, dossierFilename);
+        // Générer et télécharger le PDF dossier de liaison côté client
+        const dossierEl = document.getElementById("pdf-content-dossier");
+        if (dossierEl) {
+          const dossierFilename = `Dossier_Liaison_${formDossier.nomClient}.pdf`;
+          const dossierBlob = await buildPdfBlob(dossierEl, dossierFilename);
+          downloadBlob(dossierBlob, dossierFilename);
+        }
+
         localStorage.removeItem("dossier_form");
         localStorage.removeItem("current_dossier_id");
       }
