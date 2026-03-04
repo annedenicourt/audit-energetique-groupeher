@@ -20,7 +20,7 @@ export type Database = {
           created_at: string
           id: string
           payload: Json
-          pdf_path: string
+          pdf_path: string | null
           study_id: string | null
           updated_at: string | null
           user_id: string
@@ -30,7 +30,7 @@ export type Database = {
           created_at?: string
           id?: string
           payload: Json
-          pdf_path: string
+          pdf_path?: string | null
           study_id?: string | null
           updated_at?: string | null
           user_id: string
@@ -40,7 +40,7 @@ export type Database = {
           created_at?: string
           id?: string
           payload?: Json
-          pdf_path?: string
+          pdf_path?: string | null
           study_id?: string | null
           updated_at?: string | null
           user_id?: string
