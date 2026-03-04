@@ -126,6 +126,18 @@ export const computeEcoMensuellesMoy = (
     const total = toNumber(exponentiel.economiesAnnuellesMoyennes) / 12
   return Math.round(total).toString();
 }
+export const computeEcoPremiereAnnee = (
+    exponentiel:FormData["exponentiel"]
+): string=> {
+    const total = toNumber(exponentiel.economiesMensuellesMoyennes) * 0.66
+  return Math.round(total).toString();
+}
+export const computeEco10eAnnee = (
+    exponentiel:FormData["exponentiel"]
+): string=> {
+    const total = toNumber(exponentiel.economiesMensuellesMoyennes) * 1.475
+  return Math.round(total).toString();
+}
 
 /*Section Aides*/
 export const computeResteaChargeAvant = (

@@ -14,6 +14,7 @@ interface FormInputProps {
   readonly?: boolean;
   min?: string;
   max?: string;
+  //isFocus?: boolean;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -28,7 +29,7 @@ const FormInput: React.FC<FormInputProps> = ({
   required = false,
   className,
   min,
-  max
+  max,
 }) => {
   return (
     <div className={`form-field ${className}`} >
@@ -44,7 +45,7 @@ const FormInput: React.FC<FormInputProps> = ({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className={`form-input ${suffix ? "pr-14" : ""}`}
+          className={`form-input ${suffix ? "pr-14" : ""} focus:ring-2 focus:ring-lime-500 focus:ring-offset-2`}
           readOnly={readonly}
           step={1}
           min={min}

@@ -158,7 +158,9 @@
    consommation10AnsApresTravaux: string;
    economiesRealisees10Ans: string;
    economiesAnnuellesMoyennes: string;
+   economiesPremiereAnne: string;
    economiesMensuellesMoyennes: string;
+   economies10eAnnee: string;
    // Projection
    factureAujourdhui: string;
    facture5Ans: string;
@@ -317,8 +319,11 @@
      consommation10AnsApresTravaux: "",
      economiesRealisees10Ans: "",
      economiesAnnuellesMoyennes: "",
+     economiesPremiereAnne: "string",
      economiesMensuellesMoyennes: "",
-     // Projection après travaux
+     economies10eAnnee:"",     
+   
+   // Projection après travaux
      factureAujourdhui: "",
      facture5Ans: "",
      facture10Ans: "",  

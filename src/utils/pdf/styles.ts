@@ -74,7 +74,7 @@ export const styles = StyleSheet.create({
     textAlign: "right",
   },
   iconBoolean: {
-    width: "10px",
+    width: 10,
   },
   footer: {
     position: "absolute",

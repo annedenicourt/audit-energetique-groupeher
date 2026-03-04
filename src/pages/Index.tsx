@@ -29,6 +29,8 @@ import {
   computeNRJAnnuel,
   computeTotalChauffage,
   computefactureApres,
+  computeEcoPremiereAnnee,
+  computeEco10eAnnee,
 } from "@/utils/energyCalculation";
 import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
@@ -125,6 +127,8 @@ const Index: React.FC = () => {
         ...withFresh,
         economiesAnnuellesMoyennes,
       });
+      const economiesPremiereAnne = computeEcoPremiereAnnee({ ...withFresh, economiesMensuellesMoyennes });
+      const economies10eAnnee = computeEco10eAnnee({ ...withFresh, economiesMensuellesMoyennes })
       return {
         ...prev,
         exponentiel: {
@@ -132,6 +136,8 @@ const Index: React.FC = () => {
           economiesRealisees10Ans,
           economiesAnnuellesMoyennes,
           economiesMensuellesMoyennes,
+          economiesPremiereAnne,
+          economies10eAnnee
         },
       };
     });
@@ -258,7 +264,7 @@ const Index: React.FC = () => {
       case 8:
         return <StepAides data={formData.aides} onChange={updateAides} ecoEstimees10ans={formData.exponentiel.economiesRealisees10Ans} dispoMPR={formData.client.dispoMaPrimeRenov} currentStep={currentStep} />;
       case 9:
-        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} />;
+        return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} economiesPremiereAnne={formData.exponentiel.economiesPremiereAnne} economies10eAnnee={formData.exponentiel.economies10eAnnee} />;
       case 10:
         return <StepDossier simulData={formData} />;
       default:

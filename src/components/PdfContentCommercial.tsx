@@ -143,8 +143,8 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Année de construction" value={data.client.anneeConstruction} />
             <SummaryRow label="Surface habitable" value={data.client.surfaceHabitable ? `${data.client.surfaceHabitable} m²` : ""} />
             <SummaryRow label="Propriétaire depuis" value={data.client.proprietaireDepuis} />
-            <SummaryRow label="Nombre de pièces chauffées" value={data.client.nbrePiecesChaufees} />
-            <SummaryRow label="Type de chauffage" value={data.client.typeChauffage} />
+            {/*             <SummaryRow label="Nombre de pièces chauffées" value={data.client.nbrePiecesChaufees} />
+ */}            <SummaryRow label="Type de chauffage" value={data.client.typeChauffage} />
             <SummaryRow label="Âge chauffage" value={`${data.client.ageChauffage}`} />
             <SummaryRow label="Coût annuel chauffage" value={`${data.client.coutAnnuelChauffage}`} />
             <SummaryRow label="Eau chaude sanitaire" value={`${data.client.typeEauChaude}—${data.client.ageEauChaude}`} />
