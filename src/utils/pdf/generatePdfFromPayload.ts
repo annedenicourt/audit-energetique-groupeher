@@ -29,8 +29,8 @@ export async function downloadPdfFromDb(
     // Build PDF document
     const DocComponent =
       type === "etude"
-        ? React.createElement(EtudeDocument, { data: payload })
-        : React.createElement(DossierDocument, { data: payload });
+        ? React.createElement(EtudeDocument, { data: payload as any })
+        : React.createElement(DossierDocument, { data: payload as any });
 
     const blob = await pdf(DocComponent as any).toBlob();
 
