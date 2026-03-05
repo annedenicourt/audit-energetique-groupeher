@@ -205,6 +205,10 @@ const SimulMpr = () => {
                   </TableRow>
                 )}
                 <TableRow>
+                  <TableCell className="text-muted-foreground">MPR après écrètement</TableCell>
+                  <TableCell>{fmt(result.mprFinal)}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell className="text-muted-foreground">Plafond MaPrimeRénov' sur 5 ans</TableCell>
                   <TableCell>20 000€</TableCell>
                 </TableRow>
@@ -212,15 +216,15 @@ const SimulMpr = () => {
                   <TableCell className="text-muted-foreground">Montant MPR reçu sur les 5 dernières années</TableCell>
                   <TableCell>{fmt(result.mpr)}</TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell className="text-muted-foreground">MPR finale après plafond 5 ans</TableCell>
-                  <TableCell>{fmt(result.mprApresPlafond)}</TableCell>
-                </TableRow>
               </TableBody>
             </Table>
-            <div className="px-4 pt-4 flex items-center justify-between border-t ">
-              <span className="text-base font-semibold text-foreground">MaPrimeRénov' finale</span>
+            {/* <div className="px-4 pt-4 flex items-center justify-between border-t ">
+              <span className="text-base font-semibold text-foreground">MPR après écrètement</span>
               <span className={`${result.mprFinal === 0 ? "text-red-500" : "text-green-500"} text-2xl font-bold`}>{fmt(result.mprFinal)}</span>
+            </div> */}
+            <div className="px-4 pt-4 flex items-center justify-between border-t ">
+              <span className="text-base font-semibold text-foreground">MaPrimeRénov' finale après plafond</span>
+              <span className={`${result.mprApresPlafond === 0 ? "text-red-500" : "text-green-500"} text-2xl font-bold`}>{fmt(result.mprApresPlafond)}</span>
             </div>
           </div>
         )}
