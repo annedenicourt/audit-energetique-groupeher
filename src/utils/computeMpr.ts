@@ -12,6 +12,7 @@ export type MprInput = {
   quantite?: number;
   cee?: number;
   mpr?: number;
+  replaceFioul?: boolean;
 };
 
 export type MprOutput = {
@@ -53,7 +54,7 @@ function determinerCategorie(nbPersonnes: number, rfr: number): CategorieMenage 
 }
 
 export function computeMpr(input: MprInput): MprOutput {
-  const { nbPersonnes, rfr, typeTravaux, quantite = 0, cee = 0, mpr = 0 } = input;
+  const { nbPersonnes, rfr, typeTravaux, quantite = 0, cee = 0, mpr = 0, replaceFioul = false } = input;
 
   const categorie = determinerCategorie(Math.max(1, nbPersonnes), rfr);
   const travail = TRAVAUX_MPR[typeTravaux];
@@ -66,7 +67,7 @@ export function computeMpr(input: MprInput): MprOutput {
   const age = input.ageLogement ?? 0;
 
   // 1) Condition d'éligibilité âge logement
-  if (age > 0 && age < 15) {
+  if (age > 0 && age < 15 && !replaceFioul) {
     return {
       categorie, // ✅ on garde la vraie catégorie
       unite,
@@ -80,7 +81,7 @@ export function computeMpr(input: MprInput): MprOutput {
       mprApresPlafond: 0,
       mprFinal: 0,
       isEligible: false,
-      reasons: ["Logement achevé depuis moins de 15 ans (non éligible MPR dans la plupart des cas)"],
+      reasons: ["Logement achevé depuis moins de 15 ans (non éligible MPR sauf PAC en remplacement de fioul)"],
     };
   }
 

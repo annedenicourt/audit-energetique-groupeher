@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { replace, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import { computeMpr } from "@/utils/computeMpr";
 import { TYPES_TRAVAUX_MPR, type TypeTravauxMpr } from "@/types/mpr/listesMpr";
@@ -25,6 +25,7 @@ const SimulMpr = () => {
   const [quantite, setQuantite] = useState("");
   const [cee, setCee] = useState("0");
   const [mpr, setMpr] = useState("0");
+  const [replaceFioul, setReplaceFioul] = useState(false)
 
   const travail = typeTravaux ? TRAVAUX_MPR[typeTravaux as TypeTravauxMpr] : null;
   const unite = travail?.unite ?? "FORFAIT";
@@ -40,8 +41,9 @@ const SimulMpr = () => {
       quantite: needQuantite ? (parseFloat(quantite) || 0) : undefined,
       cee: parseFloat(cee) || 0,
       mpr: parseFloat(mpr) || 0,
+      replaceFioul
     });
-  }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee, mpr]);
+  }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee, mpr, replaceFioul]);
 
   useEffect(() => setQuantite(""), [typeTravaux]);
 
@@ -115,6 +117,17 @@ const SimulMpr = () => {
             options={travauxOptions}
             required
           />
+          {parseFloat(ageLogement) < 15 && typeTravaux === "PAC Air/Eau" && (
+            <label className="flex items-center gap-2 cursor-pointer py-1">
+              <input
+                type="checkbox"
+                checked={replaceFioul}
+                onChange={(e) => setReplaceFioul(!replaceFioul)}
+                className="w-4 h-4 rounded border-input accent-primary"
+              />
+              <span className="text-sm">PAC en remplacement de fioul</span>
+            </label>
+          )}
 
           {needQuantite && (
             <FormInput
