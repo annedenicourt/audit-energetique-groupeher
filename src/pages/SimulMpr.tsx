@@ -94,6 +94,7 @@ const SimulMpr = () => {
               onChange={setRfr}
               suffix="€"
               required
+              min="0"
             />
           </div>
           <FormInput
@@ -144,6 +145,7 @@ const SimulMpr = () => {
             value={cee}
             onChange={setCee}
             suffix="€"
+            min="0"
           />
           <FormInput
             label="Montant MPR reçu sur les 5 dernières années"
@@ -152,6 +154,7 @@ const SimulMpr = () => {
             value={mpr}
             onChange={setMpr}
             suffix="€"
+            min="0"
           />
         </div>
 
