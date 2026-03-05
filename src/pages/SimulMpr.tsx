@@ -24,6 +24,7 @@ const SimulMpr = () => {
   const [typeTravaux, setTypeTravaux] = useState("");
   const [quantite, setQuantite] = useState("");
   const [cee, setCee] = useState("0");
+  const [mpr, setMpr] = useState("0");
 
   const travail = typeTravaux ? TRAVAUX_MPR[typeTravaux as TypeTravauxMpr] : null;
   const unite = travail?.unite ?? "FORFAIT";
@@ -38,8 +39,9 @@ const SimulMpr = () => {
       typeTravaux: typeTravaux as TypeTravauxMpr,
       quantite: needQuantite ? (parseFloat(quantite) || 0) : undefined,
       cee: parseFloat(cee) || 0,
+      mpr: parseFloat(mpr) || 0,
     });
-  }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee]);
+  }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee, mpr]);
 
   useEffect(() => setQuantite(""), [typeTravaux]);
 
@@ -143,6 +145,14 @@ const SimulMpr = () => {
             onChange={setCee}
             suffix="€"
           />
+          <FormInput
+            label="Montant MPR reçu sur les 5 dernières années"
+            name="mpr"
+            type="number"
+            value={mpr}
+            onChange={setMpr}
+            suffix="€"
+          />
         </div>
 
         {/* Résultats */}
@@ -177,7 +187,8 @@ const SimulMpr = () => {
                 <TableRow>
                   <TableCell className="text-muted-foreground">MPR brut</TableCell>
                   <TableCell>{fmt(result.mprBrut)}</TableCell>
-                </TableRow><TableRow>
+                </TableRow>
+                <TableRow>
                   <TableCell className="text-muted-foreground">Plafond éligible total</TableCell>
                   <TableCell>{fmt(result.plafondEligibleTotal)}</TableCell>
                 </TableRow>
@@ -193,6 +204,18 @@ const SimulMpr = () => {
                     <TableCell>{fmt(result.capEcretement)}</TableCell>
                   </TableRow>
                 )}
+                <TableRow>
+                  <TableCell className="text-muted-foreground">Plafond MaPrimeRénov' sur 5 ans</TableCell>
+                  <TableCell>20 000€</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="text-muted-foreground">Montant MPR reçu sur les 5 dernières années</TableCell>
+                  <TableCell>{fmt(result.mpr)}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="text-muted-foreground">MPR finale après plafond 5 ans</TableCell>
+                  <TableCell>{fmt(result.mprApresPlafond)}</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
             <div className="px-4 pt-4 flex items-center justify-between border-t ">

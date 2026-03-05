@@ -11,6 +11,7 @@ export type MprInput = {
   typeTravaux: TypeTravauxMpr;
   quantite?: number;
   cee?: number;
+  mpr?: number;
 };
 
 export type MprOutput = {
@@ -22,7 +23,9 @@ export type MprOutput = {
   plafondEligibleTotal: number;
   tauxEcretement?: number;
   capEcretement?: number;
+  mpr?: number;
   mprFinal: number;
+  mprApresPlafond?: number;
   isEligible: boolean;
   reasons?: string[];
 };
@@ -50,7 +53,7 @@ function determinerCategorie(nbPersonnes: number, rfr: number): CategorieMenage 
 }
 
 export function computeMpr(input: MprInput): MprOutput {
-  const { nbPersonnes, rfr, typeTravaux, quantite = 0, cee = 0 } = input;
+  const { nbPersonnes, rfr, typeTravaux, quantite = 0, cee = 0, mpr = 0 } = input;
 
   const categorie = determinerCategorie(Math.max(1, nbPersonnes), rfr);
   const travail = TRAVAUX_MPR[typeTravaux];
@@ -101,6 +104,7 @@ export function computeMpr(input: MprInput): MprOutput {
   const tauxEcretement = TAUX_ECRETEMENT[categorie];
   const capEcretement = tauxEcretement * plafondEligibleTotal;
   const mprFinal = Math.max(0, Math.min(mprBrut, capEcretement - cee));
+  const mprApresPlafond = Math.max(0, Math.min(mprFinal, 20000 - mpr));
 
   return {
     categorie,
@@ -112,6 +116,8 @@ export function computeMpr(input: MprInput): MprOutput {
     tauxEcretement,
     capEcretement,
     mprFinal,
+    mpr,
+    mprApresPlafond,
     isEligible: true,
     reasons: [],
   };
