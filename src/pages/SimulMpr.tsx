@@ -52,6 +52,11 @@ const SimulMpr = () => {
   const fmt = (n: number) =>
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
+  const handleTypeTravaux = (typeTravaux) => {
+    setTypeTravaux(typeTravaux)
+    setReplaceFioul(false)
+  }
+
   if (loading) return null;
 
   return (
@@ -113,7 +118,7 @@ const SimulMpr = () => {
             label="Type de travaux"
             name="typeTravaux"
             value={typeTravaux}
-            onChange={setTypeTravaux}
+            onChange={(value) => handleTypeTravaux(value)}
             options={travauxOptions}
             required
           />
