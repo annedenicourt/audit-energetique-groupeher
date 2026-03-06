@@ -102,6 +102,23 @@ export function computeMpr(input: MprInput): MprOutput {
     };
   }
 
+  // Non éligible si isolation combles perdus
+  if (typeTravaux === "Isolation combles perdus") {
+    return {
+      categorie,
+      unite,
+      montantUnitaire: 0,
+      mprBrut: 0,
+      plafondEligibleUnitaire,
+      plafondEligibleTotal,
+      mpr: 0,
+      mprApresPlafond: 0,
+      mprFinal: 0,
+      isEligible: false,
+      reasons: ["Les travaux d'isolation de combles perdus ne sont pas éligibles à MaPrimeRénov'"],
+    };
+  }
+
   // 3) Calcul brut + écrêtement
   const montantUnitaire = travail.montants[categorie];
   const mprBrut = unite === "FORFAIT" ? montantUnitaire : montantUnitaire * quantite;

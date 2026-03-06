@@ -9,6 +9,7 @@ export const TYPES_TRAVAUX_MPR = [
   "Poêle à granulés",
   "Insert / Foyer fermé",
   "Isolation rampants / plafonds combles",
+  "Isolation combles perdus",
   "Isolation toiture terrasse",
   "Fenêtres simple vitrage → performant",
   "Raccordement réseau de chaleur",

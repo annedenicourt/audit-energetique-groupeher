@@ -60,6 +60,12 @@ export const TRAVAUX_MPR = {
     plafondEligible: 75,
     montants: { TRES_MODESTE: 25, MODESTE: 20, INTERMEDIAIRE: 15 },
   },
+  "Isolation combles perdus": {
+    unite: "M2" as const,
+    plafondEligible: 75,
+    montants: { TRES_MODESTE: 25, MODESTE: 20, INTERMEDIAIRE: 15 },
+    condition: "Non éligible MPR",
+  },
   "Isolation toiture terrasse": {
     unite: "M2" as const,
     plafondEligible: 180,
@@ -84,7 +90,7 @@ export const TRAVAUX_MPR = {
     unite: "FORFAIT" as const,
     plafondEligible: 6000,
     montants: { TRES_MODESTE: 2500, MODESTE: 2000, INTERMEDIAIRE: 1500 },
-    condition: "Nécessite geste d'isolation",
+    condition: "Conditionné à 1 geste d'isolation thermique (menuiserie , sous-rampant)",
   },
   "Audit énergétique (hors obligation)": {
     unite: "FORFAIT" as const,

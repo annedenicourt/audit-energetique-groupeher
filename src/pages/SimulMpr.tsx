@@ -47,7 +47,7 @@ const SimulMpr = () => {
 
   useEffect(() => setQuantite(""), [typeTravaux]);
 
-  
+
 
   const fmt = (n: number) =>
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -119,14 +119,14 @@ const SimulMpr = () => {
               Type de travaux<span className="text-destructive ml-1">*</span>
             </label>
             <Select value={typeTravaux} onValueChange={handleTypeTravaux}>
-              <SelectTrigger className="form-select">
+              <SelectTrigger className="h-14 bg-card rounded-lg cursor-pointer transition-all duration-200 ease-out">
                 <SelectValue placeholder="Sélectionner...">
                   {typeTravaux && (
                     <span>
                       {typeTravaux}
                       {travail && "condition" in travail && (
                         <span className="text-destructive ml-1 text-xs font-medium">
-                          ⚠️ {(travail as any).condition}
+                          ⚠️ {(travail).condition}
                         </span>
                       )}
                     </span>
@@ -136,7 +136,7 @@ const SimulMpr = () => {
               <SelectContent>
                 {TYPES_TRAVAUX_MPR.map((t) => {
                   const info = TRAVAUX_MPR[t];
-                  const cond = "condition" in info ? (info as any).condition : null;
+                  const cond = "condition" in info ? (info).condition : null;
                   return (
                     <SelectItem key={t} value={t}>
                       <span>{t}</span>
