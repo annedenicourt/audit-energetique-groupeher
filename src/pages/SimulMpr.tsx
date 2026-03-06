@@ -47,7 +47,7 @@ const SimulMpr = () => {
 
   useEffect(() => setQuantite(""), [typeTravaux]);
 
-  const travauxOptions = TYPES_TRAVAUX_MPR.map((t) => ({ value: t, label: t }));
+  
 
   const fmt = (n: number) =>
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
