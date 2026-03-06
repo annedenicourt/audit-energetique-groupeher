@@ -4,7 +4,7 @@ import { computeMpr } from "@/utils/computeMpr";
 import { TYPES_TRAVAUX_MPR, type TypeTravauxMpr } from "@/types/mpr/listesMpr";
 import { TRAVAUX_MPR } from "@/types/mpr/travauxMpr";
 import FormInput from "@/components/FormInput";
-import FormSelect from "@/components/FormSelect";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Info } from "lucide-react";
 import { CATEGORIES_LABELS } from "@/utils/handleForm";
