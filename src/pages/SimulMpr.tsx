@@ -4,7 +4,7 @@ import { computeMpr } from "@/utils/computeMpr";
 import { TYPES_TRAVAUX_MPR, type TypeTravauxMpr } from "@/types/mpr/listesMpr";
 import { TRAVAUX_MPR } from "@/types/mpr/travauxMpr";
 import FormInput from "@/components/FormInput";
-import FormSelect from "@/components/FormSelect";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Info } from "lucide-react";
 import { CATEGORIES_LABELS } from "@/utils/handleForm";
@@ -47,7 +47,7 @@ const SimulMpr = () => {
 
   useEffect(() => setQuantite(""), [typeTravaux]);
 
-  const travauxOptions = TYPES_TRAVAUX_MPR.map((t) => ({ value: t, label: t }));
+  
 
   const fmt = (n: number) =>
     n.toLocaleString("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
@@ -114,14 +114,43 @@ const SimulMpr = () => {
             required
           />
 
-          <FormSelect
-            label="Type de travaux"
-            name="typeTravaux"
-            value={typeTravaux}
-            onChange={(value) => handleTypeTravaux(value)}
-            options={travauxOptions}
-            required
-          />
+          <div className="form-field">
+            <label htmlFor="typeTravaux" className="form-label">
+              Type de travaux<span className="text-destructive ml-1">*</span>
+            </label>
+            <Select value={typeTravaux} onValueChange={handleTypeTravaux}>
+              <SelectTrigger className="form-select">
+                <SelectValue placeholder="Sélectionner...">
+                  {typeTravaux && (
+                    <span>
+                      {typeTravaux}
+                      {travail && "condition" in travail && (
+                        <span className="text-destructive ml-1 text-xs font-medium">
+                          ⚠️ {(travail as any).condition}
+                        </span>
+                      )}
+                    </span>
+                  )}
+                </SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                {TYPES_TRAVAUX_MPR.map((t) => {
+                  const info = TRAVAUX_MPR[t];
+                  const cond = "condition" in info ? (info as any).condition : null;
+                  return (
+                    <SelectItem key={t} value={t}>
+                      <span>{t}</span>
+                      {cond && (
+                        <span className="text-destructive ml-1 text-xs font-medium">
+                          ⚠️ {cond}
+                        </span>
+                      )}
+                    </SelectItem>
+                  );
+                })}
+              </SelectContent>
+            </Select>
+          </div>
           {parseFloat(ageLogement) < 15 && typeTravaux === "PAC Air/Eau" && (
             <label className="flex items-center gap-2 cursor-pointer py-1">
               <input
