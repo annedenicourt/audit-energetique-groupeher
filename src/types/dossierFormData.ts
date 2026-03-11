@@ -22,6 +22,8 @@ export interface DossierFormData {
   telephone: string;
   adresse: string;
   adresseInstallation: string;
+  codePostal: string;
+  ville: string;
 
   // 2) RÈGLEMENT
   reglementCheque: boolean;
@@ -245,6 +247,8 @@ export const defaultDossierFormData: DossierFormData = {
   telephone: "",
   adresse: "",
   adresseInstallation: "",
+  codePostal:"",
+  ville:"",
 
   reglementCheque: false,
   reglementFinancement: false,

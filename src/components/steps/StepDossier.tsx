@@ -53,14 +53,16 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
     try {
       setForm((prev) => ({
         ...prev,
-        conseiller: prev.conseiller || simulData?.client?.accompagnateur || "",
-        nomClient: prev.nomClient || simulData?.client?.nom || "",
-        adresse: prev.adresse || simulData.client.adresseFiscale,
-        adresseInstallation: prev.adresseInstallation || simulData?.client?.adresse || "",
-        telephone: prev.telephone || simulData?.client?.telephone || "",
-        montantPrimeRenov: prev.montantPrimeRenov || simulData?.aides?.maPrimeRenov || "",
-        montantPrimeEDF: prev.montantPrimeEDF || simulData?.aides?.primeCEE || "",
-        anneeConstruction: prev.anneeConstruction || simulData?.client?.anneeConstruction || "",
+        conseiller: simulData?.client?.accompagnateur || "",
+        nomClient: simulData?.client?.nom || "",
+        adresse: simulData.client.adresseFiscale,
+        adresseInstallation: simulData?.client?.adresse || "",
+        codePostal: simulData?.client?.codePostal || "",
+        ville: simulData?.client?.ville || "",
+        telephone: simulData?.client?.telephone || "",
+        montantPrimeRenov: simulData?.aides?.maPrimeRenov || "",
+        montantPrimeEDF: simulData?.aides?.primeCEE || "",
+        anneeConstruction: simulData?.client?.anneeConstruction || "",
         quantiteFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.quantite || "",
         matiereFenetres: simulData?.dimensionnement?.dimensionnementFenetres[0]?.matiere || "",
         quantiteVolets: simulData?.dimensionnement.quantiteVolets || "",
@@ -133,6 +135,8 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
           <FormInput label="Téléphone" name="telephone" value={formDossier.telephone} type="tel" readonly={true} />
           <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresse} readonly={true} className="md:col-span-2" />
           <FormInput label="Adresse de chantier" name="adresseInstallation" value={formDossier.adresseInstallation} readonly={true} className="md:col-span-2" />
+          <FormInput label="Code postal" name="adresseInstallation" value={formDossier.codePostal} readonly={true} className="md:col-span-2" />
+          <FormInput label="Ville" name="adresseInstallation" value={formDossier.ville} readonly={true} className="md:col-span-2" />
         </div>
       </SectionCard>
 

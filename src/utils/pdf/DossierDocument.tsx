@@ -43,6 +43,8 @@ const DossierDocument: React.FC<{ data: DossierFormData }> = ({ data: d }) => {
           { label: "Téléphone", value: val(d.telephone) },
           { label: "Adresse fiscale", value: val(d.adresse) },
           { label: "Adresse de chantier", value: val(d.adresseInstallation) },
+          { label: "Code Postal", value: val(d.codePostal) },
+          { label: "Ville", value: val(d.ville) },
         ]} />
 
         <PdfSection title="Règlement" rows={[
