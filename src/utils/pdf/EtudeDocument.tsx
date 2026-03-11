@@ -20,9 +20,6 @@ const EtudeDocument: React.FC<{ data: FormData }> = ({ data }) => {
   const ai = data.aides;
   const fin = data.financement;
 
-  console.log(data)
-  console.log(sc)
-
   const ScenarioRows: React.FC<ScenarioProps> = ({ title, scenario }) => {
     return (
       <View >

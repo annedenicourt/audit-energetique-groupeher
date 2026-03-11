@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Banknote, LineChart, CheckCircle2 } from "lucide-react";
 import FormInput from "../FormInput";
 import SectionCard from "../SectionCard";
 import { FinancementData } from "@/types/formData";
 import { Chronologie } from "../Chronologie";
+import AppModal from "../Modal";
 
 interface StepFinancementProps {
   data: FinancementData;
@@ -19,6 +20,26 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
 
   const [isActive, setIsActive] = useState<string>("economies5eAnnee");
   const [resultCalc, setResultCalc] = useState<string>();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<{ src: string; alt: string, caption: string } | null>(null);
+
+  const images = useMemo(
+    () => [
+      {
+        src: "/images/comparatif_bancaire_1.png", alt: "Comparatif bancaire 1", caption: "Page 1",
+      },
+      {
+        src: "/images/comparatif_bancaire_2.png", alt: "Comparatif bancaire 2", caption: "Page 2",
+      },
+      {
+        src: "/images/comparatif_bancaire_3.png", alt: "Comparatif bancaire 3", caption: "Page 3",
+      },
+      {
+        src: "/images/comparatif_bancaire_4.png", alt: "Comparatif bancaire 3", caption: "Page 4",
+      },
+    ],
+    []
+  );
 
   const getBackground = (mensualite) => {
     let result = ""
@@ -29,15 +50,22 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
     return result
   }
 
+  const openImage = (img: { src: string; alt: string, caption: string }) => {
+    setSelectedImage(img);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedImage(null);
+  };
 
   useEffect(() => {
     let result = 0
     if (isActive === "economiesPremiereAnnee") {
       result = Number(economiesPremiereAnne) - Number(data.mensualiteConfort)
-      //setIsActive("economiesPremiereAnne")
     } else if (isActive === "economies10eAnnee") {
       result = Number(economies10eAnnee) - Number(data.mensualiteConfort)
-      //setIsActive("economies10eAnnee")
     } else {
       result = Number(economiesMensuellesMoyennes) - Number(data.mensualiteConfort)
     }
@@ -118,7 +146,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
       <div className="mt-8 p-6 bg-secondary rounded-xl border border-border">
         <h4 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-primary" />
-          Les avantages de l'écofinancement
+          Les avantages de l'écofinancement = un paiement comptant mais quand vous voulez
         </h4>
         <ul className="space-y-3 text-sm text-foreground">
           <li className="flex items-start gap-2">
@@ -133,13 +161,64 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
             <span className="text-primary mt-1">•</span>
             <span>Possibilité de solder tout ou partiellement sans frais jusqu'à 10 000 €</span>
           </li>
-          {/* <li className="flex items-start gap-2">
+          <li className="flex items-start gap-2">
             <span className="text-primary mt-1">•</span>
-            <span>Si montant à solder supérieur à 10 000 €, frais limités à 1% mais pris en charge par le Groupe HER-ENR en déduction du devis</span>
-          </li> */}
+            <span>Augmentez ou réduisez vos mensualités comme vous le souhaitez</span>
+          </li>
+          <li className="flex items-start gap-2">
+            <span className="text-primary mt-1">•</span>
+            <span>Possibilité de reporter une mensualité une fois par an</span>
+          </li>
         </ul>
       </div>
+
+
+
+      {/* Illustrations */}
+      <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        {images.map((img, idx) => (
+          <div
+            key={`${img.src}-${idx}`}
+            className="border border-slate-200 rounded-lg overflow-hidden transition-transform duration-300 ease-out hover:scale-105"
+          >
+            <button
+              type="button"
+              onClick={() => openImage(img)}
+              className="block w-full"
+              title="Cliquer pour agrandir"
+            >
+              <img
+                src={img.src}
+                alt={img.alt}
+                className="w-full h-40 object-cover"
+                loading="lazy"
+              />
+            </button>
+
+            <div className="p-2 text-xs text-center text-muted-foreground">
+              {img.caption}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <AppModal isOpen={isModalOpen} onClose={closeModal} title="Aperçu">
+        {selectedImage && (
+          <div className="flex flex-col gap-3">
+            <img
+              src={selectedImage.src}
+              alt={selectedImage.alt}
+              className="w-full max-h-[75vh] object-contain rounded-lg"
+            />
+            <div className="text-sm text-center text-muted-foreground">
+              {selectedImage.caption}
+            </div>
+          </div>
+        )}
+      </AppModal>
     </div>
+
+
   );
 };
 
