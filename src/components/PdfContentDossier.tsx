@@ -68,8 +68,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 1 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 1 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between">
@@ -104,8 +107,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <SummaryRow label="MDP Gmail" value={data.mdpGmail} />
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 2 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 2 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -139,8 +145,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 3 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 3 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -179,8 +188,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
           </SectionCard>
 
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 4 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 4 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -219,8 +231,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 5 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 5 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -251,8 +266,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 6 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 6 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -298,8 +316,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
 
 
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 7 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 7 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -363,8 +384,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             )}
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 8 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 8 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -398,8 +422,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page 9 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page 9 / {totalPages}
+          </div>
         </div>
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
@@ -431,8 +458,11 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="mt-4 text-white text-center">
-          Page {totalPages} / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
+          <div className="">
+            Page {totalPages} / {totalPages}
+          </div>
         </div>
       </div>
     </div>

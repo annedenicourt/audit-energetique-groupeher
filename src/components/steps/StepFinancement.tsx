@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Banknote, LineChart, CheckCircle2 } from "lucide-react";
+import { Banknote, LineChart, CheckCircle2, ArrowBigRight } from "lucide-react";
 import FormInput from "../FormInput";
 import SectionCard from "../SectionCard";
 import { FinancementData } from "@/types/formData";
@@ -26,16 +26,16 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
   const images = useMemo(
     () => [
       {
-        src: "/images/comparatif_bancaire_1.png", alt: "Comparatif bancaire 1", caption: "Page 1",
+        src: "/images/comparatif_bancaire_1.png", alt: "Comparatif bancaire 1", caption: "Comparatif banque - page 1",
       },
       {
-        src: "/images/comparatif_bancaire_2.png", alt: "Comparatif bancaire 2", caption: "Page 2",
+        src: "/images/comparatif_bancaire_2.png", alt: "Comparatif bancaire 2", caption: "Comparatif banque - page 2",
       },
       {
-        src: "/images/comparatif_bancaire_3.png", alt: "Comparatif bancaire 3", caption: "Page 3",
+        src: "/images/comparatif_bancaire_3.png", alt: "Comparatif bancaire 3", caption: "Comparatif banque - page 3",
       },
       {
-        src: "/images/comparatif_bancaire_4.png", alt: "Comparatif bancaire 3", caption: "Page 4",
+        src: "/images/comparatif_bancaire_4.png", alt: "Comparatif bancaire 3", caption: "Comparatif banque - page 4",
       },
     ],
     []
@@ -146,7 +146,9 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
       <div className="mt-8 p-6 bg-secondary rounded-xl border border-border">
         <h4 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-primary" />
-          Les avantages de l'écofinancement = un paiement comptant mais quand vous voulez
+          Les avantages de l'écofinancement
+          <ArrowBigRight />
+          un paiement comptant mais quand vous voulez
         </h4>
         <ul className="space-y-3 text-sm text-foreground">
           <li className="flex items-start gap-2">

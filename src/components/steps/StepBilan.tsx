@@ -37,16 +37,6 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange, factureNrjAnnuell
             onChange={(v) => onChange("classeEnergetique", v)}
             options={classeOptions}
           />
-          {/* <FormInput
-            label="Consommation actuelle"
-            name="consommationActuelle"
-            min={"0"}
-            value={data.consommationActuelle}
-            onChange={(v) => onChange("consommationActuelle", v)}
-            type="number"
-            placeholder="0"
-            suffix="kWh/m²/an"
-          /> */}
           <FormInput
             label="Facture énergétique annuelle"
             name="factureAnnuelle"

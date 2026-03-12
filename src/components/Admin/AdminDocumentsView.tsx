@@ -110,12 +110,12 @@ const AdminDocumentsView: React.FC<{
     });
   }, [rows, search, filterCommercial, sortKey, profileMap]);
 
-  const handleOpenPdf = async (pdfPath: string | null, label: string) => {
+  /* const handleOpenPdf = async (pdfPath: string | null, label: string) => {
     if (!pdfPath) { toast.error(`Aucun PDF ${label} disponible.`); return; }
     const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(pdfPath, 60);
     if (error || !data?.signedUrl) { toast.error("Impossible de générer le lien PDF."); return; }
     window.open(data.signedUrl, "_blank");
-  };
+  }; */
 
   const handleRestore = async (row: ClientRow) => {
     setRestoringId(row.study.id);
@@ -189,9 +189,11 @@ const AdminDocumentsView: React.FC<{
               <SelectValue placeholder="Tous les commerciaux" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">Tous les commerciaux</SelectItem>
+              <SelectItem value="all" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white"
+              >Tous les commerciaux</SelectItem>
               {commercials.map((c) => (
-                <SelectItem key={c.id} value={c.id}>{c.display_name ?? c.id}</SelectItem>
+                <SelectItem key={c.id} value={c.id} className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white"
+                >{c.display_name ?? c.id}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -202,19 +204,19 @@ const AdminDocumentsView: React.FC<{
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="date_desc">Date ↓ récente</SelectItem>
-            <SelectItem value="date_asc">Date ↑ ancienne</SelectItem>
-            <SelectItem value="client_name_asc">Client A→Z</SelectItem>
-            <SelectItem value="client_name_desc">Client Z→A</SelectItem>
-            <SelectItem value="commercial_asc">Commercial A→Z</SelectItem>
-            <SelectItem value="commercial_desc">Commercial Z→A</SelectItem>
+            <SelectItem value="date_desc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Date ↓ récente</SelectItem>
+            <SelectItem value="date_asc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Date ↑ ancienne</SelectItem>
+            <SelectItem value="client_name_asc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Client A→Z</SelectItem>
+            <SelectItem value="client_name_desc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Client Z→A</SelectItem>
+            <SelectItem value="commercial_asc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Commercial A→Z</SelectItem>
+            <SelectItem value="commercial_desc" className="focus:bg-orange-500/80 data-[highlighted]:bg-orange-500/80 data-[highlighted]:text-white">Commercial Z→A</SelectItem>
           </SelectContent>
         </Select>
         <div className="flex gap-1 border rounded-md p-1">
-          <Button variant={listView === "list" ? "default" : "ghost"} size="icon" onClick={() => setListView("list")} aria-label="Vue liste">
+          <Button variant={listView === "list" ? "default" : "ghost"} size="icon" className="hover:bg-orange-500/80" onClick={() => setListView("list")} aria-label="Vue liste">
             <LayoutList className="h-4 w-4" />
           </Button>
-          <Button variant={listView === "cards" ? "default" : "ghost"} size="icon" onClick={() => setListView("cards")} aria-label="Vue cartes">
+          <Button variant={listView === "cards" ? "default" : "ghost"} size="icon" className="hover:bg-orange-500/80" onClick={() => setListView("cards")} aria-label="Vue cartes">
             <LayoutGrid className="h-4 w-4" />
           </Button>
         </div>
@@ -269,6 +271,7 @@ const AdminDocumentsView: React.FC<{
                         size="sm"
                         onClick={() => handleDownloadPdf("etude", row.study.id)}
                         disabled={regeneratingId === `etude-${row.study.id}`}
+                        className="hover:bg-orange-500/80"
                       >
                         <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
                         {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
@@ -279,6 +282,7 @@ const AdminDocumentsView: React.FC<{
                           size="sm"
                           onClick={() => handleDownloadPdf("dossier", row.dossier!.id)}
                           disabled={regeneratingId === `dossier-${row.dossier!.id}`}
+                          className="hover:bg-orange-500/80"
                         >
                           <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
                           {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Liaison"}
@@ -292,6 +296,7 @@ const AdminDocumentsView: React.FC<{
                       size="sm"
                       onClick={() => handleRestore(row)}
                       disabled={restoringId === row.study.id}
+                      className="hover:bg-orange-500/80"
                     >
                       <RotateCcw className="h-4 w-4 mr-1" />
                       Restaurer
@@ -313,7 +318,7 @@ const AdminDocumentsView: React.FC<{
                 {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(row.study.user_id) ?? "—"}</p>}
                 <p className="text-xs text-muted-foreground">Créé le : {formatDate(row.study.created_at)}</p>
                 <p className="text-xs text-muted-foreground">Modifié le : {formatDate(row.study.updated_at)}</p>
-                <div className="flex gap-2 flex-wrap">
+                {/* <div className="flex gap-2 flex-wrap">
                   <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
                     <FolderOpen className="h-3 w-3" /> Étude PDF
                   </Badge>
@@ -326,20 +331,20 @@ const AdminDocumentsView: React.FC<{
                       <ArrowRightLeft className="h-3 w-3" /> Pas de dossier
                     </Badge>
                   )}
-                </div>
+                </div> */}
                 <div className="flex gap-2 flex-wrap">
-                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`}>
+                  <Button variant="outline" size="sm" className="flex-1 hover:bg-orange-500/80" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`} >
                     <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
                     {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
                   </Button>
                   {row.dossier && (
-                    <Button variant="outline" size="sm" className="flex-1" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
+                    <Button variant="outline" size="sm" className="flex-1 hover:bg-orange-500/80" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
                       <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
                       {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Dossier"}
                     </Button>
                   )}
                 </div>
-                <Button variant="outline" size="sm" className="w-full" onClick={() => handleRestore(row)} disabled={restoringId === row.study.id}>
+                <Button variant="outline" size="sm" className="w-full hover:bg-orange-500/80" onClick={() => handleRestore(row)} disabled={restoringId === row.study.id}>
                   <RotateCcw className="h-4 w-4 mr-1" /> Restaurer
                 </Button>
               </CardContent>

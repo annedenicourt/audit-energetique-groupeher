@@ -128,13 +128,13 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Dont enfants à charge" value={data.client.dontEnfants} />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
             Page 1 / {totalPages}
           </div>
         </div>
-
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Habitation */}
@@ -157,9 +157,10 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Aides perçues" value={data.client.montantAides ? `${data.client.montantAides} €` : ""} />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
             Page 2 / {totalPages}
           </div>
         </div>
@@ -183,21 +184,21 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
               <SummaryRow label="Commentaires" value={data.bilan.eauChaudeSanitaireCommentaire} />
               <SummaryRow label="Ventilation" value={data.bilan.ventilation} />
               <SummaryRow label="Commentaires" value={data.bilan.ventilationCommentaire} />
+              <SummaryRow label="Notes/remarques" value={data.bilan.notes} />
             </div>
           </SectionCard>
+        </div>
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 3 / {totalPages}
+          </div>
+        </div>
+      </div>
+      <div className="a4-page flex flex-col justify-between space-y-1">
+        <div className="space-y-1">
           {/* Evolution */}
-          {/* <SectionCard title="Répartition actuelle de la facture énergétique" icon={BarChart3}>
-          <div className="grid grid-cols-1 gap-x-8">
-            <SummaryRow label="Chauffage (ECS)" value={data.client.montantChauffage ? `${data.client.montantChauffage} €` : ""} />
-            <SummaryRow label="Électricité domestique (ECS)" value={data.client.factureElecAnnuelle ? `${data.client.factureElecAnnuelle} €` : ""} />
-            <SummaryRow label="Total" value={data.client.factureEnergieAnnuelle ? `${data.client.factureEnergieAnnuelle} €` : ""} />
-          </div>
-        </SectionCard> */}
-          {/*  <SectionCard title="Énergie actuelle du logement" icon={BarChart3} className="my-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8">
-            <SummaryRow label="Chauffage" value={data.evolution.energieActuelle} />
-          </div>
-        </SectionCard> */}
           <SectionCard title="Projection des coûts de l'énergie" icon={BarChart3}>
             <div className="grid gap-x-8">
               <SummaryRow label="- 5 ans" value={data.evolution.coutNrjMoins5ans ? `${data.evolution.coutNrjMoins5ans} €` : ""} />
@@ -205,13 +206,15 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
               <SummaryRow label="+ 5 ans" value={data.evolution.coutNrj5Ans ? `${data.evolution.coutNrj5Ans} €` : ""} />
               <SummaryRow label="+ 10 ans" value={data.evolution.coutNrj10Ans ? `${data.evolution.coutNrj10Ans} €` : ""} />
               <SummaryRow label="Dépense totale cumulée sur 10 ans" value={data.evolution.depenseTotal10ans ? `${data.evolution.depenseTotal10ans} €` : ""} />
+              <SummaryRow label="Notes/remarques" value={data.evolution.notes} />
             </div>
           </SectionCard>
         </div>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
-            Page 3 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 4 / {totalPages}
           </div>
         </div>
       </div>
@@ -236,10 +239,11 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
-            Page 4 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 5 / {totalPages}
           </div>
         </div>
       </div>
@@ -269,10 +273,11 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Volets roulants (Quantité)" value={`${data.dimensionnement.quantiteVolets}`} />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
-            Page 5 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 6 / {totalPages}
           </div>
         </div>
       </div>
@@ -305,10 +310,11 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
-            Page 6 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 7 / {totalPages}
           </div>
         </div>
       </div>
@@ -321,10 +327,11 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Gain ou faible effort financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
           </div>
         </SectionCard>
-        <div>
-          <div className="mt-6 text-white text-xs text-center">Estimatif non contractuel</div>
-          <div className="mt-4 text-white text-center">
-            Page 7 / {totalPages}
+        <div className="text-center text-xs text-white">
+          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
+          <div className="">Estimatif non contractuel</div>
+          <div className="">
+            Page 8 / {totalPages}
           </div>
         </div>
       </div>
