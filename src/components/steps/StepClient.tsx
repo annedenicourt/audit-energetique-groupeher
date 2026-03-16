@@ -11,15 +11,15 @@ interface StepClientProps {
   data: ClientData;
   onChange: (field: keyof ClientData, value: string) => void;
 }
-
 const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Fiche découverte client
         </h2>
+        <div className="text-xs text-red-500">* champs obligatoires</div>
       </div>
 
       {/* Coordonnées */}
@@ -32,7 +32,9 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.accompagnateur}
               onChange={(v) => onChange("accompagnateur", v)}
               placeholder="Nom de l'accompagnateur"
-              className="mb-4"
+              className={`mb-4`}
+              isMissing={data.accompagnateur === ""}
+              required
             />
             <FormInput
               label="Nom / Prénom"
@@ -41,6 +43,8 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               onChange={(v) => onChange("nom", v)}
               placeholder="Jean Dupont"
               className="mb-4"
+              isMissing={data.nom === ""}
+              required
             />
           </div>
         </div>
@@ -61,9 +65,11 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             type="tel"
             placeholder="06 00 00 00 00"
             className="mb-4"
+            isMissing={data.telephone === ""}
+            required
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4">
           <div className="md:col-span-2">
             <FormInput
               label="Adresse fiscale"
@@ -72,13 +78,39 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               onChange={(v) => onChange("adresseFiscale", v)}
               placeholder="Adresse fiscale"
               className="mb-4"
+              isMissing={data.adresseFiscale === ""}
+              required
             />
+          </div>
+          <FormInput
+            label="Code postal fiscal"
+            name="codePostalFiscal"
+            value={data.codePostalFiscal}
+            onChange={(v) => onChange("codePostalFiscal", v)}
+            placeholder="Code postal fiscal"
+            isMissing={data.codePostalFiscal === ""}
+            required
+          />
+          <FormInput
+            label="Ville fiscale"
+            name="villeFiscale"
+            value={data.villeFiscale}
+            onChange={(v) => onChange("villeFiscale", v)}
+            placeholder="Ville fiscale"
+            isMissing={data.villeFiscale === ""}
+            required
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="md:col-span-2">
             <FormInput
               label="Adresse du chantier"
               name="adresse"
               value={data.adresse}
               onChange={(v) => onChange("adresse", v)}
               placeholder="Adresse du chantier"
+              isMissing={data.adresse === ""}
+              required
             />
           </div>
           <FormInput
@@ -86,21 +118,25 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             name="codePostal"
             value={data.codePostal}
             onChange={(v) => onChange("codePostal", v)}
-            placeholder="Code postal"
+            placeholder="Code postal chantier"
+            isMissing={data.codePostal === ""}
+            required
           />
           <FormInput
             label="Ville"
             name="ville"
             value={data.ville}
             onChange={(v) => onChange("ville", v)}
-            placeholder="Ville"
+            placeholder="Ville chantier"
+            isMissing={data.ville === ""}
+            required
           />
         </div>
       </SectionCard>
 
       {/* Habitation */}
       <SectionCard title="Habitation" icon={Home}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <FormInput
             label="Année de construction"
             name="anneeConstruction"
@@ -108,6 +144,8 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             onChange={(v) => onChange("anneeConstruction", v)}
             type="number"
             placeholder="Année de construction"
+            isMissing={data.anneeConstruction === ""}
+            required
           />
           <FormInput
             label="Propriétaire depuis"
@@ -118,23 +156,17 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
             placeholder="Année"
           />
           <FormInput
-            label="Surface habitable"
+            label="Surface habitable (à mesurer obligatoirement)"
             name="surfaceHabitable"
             value={data.surfaceHabitable}
             onChange={(v) => onChange("surfaceHabitable", v)}
             type="number"
             placeholder="Surface habitable"
             suffix="m²"
+            className="col-span-2"
+            isMissing={data.surfaceHabitable === ""}
+            required
           />
-          {/* <FormInput
-            label="Pièces chauffées"
-            name="nbrePiecesChaufees"
-            value={data.nbrePiecesChaufees}
-            onChange={(v) => onChange("nbrePiecesChaufees", v)}
-            type="number"
-            placeholder="0"
-          /> */}
-
         </div>
       </SectionCard>
 
@@ -329,9 +361,11 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.aidesMaPrimeRenov}
               onChange={(v) => onChange("aidesMaPrimeRenov", v)}
               type="number"
-              placeholder="0"
+              placeholder=""
               suffix="€"
               min={"0"}
+              isMissing={data.aidesMaPrimeRenov === ""}
+              required
             />
             <FormInput
               label="CEE (Certificats d'économie d'énergie)"
@@ -339,7 +373,7 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               value={data.aidesCEE}
               onChange={(v) => onChange("aidesCEE", v)}
               type="number"
-              placeholder="0"
+              placeholder=""
               suffix="€"
               className="my-4"
               min={"0"}
@@ -360,10 +394,11 @@ const StepClient: React.FC<StepClientProps> = ({ data, onChange }) => {
               label="Montant total des aides"
               name="montantAides"
               value={data.montantAides}
-              onChange={(v) => onChange("montantAides", v)}
+              //onChange={(v) => onChange("montantAides", v)}
               type="number"
               placeholder="0"
               suffix="€"
+              readonly={true}
             />
             <FormInput
               label="Plafond maximum Ma Prime Rénov (sur 5 ans)'"

@@ -45,9 +45,12 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
     <div className="space-y-6">
       {/* Page title */}
       <div className="mb-6">
-        <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-          Calcul des aides
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-display font-bold text-foreground mb-2">
+            Calcul des aides
+          </h2>
+          <div className="text-xs text-red-500">* champs obligatoires</div>
+        </div>
         <p className="text-muted-foreground">
           MaPrimeRénov' & CEE - Estimation des aides disponibles
         </p>
@@ -97,55 +100,18 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
         </div>
       </SectionCard>
 
-      {/* Informations foyer */}
-      {/*   <SectionCard title="Informations du foyer" icon={Users}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormSelect
-            label="Nombre de personnes dans le foyer"
-            name="nbrePersonnesFoyer"
-            value={data.nbrePersonnesFoyer}
-            onChange={(v) => onChange("nbrePersonnesFoyer", v)}
-            options={nbrePersonnesOptions}
-          />
-          <FormInput
-            label="Dernier RFR (Revenu Fiscal de Référence)"
-            name="dernierRFR"
-            min={"0"}
-            value={data.dernierRFR}
-            onChange={(v) => onChange("dernierRFR", v)}
-            type="number"
-            placeholder="0"
-            suffix="€"
-          />
-          <FormInput
-            label="Catégorie de revenus"
-            name="categorieRevenus"
-            value={data.categorieRevenus}
-            type="text"
-            placeholder=""
-            readonly={true}
-          />
-        </div>
-        <div className="mt-6 flex text-sm font-bold">
-          <a href="https://www.prime-energie-edf.fr/je-simule-ma-prime" target="_blank" title="Accéder au simulateur EDF">Simulateur EDF</a>
-          <SquareArrowOutUpRight size={18} className="ml-1" />
-        </div>
-        <div className="flex text-sm font-bold">
-          <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau prime avec plafond</a>
-          <SquareArrowOutUpRight size={18} className="ml-1" />
-        </div>
-        <div className="flex text-sm font-bold">
-          <a href="https://drive.google.com/drive/u/1/folders/1mfTypbHZmEhCsQuF-x7esMZBXYDky8Lj" target="_blank">MaPrimeRenov'</a>
-          <SquareArrowOutUpRight size={18} className="ml-1" />
-        </div>
-      </SectionCard> */}
-
       {/* Simulateur CEE EDF */}
-      <SectionCard title="Simulation CEE EDF (sauf BTD)" icon={Calculator}>
+      <SectionCard title="Simulation CEE EDF (tous produits)" icon={Calculator} legend="Obligatoire"
+      >
+        <div className="ml-7 -mt-4 text-xs">CEE déduite uniquement pour PAC air-eau</div>
         <div className="mt-6 flex text-sm font-bold">
           <a href="https://www.prime-energie-edf.fr/je-simule-ma-prime" target="_blank" title="Accéder au simulateur EDF">Accéder au simulateur EDF</a>
           <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
+      </SectionCard>
+
+      {/* Simulateur  */}
+      <SectionCard title="Tableau prime CEE BTD déduite" icon={Calculator} legend="Obligatoire">
         <div className="flex text-sm font-bold">
           <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau prime BTD</a>
           <SquareArrowOutUpRight size={18} className="ml-1" />
@@ -153,19 +119,27 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
       </SectionCard>
 
       {/* Simulateur MPR */}
-      <SectionCard title="Simulation MaPrimeRénov' 2026 — Monogeste Hors IDF" icon={Calculator}>
+      <SectionCard title="Simulation MaPrimeRénov' 2026 — Monogeste" icon={Calculator} legend="Obligatoire">
         <div className="mt-6 flex text-sm font-bold cursor-pointer" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
           Accéder au simulateur MaPrimeRénov'
           <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
         <div className="flex text-sm font-bold">
           <a href="https://drive.google.com/drive/u/1/folders/1mfTypbHZmEhCsQuF-x7esMZBXYDky8Lj" target="_blank">Texte officiel MaPrimeRenov'</a>
-          <SquareArrowOutUpRight size={18} className="ml-1" />
+          <SquareArrowOutUpRight size={18} className="mx-1" />
+          À envoyer par mail au client
         </div>
       </SectionCard>
 
       {/* Synthèse financière */}
-      <SectionCard title="Synthèse financière sur 10 ans" icon={Wallet} link="https://devis-groupeher-enr.fr/home" textLink="Faire un devis">
+      <SectionCard
+        title="Synthèse financière sur 10 ans"
+        icon={Wallet}
+        link={[
+          "https://devis-groupeher-enr.fr/home",
+        ]}
+        textLink={["Faire un devis"]}
+      >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="">
             <FormInput
@@ -178,6 +152,8 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               placeholder="0"
               suffix="€"
               className="mb-4"
+              isMissing={data.coutTotalInstallation === ""}
+              required
             />
             <FormInput
               label="Prime CEE déduite (sous conditions)"
@@ -189,6 +165,8 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               placeholder="0"
               suffix="€"
               className="mb-4"
+              isMissing={data.primeCEE === ""}
+              required
             />
             <FormInput
               label="Reste à charge AVANT MaPrimeRénov'"
@@ -199,6 +177,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               placeholder="0"
               suffix="€"
               readonly={true}
+              isFocus={true}
             />
           </div>
           <div>
@@ -213,6 +192,8 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               placeholder={`${dispoMPR} maxi`}
               suffix="€"
               className="mb-4"
+              isMissing={data.maPrimeRenov === ""}
+              required
             />
             <FormInput
               label="Reste à charge APRÈS MaPrimeRénov'"
@@ -224,6 +205,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               suffix="€"
               className="mb-4"
               readonly={true}
+              isFocus={true}
             />
             <FormInput
               label="Économies estimées sur 10 ans"
@@ -235,6 +217,7 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
               suffix="€"
               className="mb-4"
               readonly={true}
+              isFocus={true}
             />
           </div>
         </div>

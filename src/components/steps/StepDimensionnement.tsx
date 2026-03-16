@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
-import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2, SquareArrowOutUpRight } from "lucide-react";
+import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2, SquareArrowOutUpRight, CircleAlert } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
-import { ScenariosData, ScenarioData, DimensionnementData, FenetreData } from "@/types/formData";
+import { ScenariosData, ScenarioData, DimensionnementData, FenetreData, SelectedDimensionnementSections, DimensionnementSectionKey } from "@/types/formData";
 import { fenetreMatiereOptions, fenetreOuvrantOptions, fenetreTypeOptions } from "@/utils/handleForm";
 import AppModal from "../Modal";
 
@@ -11,7 +11,7 @@ interface StepDimensionnementProps {
   data: DimensionnementData;
   onChange: (
     field: keyof DimensionnementData | string,
-    value: string | DimensionnementData | FenetreData[]
+    value: string | DimensionnementData | FenetreData[] | SelectedDimensionnementSections
   ) => void;
 }
 
@@ -37,6 +37,16 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
     ],
     []
   );
+
+  const updateSelectedSection = (
+    key: DimensionnementSectionKey,
+    checked: boolean
+  ) => {
+    onChange("selectedSections", {
+      ...data.selectedSections,
+      [key]: checked,
+    });
+  };
 
   const fenetres: FenetreData[] = data.dimensionnementFenetres?.length ? data.dimensionnementFenetres : [{ quantite: "", type: "", ouverture: "", matiere: "" }];
 
@@ -68,16 +78,38 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         </h2>
       </div>
       {/* Dimensionnement pac air-eau */}
-      <SectionCard title="PAC air-eau (chauffage / ECS)" icon={Thermometer} link="https://projipac.atlantic-pros.fr/fr" textLink="Dimensionnement PAC air-eau">
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+      <SectionCard
+        title="PAC air-eau (chauffage / ECS)"
+        icon={Thermometer}
+        link={[
+          "https://www.prime-energie-edf.fr/controles-qualite/le-controle-de-la-qualite-d-installation-de-votre-pompe-a-chaleur",
+          "https://projipac.atlantic-pros.fr/fr",
+        ]}
+        textLink={[
+          "1-Contrôle qualité",
+          "2-Note de dimensionnement PAC air-eau",
+        ]}
+        legend="À transmettre au client"
+        showCheckbox
+        checkboxChecked={data.selectedSections?.pacAirEau}
+        onCheckboxChange={(checked) => updateSelectedSection("pacAirEau", checked)}
+        checkboxLabel="Inclure"
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -91,16 +123,27 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement pac air-air */}
-      <SectionCard title="PAC air-air (chauffage / climatisation)" icon={Thermometer} link="https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement PAC air-air">
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+      <SectionCard
+        title="PAC air-air (chauffage / climatisation)"
+        icon={Thermometer}
+        link={["https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o"]}
+        textLink={["Dimensionnement PAC air-air"]}
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -114,16 +157,27 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement multi+ */}
-      <SectionCard title="Multi + (chauffage / climatisation / ECS)" icon={Thermometer} link="https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o" textLink="Dimensionnement Multi +">
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+      <SectionCard
+        title="Multi + (chauffage / climatisation / ECS)"
+        icon={Thermometer}
+        link={["https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o"]}
+        textLink={["Dimensionnement Multi +"]}
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -136,16 +190,27 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         />
       </SectionCard>
       {/* Dimensionnement poele */}
-      <SectionCard title="Poêle à bois/granulés" icon={Flame} link="https://drive.google.com/drive/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y" textLink="Dimensionnement poêle">
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+      <SectionCard
+        title="Poêle à bois/granulés"
+        icon={Flame}
+        link={["https://drive.google.com/drive/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y"]}
+        textLink={["Dimensionnement poêle"]}
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -160,17 +225,22 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
 
       {/* Dimensionnement chauffe-eau thermodynamique */}
       <SectionCard title="Chauffe-eau thermodynamique (ECS)" icon={Droplets}>
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/10-H63QvaNOOqVufBMXwN50v-vgM26qlR"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/10-H63QvaNOOqVufBMXwN50v-vgM26qlR"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
-
         <FormInput
           label="Modèle recommandé"
           name="dimensionnementThermodynamique"
@@ -184,15 +254,21 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
 
       {/* Dimensionnement chauffe-eau solaire */}
       <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -207,15 +283,21 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
 
       {/* Dimensionnement SSC */}
       <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <FormInput
           label="Modèle recommandé"
@@ -229,16 +311,27 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement solaire */}
-      <SectionCard title="Photovoltaïque" icon={Sun} link="https://app.revolt.eco/groupe-her-enr/projects" textLink="Aller sur REVOLT">
-        <div className="flex">
-          <a
-            href="https://drive.google.com/drive/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X"
-            target="_blank"
-            className="mr-4 mb-4 flex flex-row items-center text-sm"
-          >
-            Voir produits
-            <SquareArrowOutUpRight size={20} className="ml-1" />
-          </a>
+      <SectionCard
+        title="Photovoltaïque"
+        icon={Sun}
+        link={["https://app.revolt.eco/groupe-her-enr/projects"]}
+        textLink={["Dimensionnement solaire REVOLT"]}
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* <FormInput
@@ -322,7 +415,28 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </SectionCard>
 
       {/* Dimensionnement ITE */}
-      <SectionCard title="Isolation des murs par l'extérieur" icon={Thermometer} link="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-" textLink="Voir produits">
+      <SectionCard
+        title="Isolation des murs par l'extérieur"
+        icon={Thermometer}
+      /* link={["https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"]}
+      textLink={["Voir produits"]} */
+      >
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
+        </div>
         <div>Faire photos et plans de façade pour devis R2</div>
         {/* Illustrations */}
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -354,6 +468,112 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           ))}
         </div>
       </SectionCard>
+
+
+      {/* Menuiseries */}
+      <SectionCard title="Menuiseries (présenter l'échantillon)" icon={Grid2x2}>
+        <div className="mb-4 flex gap-x-2">
+          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+            <a
+              href="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-"
+              target="_blank"
+              className="flex flex-row items-center text-xs"
+            >
+              Voir produits
+              <SquareArrowOutUpRight size={20} className="ml-1" />
+            </a>
+          </div>
+          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+            <CircleAlert size={15} />
+            Fiche produit, RGE et décennale à transmettre au client
+          </button>
+        </div>
+        <div className="p-3 space-y-2">
+          <div className="grid grid-rows-2 grid-flow-col gap-4">
+            <div className="col-span-2">
+              <div className=" font-semibold">Menuiseries</div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="form-field">
+                  <FormInput
+                    label="Quantité"
+                    name="quantiteMenuiseries"
+                    value={fenetres[0].quantite}
+                    onChange={(value) => updateFenetre(0, "quantite", value)}
+                    type="number"
+                    min="0"
+                  />
+                </div>
+                <div className="form-field">
+                  <label className="form-label">Matière</label>
+                  <select
+                    value={fenetres[0].matiere}
+                    onChange={(e) => updateFenetre(0, "matiere", e.target.value)}
+                    className="form-select"
+                  >
+                    <option value="">Sélectionner</option>
+                    {fenetreMatiereOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div className="row-span-2 col-span-1">
+              <div>
+                <div className=" font-semibold">Volets roulants</div>
+                <div className="form-field">
+                  <FormInput
+                    label="Quantité"
+                    name="quantiteVolets"
+                    value={data.quantiteVolets}
+                    onChange={(v) => onChange("quantiteVolets", v)}
+                    type="number"
+                    min="0"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="row-span-3">
+              <div className="-mt-4 mb-4 text-sm text-center">Arguments OKNOPLAST</div>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedImage({
+                    src: "/images/Argument fenêtre oknoplast.jpg",
+                    alt: "arguments Oknoplast",
+                    caption: "Arguments Oknoplast",
+                  });
+                  setIsModalOpen(true);
+                }}
+                title="Cliquer pour agrandir"
+                className="block w-full"
+              >
+                <img
+                  src="/images/Argument fenêtre oknoplast.jpg"
+                  alt="arguments Oknoplast"
+                  className="w-full h-40 md:h-56 object-contain"
+                  loading="lazy"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </SectionCard>
+
+      {/* Autres produits */}
+      <SectionCard title="Autre produit" icon={Grid2x2}>
+        <div className="mb-4">
+          <FormInput
+            label="Détails"
+            name="detailsAutreProduit"
+            value={data.dimmensionnementAutreProduit}
+            onChange={(v) => onChange("dimmensionnementAutreProduit", v)}
+          />
+        </div>
+      </SectionCard>
+
       <AppModal
         isOpen={isModalOpen}
         onClose={() => {
@@ -375,109 +595,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
           </div>
         )}
       </AppModal>
-
-      {/* Fenêtres / Portes-fenêtres */}
-      <SectionCard title="Menuiseries (Fenêtres/Portes-fenêtres/Volets roulants)" icon={Grid2x2} link="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-" textLink="Voir produits">
-        {/*  <button
-          type="button"
-          onClick={addFenetre}
-          className="nav-button nav-button--primary px-2 text-xs font-bold"
-        >
-          Ajouter
-        </button> */}
-        <div>
-          {fenetres.map((fenetre, idx) => (
-            <div key={idx} className="p-3 space-y-2">
-              <div className=" font-semibold">Menuiseries</div>
-              {/*  <div className="flex items-center justify-between">
-                <button
-                  type="button"
-                  onClick={() => removeFenetre(idx)}
-                  disabled={fenetres.length === 1}
-                  className="px-2 py-1 text-xs disabled:hidden"
-                >
-                  <Trash2 />
-                </button>
-              </div> */}
-              <div className="grid grid-cols-3 gap-2">
-                {/* <div className="form-field">
-                  <label className="form-label">Type de menuiserie</label>
-                  <select
-                    value={fenetre.type}
-                    onChange={(e) => updateFenetre(idx, "type", e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Sélectionner</option>
-                    {fenetreTypeOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-field">
-                  <label className="form-label">Type d'ouverture</label>
-                  <select
-                    value={fenetre.ouverture}
-                    onChange={(e) => updateFenetre(idx, "ouverture", e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Sélectionner</option>
-                    {fenetreOuvrantOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div> */}
-                <div className="form-field">
-                  <FormInput
-                    label="Quantité"
-                    name="quantiteMenuiseries"
-                    value={fenetre.quantite}
-                    onChange={(value) => updateFenetre(idx, "quantite", value)}
-                    type="number"
-                    placeholder=""
-                    min={"0"}
-                  />
-                </div>
-
-                <div className="form-field">
-                  <label className="form-label">Matière</label>
-                  <select
-                    value={fenetre.matiere}
-                    onChange={(e) => updateFenetre(idx, "matiere", e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Sélectionner</option>
-                    {fenetreMatiereOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-            </div>
-          ))}
-          <div className="p-3 space-y-2">
-            <div className=" font-semibold">Volets roulants</div>
-            <div className="grid grid-cols-3 gap-2">
-              <div className="form-field">
-                <FormInput
-                  label="Quantité"
-                  name="quantiteVolets"
-                  value={data.quantiteVolets}
-                  onChange={(v) => onChange("quantiteVolets", v)}
-                  type="number"
-                  placeholder=""
-                  min={"0"}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </SectionCard>
     </div>
   );
 };

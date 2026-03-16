@@ -67,55 +67,12 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Évolution de la facture énergétique
         </h2>
+        <div className="text-xs text-red-500">* champs obligatoires</div>
       </div>
-      {/* Répartition facture */}
-      {/*  <SectionCard title="Répartition de la facture énergétique" icon={Zap}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput
-            label="Chauffage (ECS)"
-            name="montantChauffage"
-            value={client.montantChauffage}
-            //onChange={(v) => onChange("montantChauffage", v)}
-            type="number"
-            placeholder="0"
-            suffix="€/an"
-            readonly={true}
-          />
-          <FormInput
-            label="Électricité domestique (ECS)"
-            name="montantElecDomestique"
-            value={client.factureElecAnnuelle}
-            //onChange={(v) => onChange("montantElecDomestique", v)}
-            type="number"
-            min={"0"}
-            placeholder="0"
-            suffix="€/an"
-            readonly={true}
-          />
-          <FormInput
-            label="Total"
-            name="totalFactureNRJ"
-            value={client.factureEnergieAnnuelle}
-            type="number"
-            placeholder="0"
-            suffix="€/an"
-            readonly={true}
-          />
-        </div>
-        <div className="mt-4">
-          <FormSelect
-            label="Chauffage principal du logement"
-            name="energieActuelle"
-            value={data.energieActuelle}
-            onChange={(v) => onChange("energieActuelle", v)}
-            options={energieOptions}
-          />
-        </div>
-      </SectionCard> */}
 
       {/* Illustrations */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -200,6 +157,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
               suffix="€/an"
               readonly={true}
               className="text-sm"
+              isFocus={true}
             />
             <FormInput
               label="Facture aujourd'hui"
@@ -210,6 +168,8 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
               placeholder="0"
               suffix="€/an"
               className="text-sm"
+              isMissing={data.coutNrjAujourdhui === ""}
+              required
             />
             <FormInput
               label="Estimation + 5 ans"
@@ -220,6 +180,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
               suffix="€/an"
               className="text-sm"
               readonly={true}
+              isWarning={true}
             />
             <FormInput
               label="Estimation + 10 ans"
@@ -230,12 +191,13 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
               suffix="€/an"
               className="text-sm"
               readonly={true}
+              isWarning={true}
             />
           </div>
 
         </div>
         <FormInput
-          label="Dépense totale cumulée sur 10 ans"
+          label="Dépense totale cumulée sur 10 ans (avant travaux)"
           name="depenseTotal10ans"
           value={data.depenseTotal10ans}
           type="text"
@@ -243,6 +205,7 @@ const StepEvolutionNrj: React.FC<StepEvolutionProps> = ({ data, onChange, client
           suffix="€"
           className="mt-6"
           readonly={true}
+          isWarning={true}
         />
 
         <p className="mt-3 font-bold text-center text-xs text-muted-foreground">

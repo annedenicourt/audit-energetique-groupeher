@@ -75,7 +75,7 @@ const SimulMpr = () => {
           <div className="mt-8 md:mt-0 flex flex-col items-center justify-center">
             <img className="w-28 md:w-36 mb-4" src="/images/logo-HER-seul.png" alt="logo HER" />
             <h1 className="text-center text-base md:text-xl font-semibold text-foreground">
-              Simulateur MaPrimeRénov' 2026 — Monogeste Hors IDF
+              Simulateur MaPrimeRénov' 2026 — Monogeste
             </h1>
           </div>
         </div>

@@ -20,10 +20,12 @@ export interface DossierFormData {
   perso: boolean;
   nomClient: string;
   telephone: string;
-  adresse: string;
+  adresseFiscale: string;
   adresseInstallation: string;
   codePostal: string;
   ville: string;
+  codePostalFiscal: string;
+  villeFiscale: string;
 
   // 2) RÈGLEMENT
   reglementCheque: boolean;
@@ -245,10 +247,12 @@ export const defaultDossierFormData: DossierFormData = {
   perso: false,
   nomClient: "",
   telephone: "",
-  adresse: "",
+  adresseFiscale: "",
   adresseInstallation: "",
   codePostal:"",
   ville:"",
+  codePostalFiscal:"",
+  villeFiscale:"",
 
   reglementCheque: false,
   reglementFinancement: false,

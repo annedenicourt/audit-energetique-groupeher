@@ -30,10 +30,11 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
           Re-exponentiel - Projection des coûts (APRÈS TRAVAUX)
         </h2>
+        <div className="text-xs text-red-500">* champs obligatoires</div>
       </div>
 
       {/* Projection des coûts - APRES travaux */}
@@ -77,6 +78,9 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               min={"0"}
               placeholder="0"
               suffix="€/an"
+              isFocus={true}
+              isMissing={data.factureAujourdhui === ""}
+              required
             />
             <FormInput
               label="Estimation + 5 ans"
@@ -87,6 +91,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               placeholder="0"
               suffix="€/an"
               readonly={true}
+              isFocus={true}
             />
             <FormInput
               label="Estimation + 10 ans"
@@ -97,6 +102,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               placeholder="0"
               suffix="€/an"
               readonly={true}
+              isFocus={true}
             />
           </div>
         </div>
@@ -109,6 +115,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
           suffix="€"
           className="mt-8"
           readonly={true}
+          isFocus={true}
         />
         <p className="text-xs text-center font-bold text-muted-foreground mt-3">
           Source CRE : augmentation moyenne estimée à 7% par an sur une durée de 10 ans
@@ -126,6 +133,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
             placeholder="0"
             suffix="€"
             readonly={true}
+            isWarning={true}
           />
           <FormInput
             label="Consommation sur 10 ans (après travaux)"
@@ -135,6 +143,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
             placeholder="0"
             suffix="€"
             readonly={true}
+            isFocus={true}
           />
           <div className="space-y-4">
             <FormInput
@@ -145,6 +154,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               placeholder="0"
               suffix="€/an"
               readonly={true}
+              isFocus={true}
             />
             <FormInput
               label="Économies mensuelles moyennes sur 10 ans"
@@ -154,9 +164,10 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               placeholder="0"
               suffix="€/mois"
               readonly={true}
+              isFocus={true}
             />
           </div>
-          <div className="p-4 bg-primary/10 rounded-lg border border-primary/20">
+          <div className="p-4 bg-green-500/10 rounded-lg border border-primary/20">
             <label className="form-label text-primary mb-2 block">
               Économies totales sur 10 ans
             </label>
@@ -168,6 +179,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
               placeholder="0"
               suffix="€"
               readonly={true}
+              isFocus={true}
             />
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { BarChart3, ThermometerSun, FileText, Zap, ArrowBigRight } from "lucide-react";
+import { BarChart3, ThermometerSun, FileText, Zap, ArrowBigRight, CircleAlert } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import FormTextarea from "../FormTextarea";
@@ -24,14 +24,15 @@ const StepBilan: React.FC<StepBilanProps> = ({ data, onChange, factureNrjAnnuell
       </div>
 
       {/* Situation actuelle */}
-      <SectionCard title="Situation actuelle du logement" icon={BarChart3} link={""} textLink={"Réaliser audit sur CapRénov"}>
-        <div className="mr-4 mb-4 flex flex-row items-center font-semibold text-sm text-green-500">
-          <ArrowBigRight />
+      <SectionCard title="Situation actuelle du logement" icon={BarChart3}>
+        <button className="mb-4 py-1 px-2 flex items-center font-semibold text-sm text-white bg-orange-500 rounded-md gap-2 cursor-default">
+          <CircleAlert />
           Réaliser audit sur logiciel CapRénov+
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        </button>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormSelect
-            label="Classe énergétique (DPE)"
+            label="Classe énergétique (résultat audit avant travaux)"
             name="classeEnergetique"
             value={data.classeEnergetique}
             onChange={(v) => onChange("classeEnergetique", v)}

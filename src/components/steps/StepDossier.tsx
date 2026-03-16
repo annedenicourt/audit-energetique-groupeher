@@ -55,10 +55,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
         ...prev,
         conseiller: simulData?.client?.accompagnateur || "",
         nomClient: simulData?.client?.nom || "",
-        adresse: simulData.client.adresseFiscale,
+        adresseFiscale: simulData.client.adresseFiscale,
         adresseInstallation: simulData?.client?.adresse || "",
         codePostal: simulData?.client?.codePostal || "",
         ville: simulData?.client?.ville || "",
+        codePostalFiscal: simulData?.client?.codePostalFiscal || "",
+        villeFiscale: simulData?.client?.villeFiscale || "",
         telephone: simulData?.client?.telephone || "",
         montantPrimeRenov: simulData?.aides?.maPrimeRenov || "",
         montantPrimeEDF: simulData?.aides?.primeCEE || "",
@@ -133,10 +135,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
           </div>
           <FormInput label="Nom / prénom client" name="nomClient" value={formDossier.nomClient} readonly={true} />
           <FormInput label="Téléphone" name="telephone" value={formDossier.telephone} type="tel" readonly={true} />
-          <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresse} readonly={true} className="md:col-span-2" />
+          <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresseFiscale} readonly={true} className="md:col-span-2" />
+          <FormInput label="Code postal fiscal" name="codePostalFiscal" value={formDossier.codePostalFiscal} readonly={true} className="" />
+          <FormInput label="Ville fiscale" name="villeFiscale" value={formDossier.villeFiscale} readonly={true} className="" />
           <FormInput label="Adresse de chantier" name="adresseInstallation" value={formDossier.adresseInstallation} readonly={true} className="md:col-span-2" />
-          <FormInput label="Code postal" name="adresseInstallation" value={formDossier.codePostal} readonly={true} className="md:col-span-2" />
-          <FormInput label="Ville" name="adresseInstallation" value={formDossier.ville} readonly={true} className="md:col-span-2" />
+          <FormInput label="Code postal chantier" name="adresseInstallation" value={formDossier.codePostal} readonly={true} className="" />
+          <FormInput label="Ville chantier" name="adresseInstallation" value={formDossier.ville} readonly={true} className="" />
         </div>
       </SectionCard>
 
@@ -191,7 +195,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
             <CheckboxField label="Compte Prime CEE EDF" checked={formDossier.compteCeeEdf} onChange={(v) => update("compteCeeEdf", v)} />
             <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput label="Mail" name="mailPrimeEDF" value={formDossier.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
-              <FormInput label="MDP" name="mdpPrimeEDF" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
+              <FormInput label="MDP" name="mdpPrimeEDF" type="password" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
             </div>
           </div>
         </div>
@@ -205,14 +209,14 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
             <div className="underline">Compte MaPrimeRenov'</div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormInput label="Mail" name="mailPrimeRenov" value={formDossier.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={formDossier.nonEligibleMpr} />
-              <FormInput label="MDP" name="mdpPrimeRenov" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} />
+              <FormInput label="MDP" name="mdpPrimeRenov" type="password" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} />
             </div>
           </div>
         </div>
         <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail, ne pas oubliez de lui communiquer</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <FormInput label="Gmail créé" name="gmailCree" value={formDossier.gmailCree} onChange={(v) => update("gmailCree", v)} type="email" />
-          <FormInput label="MDP" name="mdpGmail" value={formDossier.mdpGmail} onChange={(v) => update("mdpGmail", v)} />
+          <FormInput label="MDP" name="mdpGmail" type="password" value={formDossier.mdpGmail} onChange={(v) => update("mdpGmail", v)} />
         </div>
       </SectionCard>
 

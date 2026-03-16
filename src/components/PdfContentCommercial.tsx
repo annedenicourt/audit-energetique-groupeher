@@ -118,7 +118,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Département" value={data.client.departement} />
             <SummaryRow label="Nom" value={data.client.nom} />
             <SummaryRow label="Téléphone" value={data.client.telephone} />
-            <SummaryRow label="Adresse fiscale" value={`${data.client.adresseFiscale}`} />
+            <SummaryRow label="Adresse fiscale" value={`${data.client.adresseFiscale}—${data.client.codePostalFiscal} ${data.client.villeFiscale}`} />
             <SummaryRow label="Adresse de chantier" value={`${data.client.adresse}—${data.client.codePostal} ${data.client.ville}`} />
             <SummaryRow label="Situation pro Conjoint 1" value={`${data.client.situationConjoint1}`} />
             <SummaryRow label="Âge Conjoint 1" value={`${data.client.ageConjoint1}`} />

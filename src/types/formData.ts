@@ -4,10 +4,12 @@
    // Coordonnées
    nom: string;
    telephone: string;
-   adresseFiscale: string;
    adresse: string;
    codePostal: string;
    ville: string;
+   adresseFiscale: string;
+   codePostalFiscal: string;
+   villeFiscale: string;
    
    // Situation professionnelle
    situationConjoint1: string;
@@ -130,7 +132,26 @@
    scenario2: ScenarioData;
    scenario3: ScenarioData;
  }
+
+ export type DimensionnementSectionKey =
+  | "pacAirEau"
+  | "pacAirAir"
+  | "multiplus"
+  | "poele"
+  | "thermodynamique"
+  | "ecsSolaire"
+  | "ssc"
+  | "photovoltaique"
+  | "comblesPerdus"
+  | "rampants"
+  | "menuiseries"
+  | "autreProduit";
+
+ export type SelectedDimensionnementSections = Record<DimensionnementSectionKey, boolean>;
+
  export interface DimensionnementData {
+  selectedSections: SelectedDimensionnementSections;
+
   // Chauffage / ECS
   dimensionnementPACaireau: string;
   dimensionnementPACairair: string;
@@ -152,6 +173,8 @@
   // Fenêtres / Menuiseries
   dimensionnementFenetres: FenetreData[];
   quantiteVolets: string;
+  // Autre produit
+  dimmensionnementAutreProduit: string;
 }
  export interface ExponentielData {
    consommation10AnsSansTravaux: string;
@@ -216,6 +239,8 @@
      adresse: "",
      codePostal: "",
      ville: "",
+     codePostalFiscal: "",
+     villeFiscale: "",
      situationConjoint1: "",
      situationConjoint2: "",
      ageConjoint1: "",
@@ -292,6 +317,21 @@
      scenario3: { nom: "", economieAnnuelle: "", plusValueLogement: "", factureApres: "", lettreApres: "" },
    },
    dimensionnement: {
+    selectedSections:{
+      pacAirEau: false,
+      pacAirAir: false,
+      multiplus: false,
+      poele: false,
+      thermodynamique: false,
+      ecsSolaire: false,
+      ssc: false,
+      photovoltaique: false,
+      comblesPerdus: false,
+      rampants: false,
+      menuiseries: false,
+      autreProduit: false,
+    },
+
   dimensionnementPACaireau: "",
   dimensionnementPACairair: "",
   dimensionnementMultiplus: "",
@@ -312,6 +352,8 @@
 
   dimensionnementFenetres: [{ quantite: "", type: "", ouverture: "", matiere: "" }],
   quantiteVolets:"",
+
+  dimmensionnementAutreProduit: "",
 },
 
    exponentiel: {
@@ -319,7 +361,7 @@
      consommation10AnsApresTravaux: "",
      economiesRealisees10Ans: "",
      economiesAnnuellesMoyennes: "",
-     economiesPremiereAnne: "string",
+     economiesPremiereAnne: "",
      economiesMensuellesMoyennes: "",
      economies10eAnnee:"",     
    

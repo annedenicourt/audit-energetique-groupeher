@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Banknote, LineChart, CheckCircle2, ArrowBigRight } from "lucide-react";
+import { Banknote, LineChart, CheckCircle2, ArrowBigRight, CircleX } from "lucide-react";
 import FormInput from "../FormInput";
 import SectionCard from "../SectionCard";
 import { FinancementData } from "@/types/formData";
@@ -26,16 +26,16 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
   const images = useMemo(
     () => [
       {
-        src: "/images/comparatif_bancaire_1.png", alt: "Comparatif bancaire 1", caption: "Comparatif banque - page 1",
+        src: "/images/comparatif_bancaire_1.png", alt: "Comparatif bancaire 1", caption: "Comparatif 5000 € - page 1",
       },
       {
-        src: "/images/comparatif_bancaire_2.png", alt: "Comparatif bancaire 2", caption: "Comparatif banque - page 2",
+        src: "/images/comparatif_bancaire_2.png", alt: "Comparatif bancaire 2", caption: "Comparatif 10000 € - page 2",
       },
       {
-        src: "/images/comparatif_bancaire_3.png", alt: "Comparatif bancaire 3", caption: "Comparatif banque - page 3",
+        src: "/images/comparatif_bancaire_3.png", alt: "Comparatif bancaire 3", caption: "Comparatif 15000 € - page 3",
       },
       {
-        src: "/images/comparatif_bancaire_4.png", alt: "Comparatif bancaire 3", caption: "Comparatif banque - page 4",
+        src: "/images/comparatif_bancaire_4.png", alt: "Comparatif bancaire 3", caption: "Comparatif 20000 € - page 4",
       },
     ],
     []
@@ -98,26 +98,27 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
               placeholder="0"
               suffix="€"
               readonly={true}
+              isFocus={true}
             />
           </div>
           <div>
             <div onClick={() => setIsActive("economiesPremiereAnnee")}>
               <div className="form-label">Économies dès la 1ère année</div>
-              <div className={`my-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economiesPremiereAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
+              <div className={`my-3 flex items-center justify-between form-input bg-green-500/20 cursor-pointer  ${isActive === "economiesPremiereAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economiesPremiereAnne || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
               </div>
             </div>
             <div onClick={() => setIsActive("economies5eAnnee")}>
               <div className="form-label">Économies moy. mens. sur 10 ans (la 5e année)</div>
-              <div className={`my-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economies5eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
+              <div className={`my-3 flex items-center justify-between form-input bg-green-500/20 cursor-pointer  ${isActive === "economies5eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economiesMensuellesMoyennes || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
               </div>
             </div>
             <div onClick={() => setIsActive("economies10eAnnee")}>
               <div className="form-label">Économies la 10e année</div>
-              <div className={`mt-3 flex items-center justify-between form-input bg-muted cursor-pointer  ${isActive === "economies10eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
+              <div className={`mt-3 flex items-center justify-between form-input bg-green-500/20 cursor-pointer  ${isActive === "economies10eAnnee" && "ring ring-offset-2 ring-lime-500"}`}>
                 <span>{economies10eAnnee || 0}</span>
                 <span className="text-muted-foreground text-sm font-medium">€</span>
               </div>
@@ -136,14 +137,29 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
                 suffix="€/mois"
                 readonly={true}
                 className={`ring ring-offset-2 rounded-md ${getBackground(data.mensualiteMoinsEconomies)}`}
+                isFocus={true}
               />
             </div>
           </div>
         </div>
       </SectionCard>
 
+      {/* Inconvenients  NO TRAVUX */}
+      <div className="mt-8 p-6 bg-red-100 rounded-xl border border-border">
+        <h4 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+          <CircleX className="w-5 h-5 text-primary" />
+          Les inconvénients de la facture d'énergie sans travaux
+        </h4>
+        <ul className="space-y-3 text-sm text-foreground">
+          <li className="flex items-start gap-2">
+            <span className="text-primary mt-1">•</span>
+            <span>Facture d'énergie = crédit à vie à 7% d'augmentation moyenne sur 10 ans</span>
+          </li>
+        </ul>
+      </div>
+
       {/* Avantages écofinancement */}
-      <div className="mt-8 p-6 bg-secondary rounded-xl border border-border">
+      <div className="mt-4 p-6 bg-green-500/20 rounded-xl border border-border">
         <h4 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2">
           <CheckCircle2 className="w-5 h-5 text-primary" />
           Les avantages de l'écofinancement
@@ -174,10 +190,10 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
         </ul>
       </div>
 
-
+      <div className="mt-8 section-title">Comparatif autres banques</div>
 
       {/* Illustrations */}
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {images.map((img, idx) => (
           <div
             key={`${img.src}-${idx}`}

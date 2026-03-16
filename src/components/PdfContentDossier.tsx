@@ -44,10 +44,8 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
               <SummaryRow label="Téléphone" value={data.telephone} />
             </div>
             <div>
-              <SummaryRow label="Adresse fiscale" value={data.adresse} />
-              <SummaryRow label="Adresse de chantier" value={data.adresseInstallation} />
-              <SummaryRow label="Code postal" value={data.codePostal} />
-              <SummaryRow label="Ville" value={data.ville} />
+              <SummaryRow label="Adresse fiscale" value={`${data.adresseFiscale}-${data.codePostalFiscal}-${data.villeFiscale}`} />
+              <SummaryRow label="Adresse de chantier" value={`${data.adresseInstallation}-${data.codePostal}-${data.ville}`} />
             </div>
           </SectionCard>
           {/* Règlement */}

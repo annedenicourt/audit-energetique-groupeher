@@ -9,7 +9,8 @@ export const STEPS = [
   { id: 7, label: "Projection", shortLabel: "Projection" },
   { id: 8, label: "Aides", shortLabel: "Aides" },
   { id: 9, label: "Financement", shortLabel: "Financement" },
-  { id: 10, label: "Dossier", shortLabel: "Dossier" },
+  { id: 10, label: "Avis & Parrainage", shortLabel: "Avis & Parrainage" },
+  { id: 11, label: "Dossier", shortLabel: "Dossier" },
 ];
 
 export const situationOptions = [

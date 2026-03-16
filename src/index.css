@@ -142,6 +142,18 @@
   @apply bg-muted text-muted-foreground cursor-default;
 }
 
+.form-input[readonly].is-focus, .is-focus {
+  @apply bg-green-500/20;
+}
+
+.form-input[readonly].is-warning, .is-warning {
+  @apply bg-red-500/20;
+}
+
+.form-input[readonly].is-missing, .is-missing {
+  @apply border-2 border-dotted border-red-400;
+}
+
 .form-input[readonly]:focus,
 .form-input[readonly]:focus-visible {
   @apply outline-none ring-0 ring-transparent border-input shadow-none;
@@ -158,8 +170,8 @@
   }
 
   .step-indicator {
-    @apply flex items-center justify-center w-10 h-10 rounded-full 
-           text-sm font-semibold transition-all duration-300;
+    @apply flex items-center justify-center w-7 h-7 rounded-full 
+           text-xs font-semibold transition-all duration-300;
   }
 
   .step-indicator--active {

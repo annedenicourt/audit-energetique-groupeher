@@ -1,5 +1,5 @@
 import React from "react";
-import { TrendingUp, Sun, Thermometer } from "lucide-react";
+import { TrendingUp, Sun, Thermometer, CircleAlert } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
@@ -80,23 +80,42 @@ const StepScenarios: React.FC<StepScenariosProps> = ({ data, onChange }) => {
     onChange(scenarioKey, updated);
   };
 
+  const hasAtLeastOneScenario = (): boolean => {
+    if (!data.scenario1 || typeof data.scenario1 !== "object") return false;
+
+    return Object.values(data).some((scenario: ScenarioData) =>
+      scenario &&
+      (scenario.nom !== "" ||
+        scenario.lettreApres !== "" ||
+        scenario.economieAnnuelle !== "")
+    );
+  };
+
+  console.log(data)
+  console.log(hasAtLeastOneScenario())
+
   return (
     <div className="space-y-6">
       {/* Page title */}
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h2 className="text-2xl font-display font-bold text-foreground mb-2">
-          Résultat audit CAP RENOV
+          Résultat audit après travaux
         </h2>
+        <div className="text-xs text-red-500">* champs obligatoires</div>
       </div>
 
       {/* Scénarios proposés */}
       <SectionCard title="Scénarios proposés" icon={TrendingUp}>
+        <button className="mb-4 py-1 px-2 flex items-center font-semibold text-sm text-white bg-orange-500 rounded-md gap-2 cursor-default">
+          <CircleAlert />
+          Merci de renseigner au moins un scénario
+        </button>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <ScenarioCard
-            title="Scénario 1"
+            title="Scénario 1 * (obligatoire)"
             scenario={data.scenario1}
             onChange={(field, value) => updateScenario("scenario1", field, value)}
-            color="border-primary/30 bg-primary/5"
+            color={`${!hasAtLeastOneScenario() && "border-dotted border-red-500 bg-primary/5"}`}
           />
           <ScenarioCard
             title="Scénario 2"

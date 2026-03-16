@@ -75,7 +75,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
                 defaultValue={aidesMaPrimeRenov}
                 placeholder=""
                 readOnly
-                className="w-[65%] border border-slate-300 rounded bg-muted text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
+                className="w-[65%] border border-slate-300 rounded bg-green-500/20 text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
             </div>
             <div className="flex flex-row items-center justify-between">
               <label className="mr-2">CEE</label>
@@ -85,7 +85,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
                 defaultValue={aidesCEE}
                 placeholder=""
                 readOnly
-                className="w-[65%] border border-slate-300 rounded bg-muted text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
+                className="w-[65%] border border-slate-300 rounded bg-green-500/20 text-muted-foreground cursor-default outline-none ring-0 ring-transparent border-input shadow-none" />
             </div>
           </div>
           <div className="mt-2 text-xs text-center">à réinjecter dans la 2e mensualité</div>
@@ -126,7 +126,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
               <div className="text-xs text-white text-center font-bold">2e mensualité de confort</div>
             </div>
             <input
-              className="px-1 py-2 mt-4 w-20 text-xs text-center border border-slate-300 rounded-md"
+              className="px-1 py-2 mt-4 w-20 text-xs text-center bg-green-500/20 rounded-md"
               type="number"
               name=""
               min={"0"}
@@ -137,7 +137,7 @@ export const Chronologie: React.FC<ChronologieProps> = ({ data, onChange, aidesC
           </div>
         </div>
       </div>
-      <div className="absolute top-[50%] h-0.5 w-full bg-orange-500 z-0" />
+      <div className="absolute top-[45%] h-0.5 w-full bg-orange-500 z-0" />
     </div>
   );
 }

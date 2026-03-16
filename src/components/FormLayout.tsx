@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
+import { MissingField, validateSimulationForm } from "@/utils/validateSimulation";
 
 interface Step {
   id: number;
@@ -24,6 +25,7 @@ interface FormLayoutProps {
   onNext: () => void;
   canGoNext: boolean;
   canGoPrevious: boolean;
+  onStepClick?: (stepId: number) => boolean;
 }
 
 const FormLayout: React.FC<FormLayoutProps> = ({
@@ -36,6 +38,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   onNext,
   canGoNext,
   canGoPrevious,
+  onStepClick,
 }) => {
 
   const navigate = useNavigate();
@@ -46,6 +49,14 @@ const FormLayout: React.FC<FormLayoutProps> = ({
     await signOut();
     navigate("/login", { replace: true });
   };
+
+  const checkStep = () => {
+    if (currentStep === totalSteps) {
+      navigate("/synthese")
+    } else {
+      onNext()
+    }
+  }
 
 
   return (
@@ -76,9 +87,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                   <Calculator size={20} className="mr-1" />
                   Simulateur MPR
                 </button> */}
-                {/*  <div className="py-2 px-3 text-xs md:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => setIsOpenModal(true)} title={"Déconnexion"} >
-                  <LogOut className="text-white" />
-                </div> */}
                 <Popover>
                   <PopoverTrigger asChild>
                     <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
@@ -96,13 +104,15 @@ const FormLayout: React.FC<FormLayoutProps> = ({
         </header>
 
         {/* Progress bar */}
-        <div className="bg-card border-b border-border py-6 px-6">
+        <div className="bg-card border-b border-border p-3">
           <div className="max-w-6xl mx-auto">
             {/* Desktop: full steps */}
             <div className="hidden md:flex items-center justify-between">
               {steps.map((step, index) => (
                 <React.Fragment key={step.id}>
-                  <div className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => setCurrentStep(step.id)}>
+                  <div className="flex flex-col items-center gap-2 cursor-pointer" onClick={() => {
+                    if (!onStepClick || onStepClick(step.id)) setCurrentStep(step.id);
+                  }}>
                     <div
                       className={`step-indicator ${currentStep === step.id
                         ? "step-indicator--active bg-orange-500 text-white font-bold"
@@ -162,7 +172,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
 
       {/* Main content */}
       <main className="max-w-5xl mx-auto px-4 py-8">
-        <div className="mt-52 animate-fade-in">{children}</div>
+        <div className="mt-40 animate-fade-in">{children}</div>
       </main>
 
       {/* Navigation footer */}
@@ -193,15 +203,13 @@ const FormLayout: React.FC<FormLayoutProps> = ({
 
           <button
             onClick={() =>
-              currentStep === totalSteps ?
-                navigate("/synthese")
-                : onNext()
+              checkStep()
             }
             //disabled={!canGoNext}
             className="nav-button nav-button--primary disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <span className="hidden sm:inline">
-              {currentStep === 9 ? "Monter le dossier" : currentStep === 10 ? "Aperçu avant validation" : "Suivant"}
+              {currentStep === 9 ? "Monter le dossier" : currentStep === 11 ? "Aperçu avant validation" : "Suivant"}
             </span>
             <ChevronRight className="w-5 h-5" />
           </button>

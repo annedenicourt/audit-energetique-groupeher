@@ -68,7 +68,7 @@ const EtudeDocument: React.FC<{ data: FormData }> = ({ data }) => {
           { label: "Département", value: val(c.departement) },
           { label: "Nom", value: val(c.nom) },
           { label: "Téléphone", value: val(c.telephone) },
-          { label: "Adresse fiscale", value: val(c.adresseFiscale) },
+          { label: "Adresse fiscale", value: `${val(c.adresseFiscale)}—${val(c.codePostalFiscal)} ${val(c.villeFiscale)}` },
           { label: "Adresse chantier", value: `${val(c.adresse)}—${val(c.codePostal)} ${val(c.ville)}` },
           { label: "Situation pro Conjoint 1", value: val(c.situationConjoint1) },
           { label: "Âge Conjoint 1", value: val(c.ageConjoint1) },

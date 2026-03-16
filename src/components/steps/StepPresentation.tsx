@@ -26,26 +26,30 @@ const StepPresentation = () => {
   return (
     <div className="">
       {/* Page title */}
-      <div className="mb-4 flex flex-row items-center">
+      <div className="mb-4 flex flex-row items-center gap-x-3">
         <h2 className="mr-4 text-2xl font-display font-bold text-foreground">
           Présentation Groupe HER-Enr
         </h2>
-        <a
-          href="https://particulier.edf.fr/fr/accueil/aides-financement/professionnels/resultats.html?raisonSociale=HER%20ENR"
-          target="_blank"
-          className="mr-4 flex flex-row items-center text-sm font-bold"
-        >
-          Partenaire Economies d'énergie EDF
-          <SquareArrowOutUpRight size={20} className="ml-1" />
-        </a>
-        <a
-          href="https://france-renov.gouv.fr/annuaire-rge/identifier?company=85156645500057&date=2026-02-09"
-          target="_blank"
-          className="flex flex-row items-center text-sm font-bold"
-        >
-          Mandataire Administratif MaPrimeRénov'
-          <SquareArrowOutUpRight size={20} className="ml-1" />
-        </a>
+        <button className="py-1 px-2 flex items-center font-semibold text-sm text-white bg-orange-500 rounded-md gap-2 cursor-default">
+          <a
+            href="https://particulier.edf.fr/fr/accueil/aides-financement/professionnels/resultats.html?raisonSociale=HER%20ENR"
+            target="_blank"
+            className="flex flex-row items-center text-sm font-bold"
+          >
+            Partenaire Economies d'énergie EDF
+            <SquareArrowOutUpRight size={20} className="ml-1" />
+          </a>
+        </button>
+        <button className="py-1 px-2 flex items-center font-semibold text-sm text-white bg-orange-500 rounded-md gap-2 cursor-default">
+          <a
+            href="https://france-renov.gouv.fr/annuaire-rge/identifier?company=85156645500057&date=2026-02-09"
+            target="_blank"
+            className="flex flex-row items-center text-sm font-bold"
+          >
+            Mandataire Administratif MaPrimeRénov'
+            <SquareArrowOutUpRight size={20} className="ml-1" />
+          </a>
+        </button>
       </div>
       <div
         className=""

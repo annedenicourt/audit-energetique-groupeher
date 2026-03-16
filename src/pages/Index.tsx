@@ -36,12 +36,16 @@ import { STEPS } from "@/utils/handleForm";
 import StepPresentation from "@/components/steps/StepPresentation";
 import StepDossier from "@/components/steps/StepDossier";
 import { useLocation } from "react-router-dom";
+import { validateSimulationForm, MissingField } from "@/utils/validateSimulation";
+import MissingFieldsModal from "@/components/MissingFieldsModal";
+import StepAvis from "@/components/steps/StepAvis";
 
 const Index: React.FC = () => {
+  const location = useLocation();
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
-
-  const location = useLocation();
+  const [missingFields, setMissingFields] = useState<MissingField[]>([]);
+  const [showMissingModal, setShowMissingModal] = useState(false);
 
   useEffect(() => {
     const stepLocation = location.state?.step;
@@ -190,6 +194,14 @@ const Index: React.FC = () => {
 
   // ─── Navigation ──────────────────────────────────────────────────────────
   const goToNextStep = () => {
+    if (currentStep === 9) {
+      const missing = validateSimulationForm();
+      if (missing.length > 0) {
+        setMissingFields(missing);
+        setShowMissingModal(true);
+        return;
+      }
+    }
     if (currentStep < STEPS.length) {
       setCurrentStep((prev) => prev + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -201,6 +213,18 @@ const Index: React.FC = () => {
       setCurrentStep((prev) => prev - 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  };
+
+  const handleStepClick = (stepId: number): boolean => {
+    if (stepId >= 10 && currentStep < 10) {
+      const missing = validateSimulationForm();
+      if (missing.length > 0) {
+        setMissingFields(missing);
+        setShowMissingModal(true);
+        return false;
+      }
+    }
+    return true;
   };
 
   // ─── SETTERS SIMPLES ─────────────────────────────────────────────────────
@@ -266,6 +290,8 @@ const Index: React.FC = () => {
       case 9:
         return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} economiesPremiereAnne={formData.exponentiel.economiesPremiereAnne} economies10eAnnee={formData.exponentiel.economies10eAnnee} />;
       case 10:
+        return <StepAvis data={formData.aides} onChange={updateAides} />;
+      case 11:
         return <StepDossier simulData={formData} />;
       default:
         return null;
@@ -282,8 +308,15 @@ const Index: React.FC = () => {
       onNext={goToNextStep}
       canGoPrevious={currentStep > 1}
       canGoNext={currentStep < STEPS.length}
+      onStepClick={handleStepClick}
     >
       {renderCurrentStep()}
+      <MissingFieldsModal
+        isOpen={showMissingModal}
+        onClose={() => setShowMissingModal(false)}
+        missingFields={missingFields}
+        onGoToStep={(step) => setCurrentStep(step)}
+      />
     </FormLayout>
   );
 };
