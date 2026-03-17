@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut } from "lucide-react";
+import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "./NavLink";
 import { useUserRole } from "@/hooks/useUserRole";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
 import { MissingField, validateSimulationForm } from "@/utils/validateSimulation";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
 
 interface Step {
   id: number;
@@ -58,6 +59,12 @@ const FormLayout: React.FC<FormLayoutProps> = ({
     }
   }
 
+  const resetApp = () => {
+    localStorage.removeItem("simulation_form");
+    localStorage.removeItem("dossier_form");
+    window.location.reload();
+  }
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,7 +94,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                   <Calculator size={20} className="mr-1" />
                   Simulateur MPR
                 </button> */}
-                <Popover>
+                {/* <Popover>
                   <PopoverTrigger asChild>
                     <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
                   </PopoverTrigger>
@@ -97,12 +104,30 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                       <button className="px-3 py-2 text-sm text-white font-bold bg-orange-500 rounded-md" onClick={() => handleLogout()} >OUI, je me déconnecte</button>
                     </div>
                   </PopoverContent>
-                </Popover>
+                </Popover> */}
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Voulez-vous vraiment vous déconnecter ?</AlertDialogTitle>
+                      <AlertDialogDescription>
+                        A la prochaine connexion, vous devrez renseigner votre adresse e-mail.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Annuler</AlertDialogCancel>
+                      <AlertDialogAction onClick={() => handleLogout()}>
+                        Oui, je me déconnecte
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </div>
           </div>
         </header>
-
         {/* Progress bar */}
         <div className="bg-card border-b border-border p-3">
           <div className="max-w-6xl mx-auto">
@@ -147,7 +172,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 </React.Fragment>
               ))}
             </div>
-
             {/* Mobile: compact progress bar */}
             <div className="md:hidden">
               <div className="flex items-center justify-between mb-2">
@@ -168,8 +192,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
           </div>
         </div>
       </div>
-
-
       {/* Main content */}
       <main className="max-w-5xl mx-auto px-4 py-8">
         <div className="mt-40 animate-fade-in">{children}</div>
@@ -178,6 +200,29 @@ const FormLayout: React.FC<FormLayoutProps> = ({
       {/* Navigation footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-4 px-6 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="ghost" className="text-muted-foreground gap-2 hover:bg-orange-500">
+                <Trash2 className="h-4 w-4" />
+                Nouveau dossier
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Réinitialiser le dossier ?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Toutes les données locales du formulaire seront supprimées.
+                  Cette action est irréversible.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={() => resetApp()}>
+                  Oui, réinitialiser
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
           <button
             onClick={onPrevious}
             disabled={!canGoPrevious}
