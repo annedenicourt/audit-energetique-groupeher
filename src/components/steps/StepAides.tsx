@@ -221,19 +221,6 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
             />
           </div>
         </div>
-        {/* <div className="p-2 bg-orange-500/10 rounded-lg border border-orange-500/20">
-          <label className="form-label text-primary">Gain sur 10 ans</label>
-          <FormInput
-            label=""
-            name="gainSur10Ans"
-            min={"0"}
-            value={data.gainSur10Ans}
-            type="number"
-            placeholder="0"
-            suffix="€"
-            readonly={true}
-          />
-        </div> */}
         <div className="mt-8 text-xs text-center font-bold text-muted-foreground">
           Source CRE : augmentation moyenne estimée à 7% par an sur une durée de 10 ans
         </div>

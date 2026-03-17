@@ -1,10 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FileCheck, User, Home, Receipt, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
+import { User, BarChart3, TrendingUp, Wallet, Banknote } from "lucide-react";
 import SectionCard from "./SectionCard";
 import { FormData, ScenarioData } from "@/types/formData";
-import html2pdf from "html2pdf.js";
-import { lettreOptions } from "@/utils/handleForm";
-import FormSelect from "./FormSelect";
 import FormInput from "./FormInput";
 
 interface PdfContentCommercialProps {
@@ -79,6 +76,30 @@ const SummaryRow: React.FC<{ label: string; value: string }> = ({ label, value }
   </div>
 );
 
+const PageFooter: React.FC<{ nomClient: string; pagesRef: React.RefObject<HTMLDivElement> }> =
+  ({ nomClient, pagesRef }) => {
+    const selfRef = useRef<HTMLDivElement | null>(null);
+    const [pageNum, setPageNum] = useState(0);
+    const [total, setTotal] = useState(0);
+
+    useEffect(() => {
+      if (!pagesRef.current || !selfRef.current) return;
+      const pages = Array.from(pagesRef.current.querySelectorAll(".a4-page"));
+      const myPage = selfRef.current.closest(".a4-page");
+      const idx = pages.indexOf(myPage as Element);
+      setPageNum(idx + 1);
+      setTotal(pages.length);
+    }, [pagesRef]);
+
+    return (
+      <div ref={selfRef} className="text-center text-xs text-white">
+        <div className="font-bold text-sm">Étude énergétique {nomClient}</div>
+        <div className="">Estimatif non contractuel</div>
+        <div>Page {pageNum} / {total}</div>
+      </div>
+    );
+  };
+
 const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [totalPages, setTotalPages] = useState(0);
@@ -128,13 +149,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Dont enfants à charge" value={data.client.dontEnfants} />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 1 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Habitation */}
@@ -157,13 +172,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Aides perçues" value={data.client.montantAides ? `${data.client.montantAides} €` : ""} />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 2 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -188,13 +197,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 3 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -210,13 +213,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 4 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Scénarios */}
@@ -239,13 +236,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 5 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Dimensionnement */}
@@ -273,13 +264,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Volets roulants (Quantité)" value={`${data.dimensionnement.quantiteVolets}`} />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 6 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Projection */}
@@ -310,13 +295,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
             <SummaryRow label="Gain sur 10 ans" value={data.aides.gainSur10Ans ? `${data.aides.gainSur10Ans} €` : ""} />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 7 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Financement */}
@@ -324,16 +303,10 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
           <div className="grid grid-cols-1 gap-x-8">
             <SummaryRow label="Mensualité de confort" value={data.financement.mensualiteConfort ? `${data.financement.mensualiteConfort} €/mois` : ""} />
             <SummaryRow label="Économies moyennes mensuelles sur 10 ans" value={data.financement.economiesMoyennesMensuelles ? `${data.financement.economiesMoyennesMensuelles} €/mois` : ""} />
-            <SummaryRow label="Gain ou faible effort financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
+            <SummaryRow label="Gain financier" value={data.financement.mensualiteMoinsEconomies ? `${data.financement.mensualiteMoinsEconomies} €/mois` : ""} />
           </div>
         </SectionCard>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Étude énergétique {data.client.nom}</div>
-          <div className="">Estimatif non contractuel</div>
-          <div className="">
-            Page 8 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.client.nom} pagesRef={containerRef} />
       </div>
     </div>
   );

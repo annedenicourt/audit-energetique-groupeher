@@ -16,6 +16,7 @@ export default {
       fontFamily: {
         sans: ["Inter", "system-ui", "sans-serif"],
         display: ["Outfit", "system-ui", "sans-serif"],
+      handwrite: ["Shadows Into Light Two", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

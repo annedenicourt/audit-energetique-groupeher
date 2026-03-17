@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FileCheck, User, Home, Receipt, BarChart3, TrendingUp, Wallet, Banknote, Layers, Grid3X3, Flame, Zap, Building2, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs } from "lucide-react";
+import { User, Home, Layers, Grid3X3, Flame, Zap, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs } from "lucide-react";
 import SectionCard from "./SectionCard";
-import { FormData } from "@/types/formData";
-import html2pdf from "html2pdf.js";
+import { SelectedDimensionnementSections } from "@/types/formData";
 import { DossierFormData } from "@/types/dossierFormData";
 
 interface PdfContentCommercialProps {
   data: DossierFormData;
+  selectedOptions: SelectedDimensionnementSections
 }
 
 // Composant pour afficher une ligne de résumé
@@ -17,23 +17,37 @@ const SummaryRow: React.FC<{ label: string; value }> = ({ label, value }) => (
   </div>
 );
 const DisplayTrue = <Check className="text-lime-500" strokeWidth={6} />
-//const DisplayFalse = <X className="text-red-500" strokeWidth={6} />
 const DisplayFalse = "—"
 
-const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
-  const pagesRef = useRef<HTMLDivElement | null>(null);
-  const [totalPages, setTotalPages] = useState(0);
+const PageFooter: React.FC<{ nomClient: string; pagesRef: React.RefObject<HTMLDivElement> }> =
+  ({ nomClient, pagesRef }) => {
+    const selfRef = useRef<HTMLDivElement | null>(null);
+    const [pageNum, setPageNum] = useState(0);
+    const [total, setTotal] = useState(0);
 
-  useEffect(() => {
-    if (!pagesRef.current) return;
-    const pages =
-      pagesRef.current.querySelectorAll(".a4-page");
-    setTotalPages(pages.length);
-  }, []);
+    useEffect(() => {
+      if (!pagesRef.current || !selfRef.current) return;
+      const pages = Array.from(pagesRef.current.querySelectorAll(".a4-page"));
+      const myPage = selfRef.current.closest(".a4-page");
+      const idx = pages.indexOf(myPage as Element);
+      setPageNum(idx + 1);
+      setTotal(pages.length);
+    }, [pagesRef]);
+
+    return (
+      <div ref={selfRef} className="text-center text-xs text-white">
+        <div className="font-bold text-sm">Dossier de liaison {nomClient}</div>
+        <div>Page {pageNum} / {total}</div>
+      </div>
+    );
+  };
+
+const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selectedOptions }) => {
+  const pagesRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div ref={pagesRef}>
-      <div className="a4-page flex flex-col justify-between ">
+      <div className="a4-page flex flex-col justify-between">
         <div className="space-y-1">
           {/* Client */}
           <SectionCard title="Client" icon={User} className="">
@@ -66,12 +80,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 1 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between">
         <div className="space-y-1">
@@ -105,12 +114,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             <SummaryRow label="MDP Gmail" value={data.mdpGmail} />
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 2 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -143,12 +147,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 3 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -186,12 +185,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
           </SectionCard>
 
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 4 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -229,98 +223,92 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 5 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
-      <div className="a4-page flex flex-col justify-between space-y-1">
-        <div className="space-y-1">
-          {/* PAC Air-eau */}
-          <SectionCard title="PAC Air-eau" icon={Thermometer}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Monobloc Hybea" value={data.pacMonoblocHybea ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Bi-bloc" value={data.pacBiBloc ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement unité extérieure" value={data.emplacementUniteExterieure} />
-              <SummaryRow label="Emplacement unité intérieure" value={data.emplacementUniteInterieure} />
-              <SummaryRow label="Distance entre les 2 modules" value={data.distanceEntreModules} />
-              <SummaryRow label="Distance PAC ↔ tableau" value={data.distancePacTableau} />
-              <SummaryRow label="Difficulté passage tableaux" value={data.difficultePasaggeTableaux} />
-              <SummaryRow label="Chape à faire PAC" value={data.chapeAFairePac} />
-              <SummaryRow label="Passage liaisons combles" value={data.passageLiaisonsComble ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Passage liaisons direct" value={data.passageLiaisonsDirect ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Passage liaisons intérieur" value={data.passageLiaisonsInterieur ? DisplayTrue : DisplayFalse} />
-              {data.passageLiaisonsAutres &&
-                <SummaryRow label="Passage liaisons autres" value={data.passageLiaisonsAutresTexte} />
-              }
-              <SummaryRow label="Tranchée à faire" value={data.trancheeAFairePac} />
-              <SummaryRow label="Sol" value={data.typePosePacSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Mur" value={data.typePosePacMur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Hauteur local PAC" value={data.hauteurLocalPac} />
-              <SummaryRow label="Lève groupe PAC" value={data.leveGroupePac ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Nacelle PAC" value={data.nacellePac ? DisplayTrue : DisplayFalse} />
-            </div>
-          </SectionCard>
-        </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 6 / {totalPages}
+      {selectedOptions?.pacAirEau &&
+        <div className="a4-page flex flex-col justify-between space-y-1">
+          <div className="space-y-1">
+            {/* PAC Air-eau */}
+            <SectionCard title="PAC Air-eau" icon={Thermometer}>
+              <div className="grid gap-x-8">
+                <SummaryRow label="Monobloc Hybea" value={data.pacMonoblocHybea ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Bi-bloc" value={data.pacBiBloc ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Emplacement unité extérieure" value={data.emplacementUniteExterieure} />
+                <SummaryRow label="Emplacement unité intérieure" value={data.emplacementUniteInterieure} />
+                <SummaryRow label="Distance entre les 2 modules" value={data.distanceEntreModules} />
+                <SummaryRow label="Distance PAC ↔ tableau" value={data.distancePacTableau} />
+                <SummaryRow label="Difficulté passage tableaux" value={data.difficultePasaggeTableaux} />
+                <SummaryRow label="Chape à faire PAC" value={data.chapeAFairePac} />
+                <SummaryRow label="Passage liaisons combles" value={data.passageLiaisonsComble ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Passage liaisons direct" value={data.passageLiaisonsDirect ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Passage liaisons intérieur" value={data.passageLiaisonsInterieur ? DisplayTrue : DisplayFalse} />
+                {data.passageLiaisonsAutres &&
+                  <SummaryRow label="Passage liaisons autres" value={data.passageLiaisonsAutresTexte} />
+                }
+                <SummaryRow label="Tranchée à faire" value={data.trancheeAFairePac} />
+                <SummaryRow label="Sol" value={data.typePosePacSol ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Mur" value={data.typePosePacMur ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Hauteur local PAC" value={data.hauteurLocalPac} />
+                <SummaryRow label="Lève groupe PAC" value={data.leveGroupePac ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Nacelle PAC" value={data.nacellePac ? DisplayTrue : DisplayFalse} />
+              </div>
+            </SectionCard>
           </div>
+          <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
         </div>
-      </div>
-      <div className="a4-page flex flex-col justify-between space-y-1">
-        <div className="space-y-1">
-          {/* BTD */}
-          <SectionCard title="Ballon thermodynamique" icon={Thermometer}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Monobloc" value={data.btdMonobloc ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Bi-bloc" value={data.btdBiBloc ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement ballon local technique" value={data.btdEmplacementLocalTech ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement ballon garage" value={data.btdEmplacementGarage ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement ballon cellier" value={data.btdEmplacementCellier ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement ballon autre" value={data.btdEmplacementAutre ? DisplayTrue : DisplayFalse} />
-              {data.btdEmplacementAutre && (
-                <SummaryRow label="Emplacement autre" value={data.btdEmplacementAutreTexte} />
-              )}
-              <SummaryRow label="Unité extérieure au sol" value={data.btdGroupeExtSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Unité extérieure au mur" value={data.btdGroupeExtMur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Hauteur" value={data.btdGroupeExtHauteur} />
-              <SummaryRow label="Dalle existe" value={data.btdDalleExiste} />
-            </div>
-          </SectionCard>
-          {/* PAC air/air */}
-          <SectionCard title="PAC air/air" icon={Wind}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Mono-split" value={data.pacAirAirMonoSplit ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Multi-split" value={data.pacAirAirMultiSplit ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Gainable" value={data.pacAirAirGainable ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Console" value={data.pacAirAirConsole ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Groupe extérieur au sol" value={data.pacAirAirGroupeExtSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Groupe extérieur au mur" value={data.pacAirAirGroupeExtMur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Lève-groupe (+ de 1m et -5m)" value={data.pacAirAirLeveGroupe ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Nacelle (+5m)" value={data.pacAirAirNacelle ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Distance" value={data.pacAirAirDistance} />
-              <SummaryRow label="Nature sol" value={data.pacAirAirNatureSol} />
-              <SummaryRow label="Hauteur" value={data.pacAirAirHauteur} />
-              <SummaryRow label="Type mur" value={data.pacAirAirTypeMur} />
-              <SummaryRow label="Tranchée longueur" value={data.pacAirAirTranchee} />
-              <SummaryRow label="Chape existante" value={data.pacAirAirChapeExistante ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Chape à faire" value={data.pacAirAirChapeAFaire ? DisplayTrue : DisplayFalse} />
-            </div>
-          </SectionCard>
-
-
-        </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 7 / {totalPages}
+      }
+      {selectedOptions?.thermodynamique &&
+        <div className="a4-page flex flex-col justify-between space-y-1">
+          <div className="space-y-1">
+            {/* BTD */}
+            <SectionCard title="Ballon thermodynamique" icon={Thermometer}>
+              <div className="grid gap-x-8">
+                <SummaryRow label="Monobloc" value={data.btdMonobloc ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Bi-bloc" value={data.btdBiBloc ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Emplacement ballon local technique" value={data.btdEmplacementLocalTech ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Emplacement ballon garage" value={data.btdEmplacementGarage ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Emplacement ballon cellier" value={data.btdEmplacementCellier ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Emplacement ballon autre" value={data.btdEmplacementAutre ? DisplayTrue : DisplayFalse} />
+                {data.btdEmplacementAutre && (
+                  <SummaryRow label="Emplacement autre" value={data.btdEmplacementAutreTexte} />
+                )}
+                <SummaryRow label="Unité extérieure au sol" value={data.btdGroupeExtSol ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Unité extérieure au mur" value={data.btdGroupeExtMur ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Hauteur" value={data.btdGroupeExtHauteur} />
+                <SummaryRow label="Dalle existe" value={data.btdDalleExiste} />
+              </div>
+            </SectionCard>
           </div>
+          <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
         </div>
-      </div>
+      }
+      {selectedOptions?.pacAirAir &&
+        <div className="a4-page flex flex-col justify-between space-y-1">
+          <div className="space-y-1">
+            {/* PAC air/air */}
+            <SectionCard title="PAC air/air" icon={Wind}>
+              <div className="grid gap-x-8">
+                <SummaryRow label="Mono-split" value={data.pacAirAirMonoSplit ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Multi-split" value={data.pacAirAirMultiSplit ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Gainable" value={data.pacAirAirGainable ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Console" value={data.pacAirAirConsole ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Groupe extérieur au sol" value={data.pacAirAirGroupeExtSol ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Groupe extérieur au mur" value={data.pacAirAirGroupeExtMur ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Lève-groupe (+ de 1m et -5m)" value={data.pacAirAirLeveGroupe ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Nacelle (+5m)" value={data.pacAirAirNacelle ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Distance" value={data.pacAirAirDistance} />
+                <SummaryRow label="Nature sol" value={data.pacAirAirNatureSol} />
+                <SummaryRow label="Hauteur" value={data.pacAirAirHauteur} />
+                <SummaryRow label="Type mur" value={data.pacAirAirTypeMur} />
+                <SummaryRow label="Tranchée longueur" value={data.pacAirAirTranchee} />
+                <SummaryRow label="Chape existante" value={data.pacAirAirChapeExistante ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Chape à faire" value={data.pacAirAirChapeAFaire ? DisplayTrue : DisplayFalse} />
+              </div>
+            </SectionCard>
+          </div>
+          <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
+        </div>
+      }
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
           {/* SPLITS détail */}
@@ -382,37 +370,34 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             )}
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 8 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
           {/* PV */}
-          <SectionCard title="Photovoltaïque" icon={Sun}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Pose au sol" value={data.pvTypePoseAuSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Pose murale SSC" value={data.pvTypePoseMuraleSsc ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Pose toiture" value={data.pvTypePoseToiture ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Paysage" value={data.pvFormatPaysage ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Portrait" value={data.pvFormatPortrait ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Toiture bac acier" value={data.pvToitureBacAcier ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Toiture tuiles" value={data.pvToitureTuile ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Toiture éverite" value={data.pvToitureEverite ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Raccordement aérien" value={data.pvRaccordementAerien ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Raccordement enterré" value={data.pvRaccordementEnterre ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Docs : devis signé" value={data.pvDocDevisSigne ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Docs : facture EDF" value={data.pvDocFactureEdf ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Docs : parcelle" value={data.pvDocParcelle ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Docs : pouvoir" value={data.pvDocPouvoir ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Docs : taxe foncière" value={data.pvDocTaxeFonciere ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Nacelle +4m" value={data.pvNacellePlus4m ? DisplayTrue : DisplayFalse} />
-              {/* <SummaryRow label="Taille SSC" value={data.pvSscTaille} /> */}
-            </div>
-          </SectionCard>
+          {selectedOptions?.pacAirAir &&
+            <SectionCard title="Photovoltaïque" icon={Sun}>
+              <div className="grid gap-x-8">
+                <SummaryRow label="Pose au sol" value={data.pvTypePoseAuSol ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Pose murale SSC" value={data.pvTypePoseMuraleSsc ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Pose toiture" value={data.pvTypePoseToiture ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Paysage" value={data.pvFormatPaysage ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Portrait" value={data.pvFormatPortrait ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Toiture bac acier" value={data.pvToitureBacAcier ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Toiture tuiles" value={data.pvToitureTuile ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Toiture éverite" value={data.pvToitureEverite ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Raccordement aérien" value={data.pvRaccordementAerien ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Raccordement enterré" value={data.pvRaccordementEnterre ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Docs : devis signé" value={data.pvDocDevisSigne ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Docs : facture EDF" value={data.pvDocFactureEdf ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Docs : parcelle" value={data.pvDocParcelle ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Docs : pouvoir" value={data.pvDocPouvoir ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Docs : taxe foncière" value={data.pvDocTaxeFonciere ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Nacelle +4m" value={data.pvNacellePlus4m ? DisplayTrue : DisplayFalse} />
+                {/* <SummaryRow label="Taille SSC" value={data.pvSscTaille} /> */}
+              </div>
+            </SectionCard>
+          }
           {/* Commentaires*/}
           <SectionCard title="Commentaires & particularités chantier" icon={NotebookTabs}>
             <div className="text-sm">
@@ -420,12 +405,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page 9 / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
@@ -456,12 +436,7 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data }) => {
             </div>
           </SectionCard>
         </div>
-        <div className="text-center text-xs text-white">
-          <div className="font-bold text-sm">Dossier de liaison {data.nomClient}</div>
-          <div className="">
-            Page {totalPages} / {totalPages}
-          </div>
-        </div>
+        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
     </div>
   );

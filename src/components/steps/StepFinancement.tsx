@@ -93,7 +93,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
             <FormInput
               label="Mensualité de confort"
               name="mensualiteConfort"
-              value={data.mensualiteConfort}
+              value={data.mensualiteConfort ?? ""}
               type="number"
               placeholder="0"
               suffix="€"
@@ -130,8 +130,7 @@ const StepFinancement: React.FC<StepFinancementProps> = ({ data, onChange, econo
               <FormInput
                 label=""
                 name="mensualiteMoinsEconomies"
-                value={resultCalc}
-                // onChange={(v) => onChange("mensualiteMoinsEconomies", v)}
+                value={resultCalc ?? ""}
                 type="number"
                 placeholder="0"
                 suffix="€/mois"

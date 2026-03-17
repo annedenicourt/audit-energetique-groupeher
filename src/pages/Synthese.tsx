@@ -155,26 +155,46 @@ const Synthese: React.FC = () => {
       </div>
 
       {pdfMode === "etude" ? (
-        <PreviewCommercial data={formSim} downloadPdf={downloadPdfGeneric} isSaving={isSaving} />
+        <div className="mx-auto pt-4 bg-white border border-orange-100">
+          <div className="m-6 flex items-center">
+            <FileCheck size="30" className="mr-3 text-primary" />
+            <div className="mr-6 text-2xl font-display font-bold text-foreground">
+              Infos Simulateur
+            </div>
+          </div>
+          <div className="pdf-commercial-visible">
+            <PdfContentCommercial data={formSim} />
+          </div>
+        </div>
       ) : (
-        <PreviewDossier data={formDossier} downloadPdf={downloadPdfGeneric} isSaving={isSaving} />
+        <div className="mx-auto bg-white border border-orange-100">
+          <div className="m-6 flex items-center">
+            <FileCheck size="30" className="mr-3 text-primary" />
+            <div className="mr-6 text-2xl font-display font-bold text-foreground">
+              Dossier de liaison
+            </div>
+          </div>
+          <div>
+            <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} />
+          </div>
+        </div>
       )}
 
       {/* ZONE PDF OFF-SCREEN */}
-      <div className="fixed -left-[10000px] top-0">
+      {/* <div className="fixed -left-[10000px] top-0">
         <div id="pdf-content-etude">
           <div className="a4-page">
             <img src="/images/couv_pdf.png" alt="couverture pdf" />
           </div>
           <PdfContentCommercial data={formSim} />
         </div>
-      </div>
+      </div> */}
       <div className="fixed -left-[10000px] top-0">
         <div id="pdf-content-dossier">
           <div className="a4-page">
             <img src="/images/couv_dossier_liaison.png" alt="couverture pdf" />
           </div>
-          <PdfContentDossier data={formDossier} />
+          <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} />
         </div>
       </div>
 

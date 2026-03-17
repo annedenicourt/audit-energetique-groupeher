@@ -91,9 +91,6 @@ const StepScenarios: React.FC<StepScenariosProps> = ({ data, onChange }) => {
     );
   };
 
-  console.log(data)
-  console.log(hasAtLeastOneScenario())
-
   return (
     <div className="space-y-6">
       {/* Page title */}

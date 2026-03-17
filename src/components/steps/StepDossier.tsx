@@ -182,7 +182,10 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
           <CheckboxField label="Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} />
           <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} />
         </div>
+      </SectionCard>
 
+      {/* COMPTE CEE  et MPR */}
+      <SectionCard title="Compte Prime EDF & MaPrimeRénov'">
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime EDF</h3>
         <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
@@ -341,187 +344,198 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
       </SectionCard>
 
       {/* PAC AIR EAU */}
-      <SectionCard title="PAC Air-Eau">
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Monobloc Hybea" checked={formDossier.pacMonoblocHybea} onChange={(v) => update("pacMonoblocHybea", v)} />
-          <CheckboxField label="Bi-bloc" checked={formDossier.pacBiBloc} onChange={(v) => update("pacBiBloc", v)} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <FormInput label="Emplacement unité extérieure" name="emplacementUniteExterieure" value={formDossier.emplacementUniteExterieure} onChange={(v) => update("emplacementUniteExterieure", v)} />
-          <FormInput label="Emplacement unité intérieure" name="emplacementUniteInterieure" value={formDossier.emplacementUniteInterieure} onChange={(v) => update("emplacementUniteInterieure", v)} />
-          <FormInput label="Distance entre les 2 modules" name="distanceEntreModules" value={formDossier.distanceEntreModules} onChange={(v) => update("distanceEntreModules", v)} />
-          <FormInput label="Distance PAC → tableau électrique" name="distancePacTableau" value={formDossier.distancePacTableau} onChange={(v) => update("distancePacTableau", v)} />
-          <FormInput label="Difficulté de passage entre tableaux" name="difficultePasaggeTableaux" value={formDossier.difficultePasaggeTableaux} onChange={(v) => update("difficultePasaggeTableaux", v)} className="md:col-span-2" />
-        </div>
-
-        <FormSelect label="Chape à faire" name="chapeAFairePac" value={formDossier.chapeAFairePac} onChange={(v) => update("chapeAFairePac", v)} options={OUI_NON} />
-
-        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Passage des liaisons</h3>
-        <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Comble" checked={formDossier.passageLiaisonsComble} onChange={(v) => update("passageLiaisonsComble", v)} />
-          <CheckboxField label="Direct" checked={formDossier.passageLiaisonsDirect} onChange={(v) => update("passageLiaisonsDirect", v)} />
-          <CheckboxField label="Intérieur maison" checked={formDossier.passageLiaisonsInterieur} onChange={(v) => update("passageLiaisonsInterieur", v)} />
-          <CheckboxField label="Autres" checked={formDossier.passageLiaisonsAutres} onChange={(v) => update("passageLiaisonsAutres", v)} />
-        </div>
-        {formDossier.passageLiaisonsAutres && (
-          <FormInput label="" name="passageLiaisonsAutresTexte" value={formDossier.passageLiaisonsAutresTexte} onChange={(v) => update("passageLiaisonsAutresTexte", v)} placeholder="Précisez" />
-        )}
-
-        <FormSelect label="Tranchée à faire" name="trancheeAFairePac" value={formDossier.trancheeAFairePac} onChange={(v) => update("trancheeAFairePac", v)} options={OUI_NON} />
-
-        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de pose</h3>
-        <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Sol" checked={formDossier.typePosePacSol} onChange={(v) => update("typePosePacSol", v)} />
-          <CheckboxField label="Mur" checked={formDossier.typePosePacMur} onChange={(v) => update("typePosePacMur", v)} />
-        </div>
-        <div className="mb-4">
-          <FormInput label="Hauteur local" name="hauteurLocalPac" value={formDossier.hauteurLocalPac} onChange={(v) => update("hauteurLocalPac", v)} />
-          <div className="mt-2 flex items-center text-xs text-red-400">
-            <TriangleAlert className="mr-1" size={15} />
-            Duo Atlantic minimum 2,20m
+      {simulData?.dimensionnement?.selectedSections.pacAirEau &&
+        <SectionCard title="PAC Air-Eau">
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Monobloc Hybea" checked={formDossier.pacMonoblocHybea} onChange={(v) => update("pacMonoblocHybea", v)} />
+            <CheckboxField label="Bi-bloc" checked={formDossier.pacBiBloc} onChange={(v) => update("pacBiBloc", v)} />
           </div>
-        </div>
-        <div className="flex flex-wrap gap-6 mt-2">
-          <CheckboxField label="Lève groupe (+ de 1m et -5m)" checked={formDossier.leveGroupePac} onChange={(v) => update("leveGroupePac", v)} />
-          <CheckboxField label="Nacelle (+5m)" checked={formDossier.nacellePac} onChange={(v) => update("nacellePac", v)} />
-        </div>
-        <div className="mt-2 flex items-center text-xs text-red-400">
-          <TriangleAlert className="mr-1" size={15} />
-          Pour groupe simple ventilo uniquement
-        </div>
-        <div className="mt-6 flex items-center justify-center text-sm text-red-400">
-          <TriangleAlert className="mr-1" size={20} />
-          Groupe Double Ventilo : pose uniquement au sol ou au ras du sol
-        </div>
-      </SectionCard>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <FormInput label="Emplacement unité extérieure" name="emplacementUniteExterieure" value={formDossier.emplacementUniteExterieure} onChange={(v) => update("emplacementUniteExterieure", v)} />
+            <FormInput label="Emplacement unité intérieure" name="emplacementUniteInterieure" value={formDossier.emplacementUniteInterieure} onChange={(v) => update("emplacementUniteInterieure", v)} />
+            <FormInput label="Distance entre les 2 modules" name="distanceEntreModules" value={formDossier.distanceEntreModules} onChange={(v) => update("distanceEntreModules", v)} />
+            <FormInput label="Distance PAC → tableau électrique" name="distancePacTableau" value={formDossier.distancePacTableau} onChange={(v) => update("distancePacTableau", v)} />
+            <FormInput label="Difficulté de passage entre tableaux" name="difficultePasaggeTableaux" value={formDossier.difficultePasaggeTableaux} onChange={(v) => update("difficultePasaggeTableaux", v)} className="md:col-span-2" />
+          </div>
 
-      {/* BTD */}
-      <SectionCard title="Ballon Thermodynamique">
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Monobloc" checked={formDossier.btdMonobloc} onChange={(v) => update("btdMonobloc", v)} />
-          <CheckboxField label="Bi-bloc" checked={formDossier.btdBiBloc} onChange={(v) => update("btdBiBloc", v)} />
-        </div>
+          <FormSelect label="Chape à faire" name="chapeAFairePac" value={formDossier.chapeAFairePac} onChange={(v) => update("chapeAFairePac", v)} options={OUI_NON} />
 
-        <h3 className="font-semibold text-lime-600 mb-2">Emplacement ballon</h3>
-        <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Local tech." checked={formDossier.btdEmplacementLocalTech} onChange={(v) => update("btdEmplacementLocalTech", v)} />
-          <CheckboxField label="Garage" checked={formDossier.btdEmplacementGarage} onChange={(v) => update("btdEmplacementGarage", v)} />
-          <CheckboxField label="Cellier" checked={formDossier.btdEmplacementCellier} onChange={(v) => update("btdEmplacementCellier", v)} />
-          <CheckboxField label="Autre" checked={formDossier.btdEmplacementAutre} onChange={(v) => update("btdEmplacementAutre", v)} />
-        </div>
-        {formDossier.btdEmplacementAutre && (
-          <FormInput label="" name="btdEmplacementAutreTexte" value={formDossier.btdEmplacementAutreTexte} onChange={(v) => update("btdEmplacementAutreTexte", v)} placeholder="Précisez" />
-        )}
+          <h3 className="font-semibold text-lime-600 mt-4 mb-2">Passage des liaisons</h3>
+          <div className="flex flex-wrap gap-6 mb-2">
+            <CheckboxField label="Comble" checked={formDossier.passageLiaisonsComble} onChange={(v) => update("passageLiaisonsComble", v)} />
+            <CheckboxField label="Direct" checked={formDossier.passageLiaisonsDirect} onChange={(v) => update("passageLiaisonsDirect", v)} />
+            <CheckboxField label="Intérieur maison" checked={formDossier.passageLiaisonsInterieur} onChange={(v) => update("passageLiaisonsInterieur", v)} />
+            <CheckboxField label="Autres" checked={formDossier.passageLiaisonsAutres} onChange={(v) => update("passageLiaisonsAutres", v)} />
+          </div>
+          {formDossier.passageLiaisonsAutres && (
+            <FormInput label="" name="passageLiaisonsAutresTexte" value={formDossier.passageLiaisonsAutresTexte} onChange={(v) => update("passageLiaisonsAutresTexte", v)} placeholder="Précisez" />
+          )}
 
-        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
-        <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Sol" checked={formDossier.btdGroupeExtSol} onChange={(v) => update("btdGroupeExtSol", v)} />
-          <CheckboxField label="Mur" checked={formDossier.btdGroupeExtMur} onChange={(v) => update("btdGroupeExtMur", v)} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <FormInput label="Hauteur" name="btdGroupeExtHauteur" value={formDossier.btdGroupeExtHauteur} onChange={(v) => update("btdGroupeExtHauteur", v)} />
-          <FormSelect label="Dalle existe" name="btdDalleExiste" value={formDossier.btdDalleExiste} onChange={(v) => update("btdDalleExiste", v)} options={OUI_NON} />
-        </div>
-      </SectionCard>
+          <FormSelect label="Tranchée à faire" name="trancheeAFairePac" value={formDossier.trancheeAFairePac} onChange={(v) => update("trancheeAFairePac", v)} options={OUI_NON} />
 
-      {/* PAC AIR AIR */}
-      <SectionCard title="PAC Air Air ou Multi+">
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Mono-split" checked={formDossier.pacAirAirMonoSplit} onChange={(v) => update("pacAirAirMonoSplit", v)} />
-          <CheckboxField label="Multi-split" checked={formDossier.pacAirAirMultiSplit} onChange={(v) => update("pacAirAirMultiSplit", v)} />
-          <CheckboxField label="Console" checked={formDossier.pacAirAirConsole} onChange={(v) => update("pacAirAirConsole", v)} />
-          <CheckboxField label="Gainable" checked={formDossier.pacAirAirGainable} onChange={(v) => update("pacAirAirGainable", v)} />
-        </div>
-        {formDossier.splits.map((split, i) => (
-          <div key={i} >
-            <h3 className="font-semibold text-lime-600">Split {i + 1}</h3>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 p-3">
-              <FormInput label={`Pièce`} name={`split_${i}_piece`} value={split.nomPiece} onChange={(v) => updateSplit(i, "nomPiece", v)} />
-              <FormInput label="Puissance" name={`split_${i}_kw`} value={split.puissanceKw} onChange={(v) => updateSplit(i, "puissanceKw", v)} suffix="kW" />
-              <FormSelect label="Dos à dos" name={`split_${i}_dos`} value={split.dosADos} onChange={(v) => updateSplit(i, "dosADos", v)} options={OUI_NON} />
-              <FormSelect label="Pompe de relevage" name={`split_${i}_pompe`} value={split.pompeRelevage} onChange={(v) => updateSplit(i, "pompeRelevage", v)} options={OUI_NON} />
-              <div className="flex items-end">
-                <button type="button" onClick={() => removeSplit(i)} className="mb-4 text-destructive hover:text-destructive/80">
-                  <Trash2 size={20} />
-                </button>
-              </div>
+          <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de pose</h3>
+          <div className="flex flex-wrap gap-6 mb-2">
+            <CheckboxField label="Sol" checked={formDossier.typePosePacSol} onChange={(v) => update("typePosePacSol", v)} />
+            <CheckboxField label="Mur" checked={formDossier.typePosePacMur} onChange={(v) => update("typePosePacMur", v)} />
+          </div>
+          <div className="mb-4">
+            <FormInput label="Hauteur local" name="hauteurLocalPac" value={formDossier.hauteurLocalPac} onChange={(v) => update("hauteurLocalPac", v)} />
+            <div className="mt-2 flex items-center text-xs text-red-400">
+              <TriangleAlert className="mr-1" size={15} />
+              Duo Atlantic minimum 2,20m
             </div>
           </div>
+          <div className="flex flex-wrap gap-6 mt-2">
+            <CheckboxField label="Lève groupe (+ de 1m et -5m)" checked={formDossier.leveGroupePac} onChange={(v) => update("leveGroupePac", v)} />
+            <CheckboxField label="Nacelle (+5m)" checked={formDossier.nacellePac} onChange={(v) => update("nacellePac", v)} />
+          </div>
+          <div className="mt-2 flex items-center text-xs text-red-400">
+            <TriangleAlert className="mr-1" size={15} />
+            Pour groupe simple ventilo uniquement
+          </div>
+          <div className="mt-6 flex items-center justify-center text-sm text-red-400">
+            <TriangleAlert className="mr-1" size={20} />
+            Groupe Double Ventilo : pose uniquement au sol ou au ras du sol
+          </div>
+        </SectionCard>
+      }
 
-        ))}
-        <div className="">
-          <button type="button" onClick={addSplit} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
-            <Plus className="font-bold" size={25} /> Ajouter un split
-          </button>
-        </div>
 
-        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
-        <div className="flex flex-wrap gap-6 mb-2">
-          <CheckboxField label="Sol" checked={formDossier.pacAirAirGroupeExtSol} onChange={(v) => update("pacAirAirGroupeExtSol", v)} />
-          <CheckboxField label="Mur" checked={formDossier.pacAirAirGroupeExtMur} onChange={(v) => update("pacAirAirGroupeExtMur", v)} />
-          <CheckboxField label="Lève groupe (+ de 1m et -5m)" checked={formDossier.pacAirAirLeveGroupe} onChange={(v) => update("pacAirAirLeveGroupe", v)} />
-          <CheckboxField label="Nacelle (+5m)" checked={formDossier.pacAirAirNacelle} onChange={(v) => update("pacAirAirNacelle", v)} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-          <FormInput label="Distance" name="pacAirAirDistance" value={formDossier.pacAirAirDistance} onChange={(v) => update("pacAirAirDistance", v)} />
-          <FormInput label="Nature du sol" name="pacAirAirNatureSol" value={formDossier.pacAirAirNatureSol} onChange={(v) => update("pacAirAirNatureSol", v)} />
-          <FormInput label="Hauteur" name="pacAirAirHauteur" value={formDossier.pacAirAirHauteur} onChange={(v) => update("pacAirAirHauteur", v)} />
-          <FormInput label="Type de mur" name="pacAirAirTypeMur" value={formDossier.pacAirAirTypeMur} onChange={(v) => update("pacAirAirTypeMur", v)} />
-          <FormInput label="Tranchée (longueur)" name="pacAirAirTranchee" value={formDossier.pacAirAirTranchee} onChange={(v) => update("pacAirAirTranchee", v)} />
-        </div>
-        <div className="flex flex-wrap gap-6">
-          <CheckboxField label="Chape existante" checked={formDossier.pacAirAirChapeExistante} onChange={(v) => update("pacAirAirChapeExistante", v)} />
-          <CheckboxField label="Chape à faire" checked={formDossier.pacAirAirChapeAFaire} onChange={(v) => update("pacAirAirChapeAFaire", v)} />
-        </div>
-      </SectionCard>
+      {/* BTD */}
+      {simulData?.dimensionnement?.selectedSections.thermodynamique &&
+        <SectionCard title="Ballon Thermodynamique">
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Monobloc" checked={formDossier.btdMonobloc} onChange={(v) => update("btdMonobloc", v)} />
+            <CheckboxField label="Bi-bloc" checked={formDossier.btdBiBloc} onChange={(v) => update("btdBiBloc", v)} />
+          </div>
+
+          <h3 className="font-semibold text-lime-600 mb-2">Emplacement ballon</h3>
+          <div className="flex flex-wrap gap-6 mb-2">
+            <CheckboxField label="Local tech." checked={formDossier.btdEmplacementLocalTech} onChange={(v) => update("btdEmplacementLocalTech", v)} />
+            <CheckboxField label="Garage" checked={formDossier.btdEmplacementGarage} onChange={(v) => update("btdEmplacementGarage", v)} />
+            <CheckboxField label="Cellier" checked={formDossier.btdEmplacementCellier} onChange={(v) => update("btdEmplacementCellier", v)} />
+            <CheckboxField label="Autre" checked={formDossier.btdEmplacementAutre} onChange={(v) => update("btdEmplacementAutre", v)} />
+          </div>
+          {formDossier.btdEmplacementAutre && (
+            <FormInput label="" name="btdEmplacementAutreTexte" value={formDossier.btdEmplacementAutreTexte} onChange={(v) => update("btdEmplacementAutreTexte", v)} placeholder="Précisez" />
+          )}
+
+          <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
+          <div className="flex flex-wrap gap-6 mb-2">
+            <CheckboxField label="Sol" checked={formDossier.btdGroupeExtSol} onChange={(v) => update("btdGroupeExtSol", v)} />
+            <CheckboxField label="Mur" checked={formDossier.btdGroupeExtMur} onChange={(v) => update("btdGroupeExtMur", v)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <FormInput label="Hauteur" name="btdGroupeExtHauteur" value={formDossier.btdGroupeExtHauteur} onChange={(v) => update("btdGroupeExtHauteur", v)} />
+            <FormSelect label="Dalle existe" name="btdDalleExiste" value={formDossier.btdDalleExiste} onChange={(v) => update("btdDalleExiste", v)} options={OUI_NON} />
+          </div>
+        </SectionCard>
+      }
+
+
+      {/* PAC AIR AIR */}
+      {simulData?.dimensionnement?.selectedSections.pacAirAir &&
+        <SectionCard title="PAC Air Air ou Multi+">
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Mono-split" checked={formDossier.pacAirAirMonoSplit} onChange={(v) => update("pacAirAirMonoSplit", v)} />
+            <CheckboxField label="Multi-split" checked={formDossier.pacAirAirMultiSplit} onChange={(v) => update("pacAirAirMultiSplit", v)} />
+            <CheckboxField label="Console" checked={formDossier.pacAirAirConsole} onChange={(v) => update("pacAirAirConsole", v)} />
+            <CheckboxField label="Gainable" checked={formDossier.pacAirAirGainable} onChange={(v) => update("pacAirAirGainable", v)} />
+          </div>
+          {formDossier.splits.map((split, i) => (
+            <div key={i} >
+              <h3 className="font-semibold text-lime-600">Split {i + 1}</h3>
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-3 p-3">
+                <FormInput label={`Pièce`} name={`split_${i}_piece`} value={split.nomPiece} onChange={(v) => updateSplit(i, "nomPiece", v)} />
+                <FormInput label="Puissance" name={`split_${i}_kw`} value={split.puissanceKw} onChange={(v) => updateSplit(i, "puissanceKw", v)} suffix="kW" />
+                <FormSelect label="Dos à dos" name={`split_${i}_dos`} value={split.dosADos} onChange={(v) => updateSplit(i, "dosADos", v)} options={OUI_NON} />
+                <FormSelect label="Pompe de relevage" name={`split_${i}_pompe`} value={split.pompeRelevage} onChange={(v) => updateSplit(i, "pompeRelevage", v)} options={OUI_NON} />
+                <div className="flex items-end">
+                  <button type="button" onClick={() => removeSplit(i)} className="mb-4 text-destructive hover:text-destructive/80">
+                    <Trash2 size={20} />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          ))}
+          <div className="">
+            <button type="button" onClick={addSplit} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
+              <Plus className="font-bold" size={25} /> Ajouter un split
+            </button>
+          </div>
+
+          <h3 className="font-semibold text-lime-600 mt-4 mb-2">Emplacement groupe ext.</h3>
+          <div className="flex flex-wrap gap-6 mb-2">
+            <CheckboxField label="Sol" checked={formDossier.pacAirAirGroupeExtSol} onChange={(v) => update("pacAirAirGroupeExtSol", v)} />
+            <CheckboxField label="Mur" checked={formDossier.pacAirAirGroupeExtMur} onChange={(v) => update("pacAirAirGroupeExtMur", v)} />
+            <CheckboxField label="Lève groupe (+ de 1m et -5m)" checked={formDossier.pacAirAirLeveGroupe} onChange={(v) => update("pacAirAirLeveGroupe", v)} />
+            <CheckboxField label="Nacelle (+5m)" checked={formDossier.pacAirAirNacelle} onChange={(v) => update("pacAirAirNacelle", v)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            <FormInput label="Distance" name="pacAirAirDistance" value={formDossier.pacAirAirDistance} onChange={(v) => update("pacAirAirDistance", v)} />
+            <FormInput label="Nature du sol" name="pacAirAirNatureSol" value={formDossier.pacAirAirNatureSol} onChange={(v) => update("pacAirAirNatureSol", v)} />
+            <FormInput label="Hauteur" name="pacAirAirHauteur" value={formDossier.pacAirAirHauteur} onChange={(v) => update("pacAirAirHauteur", v)} />
+            <FormInput label="Type de mur" name="pacAirAirTypeMur" value={formDossier.pacAirAirTypeMur} onChange={(v) => update("pacAirAirTypeMur", v)} />
+            <FormInput label="Tranchée (longueur)" name="pacAirAirTranchee" value={formDossier.pacAirAirTranchee} onChange={(v) => update("pacAirAirTranchee", v)} />
+          </div>
+          <div className="flex flex-wrap gap-6">
+            <CheckboxField label="Chape existante" checked={formDossier.pacAirAirChapeExistante} onChange={(v) => update("pacAirAirChapeExistante", v)} />
+            <CheckboxField label="Chape à faire" checked={formDossier.pacAirAirChapeAFaire} onChange={(v) => update("pacAirAirChapeAFaire", v)} />
+          </div>
+        </SectionCard>
+      }
+
 
       {/* PV ou SSC */}
-      <SectionCard title="PV ou SSC">
-        <h3 className="font-semibold text-lime-600 mb-2">Type de pose</h3>
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Au sol" checked={formDossier.pvTypePoseAuSol} onChange={(v) => update("pvTypePoseAuSol", v)} />
-          <CheckboxField label="Toiture" checked={formDossier.pvTypePoseToiture} onChange={(v) => update("pvTypePoseToiture", v)} />
-          <CheckboxField label="Murale SSC" checked={formDossier.pvTypePoseMuraleSsc} onChange={(v) => update("pvTypePoseMuraleSsc", v)} />
-        </div>
+      {simulData?.dimensionnement?.selectedSections.photovoltaique || simulData?.dimensionnement?.selectedSections.ssc &&
+        <SectionCard title="PV ou SSC">
+          <h3 className="font-semibold text-lime-600 mb-2">Type de pose</h3>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Au sol" checked={formDossier.pvTypePoseAuSol} onChange={(v) => update("pvTypePoseAuSol", v)} />
+            <CheckboxField label="Toiture" checked={formDossier.pvTypePoseToiture} onChange={(v) => update("pvTypePoseToiture", v)} />
+            <CheckboxField label="Murale SSC" checked={formDossier.pvTypePoseMuraleSsc} onChange={(v) => update("pvTypePoseMuraleSsc", v)} />
+          </div>
 
-        <h3 className="font-semibold text-lime-600 mb-2">Format de pose</h3>
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Portrait" checked={formDossier.pvFormatPortrait} onChange={(v) => update("pvFormatPortrait", v)} />
-          <CheckboxField label="Paysage" checked={formDossier.pvFormatPaysage} onChange={(v) => update("pvFormatPaysage", v)} />
-        </div>
+          <h3 className="font-semibold text-lime-600 mb-2">Format de pose</h3>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Portrait" checked={formDossier.pvFormatPortrait} onChange={(v) => update("pvFormatPortrait", v)} />
+            <CheckboxField label="Paysage" checked={formDossier.pvFormatPaysage} onChange={(v) => update("pvFormatPaysage", v)} />
+          </div>
 
-        <h3 className="font-semibold text-lime-600 mb-2">Type de toiture</h3>
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Bac acier" checked={formDossier.pvToitureBacAcier} onChange={(v) => update("pvToitureBacAcier", v)} />
-          <CheckboxField label="Éverite" checked={formDossier.pvToitureEverite} onChange={(v) => update("pvToitureEverite", v)} />
-          <CheckboxField label="Tuile" checked={formDossier.pvToitureTuile} onChange={(v) => update("pvToitureTuile", v)} />
-        </div>
+          <h3 className="font-semibold text-lime-600 mb-2">Type de toiture</h3>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Bac acier" checked={formDossier.pvToitureBacAcier} onChange={(v) => update("pvToitureBacAcier", v)} />
+            <CheckboxField label="Éverite" checked={formDossier.pvToitureEverite} onChange={(v) => update("pvToitureEverite", v)} />
+            <CheckboxField label="Tuile" checked={formDossier.pvToitureTuile} onChange={(v) => update("pvToitureTuile", v)} />
+          </div>
 
-        <h3 className="font-semibold text-lime-600 mb-2">Raccordement (si compteur ext.)</h3>
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Enterré" checked={formDossier.pvRaccordementEnterre} onChange={(v) => update("pvRaccordementEnterre", v)} />
-          <CheckboxField label="Aérien" checked={formDossier.pvRaccordementAerien} onChange={(v) => update("pvRaccordementAerien", v)} />
-        </div>
+          <h3 className="font-semibold text-lime-600 mb-2">Raccordement (si compteur ext.)</h3>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Enterré" checked={formDossier.pvRaccordementEnterre} onChange={(v) => update("pvRaccordementEnterre", v)} />
+            <CheckboxField label="Aérien" checked={formDossier.pvRaccordementAerien} onChange={(v) => update("pvRaccordementAerien", v)} />
+          </div>
 
-        <h3 className="font-semibold text-lime-600 mb-2">Documents</h3>
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Devis signé" checked={formDossier.pvDocDevisSigne} onChange={(v) => update("pvDocDevisSigne", v)} />
-          <CheckboxField label="Pouvoir" checked={formDossier.pvDocPouvoir} onChange={(v) => update("pvDocPouvoir", v)} />
-          <CheckboxField label="Taxe foncière" checked={formDossier.pvDocTaxeFonciere} onChange={(v) => update("pvDocTaxeFonciere", v)} />
-          <CheckboxField label="Facture EDF" checked={formDossier.pvDocFactureEdf} onChange={(v) => update("pvDocFactureEdf", v)} />
-          <CheckboxField label="Parcelle" checked={formDossier.pvDocParcelle} onChange={(v) => update("pvDocParcelle", v)} />
-        </div>
+          <h3 className="font-semibold text-lime-600 mb-2">Documents</h3>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Devis signé" checked={formDossier.pvDocDevisSigne} onChange={(v) => update("pvDocDevisSigne", v)} />
+            <CheckboxField label="Pouvoir" checked={formDossier.pvDocPouvoir} onChange={(v) => update("pvDocPouvoir", v)} />
+            <CheckboxField label="Taxe foncière" checked={formDossier.pvDocTaxeFonciere} onChange={(v) => update("pvDocTaxeFonciere", v)} />
+            <CheckboxField label="Facture EDF" checked={formDossier.pvDocFactureEdf} onChange={(v) => update("pvDocFactureEdf", v)} />
+            <CheckboxField label="Parcelle" checked={formDossier.pvDocParcelle} onChange={(v) => update("pvDocParcelle", v)} />
+          </div>
 
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Si + de 4m : Nacelle" checked={formDossier.pvNacellePlus4m} onChange={(v) => update("pvNacellePlus4m", v)} />
-        </div>
-        <div className="text-red-500">
-          Panneau SSC Taille : 2,38 x 1,06 m
-        </div>
-        <div className="text-red-500">
-          Ballon SSC : 80 cm diamètre, hauteur 1,8m
-        </div>
-      </SectionCard>
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Si + de 4m : Nacelle" checked={formDossier.pvNacellePlus4m} onChange={(v) => update("pvNacellePlus4m", v)} />
+          </div>
+          <div className="text-red-500">
+            Panneau SSC Taille : 2,38 x 1,06 m
+          </div>
+          <div className="text-red-500">
+            Ballon SSC : 80 cm diamètre, hauteur 1,8m
+          </div>
+        </SectionCard>
+      }
 
       {/* RADIATEURS */}
       <SectionCard title="Radiateurs">

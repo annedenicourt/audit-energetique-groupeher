@@ -47,7 +47,7 @@ const REQUIRED_FIELDS: { step: number; stepLabel: string; fields: { key: string;
     {
       key: "selectedSections",
       path: "dimensionnement.selectedSections",
-      label: "Au moins un produit sélectionné"
+      label: "Sélectionner au moins un produit"
     }
   ],
 },
@@ -83,6 +83,28 @@ const hasAtLeastOneScenario = (scenarios): boolean => {
   );
 };
 
+const DIMENSIONNEMENT_REQUIRED_AT_LEAST_ONE = [
+  "dimensionnementPACairair",
+  "dimensionnementPACaireau",
+  "dimensionnementPoele",
+  "dimensionnementComblesPerdus",
+  "dimensionnementRampants",
+  "dimensionnementFenetres",
+  "quantiteVolets",
+  "dimensionnementThermodynamique",
+  "dimensionnementECSSolaire",
+  "dimensionnementSSC",
+  "dimensionnementMultiplus",
+  "puissancePVRecommandee",
+  "resultatRevolt",
+];
+
+const hasAtLeastOneSelectedSection = (selectedSections: unknown): boolean => {
+  if (!selectedSections || typeof selectedSections !== "object") return false;
+
+  return Object.values(selectedSections).some(Boolean);
+};
+
 export const validateSimulationForm = (): MissingField[] => {
   const stored = localStorage.getItem("simulation_form");
 
@@ -97,10 +119,12 @@ export const validateSimulationForm = (): MissingField[] => {
     section.fields
       .filter(field => {
         const val = getValue(data, field.path);
-
         // cas spécial scenarios
         if (field.key === "scenarios") {
           return !hasAtLeastOneScenario(val);
+        }
+        if (field.key === "selectedSections") {
+          return !hasAtLeastOneSelectedSection(val);
         }
 
         return val === undefined || val === null || val === "";

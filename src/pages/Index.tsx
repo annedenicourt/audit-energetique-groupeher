@@ -290,7 +290,7 @@ const Index: React.FC = () => {
       case 9:
         return <StepFinancement data={formData.financement} onChange={updateFinancement} economiesMensuellesMoyennes={formData.exponentiel.economiesMensuellesMoyennes} aidesMaPrimeRenov={formData.aides.maPrimeRenov} aidesCEE={formData.aides.primeCEE} economiesPremiereAnne={formData.exponentiel.economiesPremiereAnne} economies10eAnnee={formData.exponentiel.economies10eAnnee} />;
       case 10:
-        return <StepAvis data={formData.aides} onChange={updateAides} />;
+        return <StepAvis data={formData.aides} onChange={updateAides} accompagnateur={formData.client.accompagnateur} />;
       case 11:
         return <StepDossier simulData={formData} />;
       default:

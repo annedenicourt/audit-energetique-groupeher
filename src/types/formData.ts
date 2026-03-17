@@ -142,8 +142,8 @@
   | "ecsSolaire"
   | "ssc"
   | "photovoltaique"
-  | "comblesPerdus"
-  | "rampants"
+  | "isolation"
+  | "ite"
   | "menuiseries"
   | "autreProduit";
 
@@ -326,8 +326,8 @@
       ecsSolaire: false,
       ssc: false,
       photovoltaique: false,
-      comblesPerdus: false,
-      rampants: false,
+      isolation: false,
+      ite: false,
       menuiseries: false,
       autreProduit: false,
     },

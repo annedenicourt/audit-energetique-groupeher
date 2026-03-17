@@ -18,14 +18,6 @@ const PreviewCommercial: React.FC<PreviwCommercialProps> = ({ data, downloadPdf,
         <div className="mr-6 text-2xl font-display font-bold text-foreground">
           Infos Simulateur
         </div>
-        {/* <button
-          className="nav-button nav-button--primary px-6"
-          disabled={isSaving}
-          onClick={() => { requestAnimationFrame(() => downloadPdf()); }}
-        >
-          <FileCheck className="w-5 h-5" />
-          {isSaving ? "Sauvegarde en cours…" : "Valider et sauvegarder les données"}
-        </button> */}
       </div>
       <div className="pdf-commercial-visible">
         <PdfContentCommercial data={data} />

@@ -93,33 +93,36 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         showCheckbox
         checkboxChecked={data.selectedSections?.pacAirEau}
         onCheckboxChange={(checked) => updateSelectedSection("pacAirEau", checked)}
-        checkboxLabel="Inclure"
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+        {data.selectedSections?.pacAirEau &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1n2Jbxya4hiUhaFDjFeZlbti1onKemoLo"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementPACaireau"
+              value={data.dimensionnementPACaireau}
+              onChange={(v) => onChange("dimensionnementPACaireau", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementPACaireau"
-          value={data.dimensionnementPACaireau}
-          onChange={(v) => onChange("dimensionnementPACaireau", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
       </SectionCard>
 
       {/* Dimensionnement pac air-air */}
@@ -128,32 +131,39 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         icon={Thermometer}
         link={["https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o"]}
         textLink={["Dimensionnement PAC air-air"]}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.pacAirAir}
+        onCheckboxChange={(checked) => updateSelectedSection("pacAirAir", checked)}
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+        {data.selectedSections?.pacAirAir &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1najEkUvKQOARVl5VdSuTJGjUy0SDDirm"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementPACairair"
+              value={data.dimensionnementPACairair}
+              onChange={(v) => onChange("dimensionnementPACairair", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementPACairair"
-          value={data.dimensionnementPACairair}
-          onChange={(v) => onChange("dimensionnementPACairair", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
       </SectionCard>
 
       {/* Dimensionnement multi+ */}
@@ -162,32 +172,39 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         icon={Thermometer}
         link={["https://drive.google.com/drive/folders/1X4BQvAhTwJ96eitthgExWrJQFCX2LD6o"]}
         textLink={["Dimensionnement Multi +"]}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.multiplus}
+        onCheckboxChange={(checked) => updateSelectedSection("multiplus", checked)}
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+        {data.selectedSections?.multiplus &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1PFy6qJAfBNBHT8JB9NZpQ6m86Tpg8-Cx"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementMultiplus"
+              value={data.dimensionnementMultiplus}
+              onChange={(v) => onChange("dimensionnementMultiplus", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementMultiplus"
-          value={data.dimensionnementMultiplus}
-          onChange={(v) => onChange("dimensionnementMultiplus", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
       </SectionCard>
       {/* Dimensionnement poele */}
       <SectionCard
@@ -195,119 +212,160 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         icon={Flame}
         link={["https://drive.google.com/drive/folders/1UZs1ZzAUtGprJXfS2I6poBCfQZh4hS-y"]}
         textLink={["Dimensionnement poêle"]}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.poele}
+        onCheckboxChange={(checked) => updateSelectedSection("poele", checked)}
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+        {data.selectedSections?.poele &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1b981tKniOLV9lfhhKieBz5fZSknYZfNk"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementPoele"
+              value={data.dimensionnementPoele}
+              onChange={(v) => onChange("dimensionnementPoele", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementPoele"
-          value={data.dimensionnementPoele}
-          onChange={(v) => onChange("dimensionnementPoele", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
+
       </SectionCard>
 
       {/* Dimensionnement chauffe-eau thermodynamique */}
-      <SectionCard title="Chauffe-eau thermodynamique (ECS)" icon={Droplets}>
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/10-H63QvaNOOqVufBMXwN50v-vgM26qlR"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+      <SectionCard
+        title="Chauffe-eau thermodynamique (ECS)"
+        icon={Droplets}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.thermodynamique}
+        onCheckboxChange={(checked) => updateSelectedSection("thermodynamique", checked)}
+      >
+        {data.selectedSections?.thermodynamique &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/10-H63QvaNOOqVufBMXwN50v-vgM26qlR"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementThermodynamique"
+              value={data.dimensionnementThermodynamique}
+              onChange={(v) => onChange("dimensionnementThermodynamique", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementThermodynamique"
-          value={data.dimensionnementThermodynamique}
-          onChange={(v) => onChange("dimensionnementThermodynamique", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
+
       </SectionCard>
 
       {/* Dimensionnement chauffe-eau solaire */}
-      <SectionCard title="Chauffe-eau solaire (ECS)" icon={Droplets}>
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+      <SectionCard
+        title="Chauffe-eau solaire (ECS)"
+        icon={Droplets}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.ecsSolaire}
+        onCheckboxChange={(checked) => updateSelectedSection("ecsSolaire", checked)}
+      >
+        {data.selectedSections?.ecsSolaire &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1qEKl9isVVUNuJ8LkN4jTVNHNH1j6_mfF"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementECSSolaire"
+              value={data.dimensionnementECSSolaire}
+              onChange={(v) => onChange("dimensionnementECSSolaire", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementECSSolaire"
-          value={data.dimensionnementECSSolaire}
-          onChange={(v) => onChange("dimensionnementECSSolaire", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
+
       </SectionCard>
 
       {/* Dimensionnement SSC */}
-      <SectionCard title="Système Solaire Combiné (SSC)" icon={Sun}>
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+      <SectionCard
+        title="Système Solaire Combiné (SSC)"
+        icon={Sun}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.ssc}
+        onCheckboxChange={(checked) => updateSelectedSection("ssc", checked)}
+      >
+        {data.selectedSections?.ssc &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1nuHsX7-y1rZ4XfcY3CBuiW6xXGwupeY1"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <FormInput
+              label="Modèle recommandé"
+              name="dimensionnementSSC"
+              value={data.dimensionnementSSC}
+              onChange={(v) => onChange("dimensionnementSSC", v)}
+              type="text"
+              placeholder=""
+              suffix=""
+            />
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <FormInput
-          label="Modèle recommandé"
-          name="dimensionnementSSC"
-          value={data.dimensionnementSSC}
-          onChange={(v) => onChange("dimensionnementSSC", v)}
-          type="text"
-          placeholder=""
-          suffix=""
-        />
+        }
+
       </SectionCard>
 
       {/* Dimensionnement solaire */}
@@ -316,262 +374,299 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
         icon={Sun}
         link={["https://app.revolt.eco/groupe-her-enr/projects"]}
         textLink={["Dimensionnement solaire REVOLT"]}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.photovoltaique}
+        onCheckboxChange={(checked) => updateSelectedSection("photovoltaique", checked)}
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
+        {data.selectedSections?.photovoltaique &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/10-Sj0DgI11TyJw3UgjFMjlxDd7L8kY8X"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
+              </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <FormInput
+                label="Consommation électrique annuelle"
+                name="consommationPVElecAnnuelle"
+                value={data.consommationPVElecAnnuelle}
+                onChange={(v) => onChange("consommationPVElecAnnuelle", v)}
+                type="number"
+                placeholder="0"
+                suffix="kW/an"
+              />
+              <FormInput
+                label="Puissance PV recommandée"
+                name="puissancePVRecommandee"
+                value={data.puissancePVRecommandee}
+                onChange={(v) => onChange("puissancePVRecommandee", v)}
+                type="number"
+                placeholder="0"
+                suffix="kWc"
+              />
+              <FormInput
+                label="Production PV estimée"
+                name="productionPVEstimee"
+                value={data.productionPVEstimee}
+                onChange={(v) => onChange("productionPVEstimee", v)}
+                type="number"
+                placeholder="0"
+                suffix="kW/an"
+              />
+              <FormInput
+                label="Puissance batterie physique recommandée"
+                name="batteriePhysiqueReco"
+                value={data.batteriePhysiqueReco}
+                onChange={(v) => onChange("batteriePhysiqueReco", v)}
+                type="text"
+                placeholder="0"
+                suffix="kW"
+              />
+              <FormInput
+                label="Puissance batterie virtuelle recommandée"
+                name="batterieVirtuelleReco"
+                value={data.batterieVirtuelleReco}
+                onChange={(v) => onChange("batterieVirtuelleReco", v)}
+                type="text"
+                placeholder="0"
+                suffix="kW/mois"
+              />
+            </div>
           </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* <FormInput
-            label="Résultat REVOLT"
-            name="resultatRevolt"
-            value={data.resultatRevolt}
-            onChange={(v) => onChange("resultatRevolt", v)}
-            type="text"
-            placeholder="0"
-          /> */}
-          <FormInput
-            label="Consommation électrique annuelle"
-            name="consommationPVElecAnnuelle"
-            value={data.consommationPVElecAnnuelle}
-            onChange={(v) => onChange("consommationPVElecAnnuelle", v)}
-            type="number"
-            placeholder="0"
-            suffix="kW/an"
-          />
-          <FormInput
-            label="Puissance PV recommandée"
-            name="puissancePVRecommandee"
-            value={data.puissancePVRecommandee}
-            onChange={(v) => onChange("puissancePVRecommandee", v)}
-            type="number"
-            placeholder="0"
-            suffix="kWc"
-          />
-          <FormInput
-            label="Production PV estimée"
-            name="productionPVEstimee"
-            value={data.productionPVEstimee}
-            onChange={(v) => onChange("productionPVEstimee", v)}
-            type="number"
-            placeholder="0"
-            suffix="kW/an"
-          />
-          <FormInput
-            label="Puissance batterie physique recommandée"
-            name="batteriePhysiqueReco"
-            value={data.batteriePhysiqueReco}
-            onChange={(v) => onChange("batteriePhysiqueReco", v)}
-            type="text"
-            placeholder="0"
-            suffix="kW"
-          />
-          <FormInput
-            label="Puissance batterie virtuelle recommandée"
-            name="batterieVirtuelleReco"
-            value={data.batterieVirtuelleReco}
-            onChange={(v) => onChange("batterieVirtuelleReco", v)}
-            type="text"
-            placeholder="0"
-            suffix="kW/mois"
-          />
-        </div>
+        }
+
       </SectionCard>
 
       {/* Dimensionnement Isolation */}
-      <SectionCard title="Isolation" icon={Thermometer}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormInput
-            label="Combles perdus (surface mesurée en m2)"
-            name="dimensionnementComblesPerdus"
-            value={data.dimensionnementComblesPerdus}
-            onChange={(v) => onChange("dimensionnementComblesPerdus", v)}
-            type="number"
-            placeholder=""
-            suffix="m2"
-          />
-          <FormInput
-            label="Sous-rampants (surface mesurée en m2)"
-            name="dimensionnementRampants"
-            value={data.dimensionnementRampants}
-            onChange={(v) => onChange("dimensionnementRampants", v)}
-            type="number"
-            placeholder=""
-            suffix="m2"
-          />
-        </div>
+      <SectionCard
+        title="Isolation"
+        icon={Thermometer}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.isolation}
+        onCheckboxChange={(checked) => updateSelectedSection("isolation", checked)}
+      >
+        {data.selectedSections?.isolation &&
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormInput
+              label="Combles perdus (surface mesurée en m2)"
+              name="dimensionnementComblesPerdus"
+              value={data.dimensionnementComblesPerdus}
+              onChange={(v) => onChange("dimensionnementComblesPerdus", v)}
+              type="number"
+              placeholder=""
+              suffix="m2"
+            />
+            <FormInput
+              label="Sous-rampants (surface mesurée en m2)"
+              name="dimensionnementRampants"
+              value={data.dimensionnementRampants}
+              onChange={(v) => onChange("dimensionnementRampants", v)}
+              type="number"
+              placeholder=""
+              suffix="m2"
+            />
+          </div>
+        }
+
       </SectionCard>
 
       {/* Dimensionnement ITE */}
       <SectionCard
         title="Isolation des murs par l'extérieur"
         icon={Thermometer}
-      /* link={["https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"]}
-      textLink={["Voir produits"]} */
+        /* link={["https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"]}
+        textLink={["Voir produits"]} */
+        showCheckbox
+        checkboxChecked={data.selectedSections?.ite}
+        onCheckboxChange={(checked) => updateSelectedSection("ite", checked)}
       >
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
-          </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <div>Faire photos et plans de façade pour devis R2</div>
-        {/* Illustrations */}
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-          {images.map((img, idx) => (
-            <div
-              key={`${img.src}-${idx}`}
-              className="border border-slate-200 rounded-lg overflow-hidden transition-transform duration-300 ease-out hover:scale-105"
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedImage(img);
-                  setIsModalOpen(true);
-                }}
-                className="block w-full"
-                title="Cliquer pour agrandir"
-              >
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="w-full h-40 object-cover"
-                  loading="lazy"
-                />
-              </button>
-              <div className="p-2 text-xs text-center text-muted-foreground">
-                {img.caption}
+        {data.selectedSections?.ite &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1NEX9Sl43vbTRJDb5LPfxWcH236_YeSr-"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
               </div>
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
+              </button>
             </div>
-          ))}
-        </div>
+            <div>Faire photos et plans de façade pour devis R2</div>
+            {/* Illustrations */}
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {images.map((img, idx) => (
+                <div
+                  key={`${img.src}-${idx}`}
+                  className="border border-slate-200 rounded-lg overflow-hidden transition-transform duration-300 ease-out hover:scale-105"
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage(img);
+                      setIsModalOpen(true);
+                    }}
+                    className="block w-full"
+                    title="Cliquer pour agrandir"
+                  >
+                    <img
+                      src={img.src}
+                      alt={img.alt}
+                      className="w-full h-40 object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                  <div className="p-2 text-xs text-center text-muted-foreground">
+                    {img.caption}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        }
+
       </SectionCard>
 
 
       {/* Menuiseries */}
-      <SectionCard title="Menuiseries (présenter l'échantillon)" icon={Grid2x2}>
-        <div className="mb-4 flex gap-x-2">
-          <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
-            <a
-              href="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-"
-              target="_blank"
-              className="flex flex-row items-center text-xs"
-            >
-              Voir produits
-              <SquareArrowOutUpRight size={20} className="ml-1" />
-            </a>
-          </div>
-          <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
-            <CircleAlert size={15} />
-            Fiche produit, RGE et décennale à transmettre au client
-          </button>
-        </div>
-        <div className="p-3 space-y-2">
-          <div className="grid grid-rows-2 grid-flow-col gap-4">
-            <div className="col-span-2">
-              <div className=" font-semibold">Menuiseries</div>
-              <div className="grid grid-cols-2 gap-2">
-                <div className="form-field">
-                  <FormInput
-                    label="Quantité"
-                    name="quantiteMenuiseries"
-                    value={fenetres[0].quantite}
-                    onChange={(value) => updateFenetre(0, "quantite", value)}
-                    type="number"
-                    min="0"
-                  />
-                </div>
-                <div className="form-field">
-                  <label className="form-label">Matière</label>
-                  <select
-                    value={fenetres[0].matiere}
-                    onChange={(e) => updateFenetre(0, "matiere", e.target.value)}
-                    className="form-select"
-                  >
-                    <option value="">Sélectionner</option>
-                    {fenetreMatiereOptions.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+      <SectionCard
+        title="Menuiseries (présenter l'échantillon)"
+        icon={Grid2x2}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.menuiseries}
+        onCheckboxChange={(checked) => updateSelectedSection("menuiseries", checked)}
+      >
+        {data.selectedSections?.menuiseries &&
+          <div>
+            <div className="mb-4 flex gap-x-2">
+              <div className="w-fit py-1 px-2 flex items-center justify-center bg-primary font-bold text-white border rounded-md">
+                <a
+                  href="https://drive.google.com/drive/folders/1o4fsS_9WEmZKH4WPurk7iFENORgj4Bx-"
+                  target="_blank"
+                  className="flex flex-row items-center text-xs"
+                >
+                  Voir produits
+                  <SquareArrowOutUpRight size={20} className="ml-1" />
+                </a>
               </div>
-            </div>
-            <div className="row-span-2 col-span-1">
-              <div>
-                <div className=" font-semibold">Volets roulants</div>
-                <div className="form-field">
-                  <FormInput
-                    label="Quantité"
-                    name="quantiteVolets"
-                    value={data.quantiteVolets}
-                    onChange={(v) => onChange("quantiteVolets", v)}
-                    type="number"
-                    min="0"
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="row-span-3">
-              <div className="-mt-4 mb-4 text-sm text-center">Arguments OKNOPLAST</div>
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedImage({
-                    src: "/images/Argument fenêtre oknoplast.jpg",
-                    alt: "arguments Oknoplast",
-                    caption: "Arguments Oknoplast",
-                  });
-                  setIsModalOpen(true);
-                }}
-                title="Cliquer pour agrandir"
-                className="block w-full"
-              >
-                <img
-                  src="/images/Argument fenêtre oknoplast.jpg"
-                  alt="arguments Oknoplast"
-                  className="w-full h-40 md:h-56 object-contain"
-                  loading="lazy"
-                />
+              <button className="py-1 px-2 flex items-center font-semibold text-xs text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Fiche produit, RGE et décennale à transmettre au client
               </button>
             </div>
+            <div className="p-3 space-y-2">
+              <div className="grid grid-rows-2 grid-flow-col gap-4">
+                <div className="col-span-2">
+                  <div className=" font-semibold">Menuiseries</div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="form-field">
+                      <FormInput
+                        label="Quantité"
+                        name="quantiteMenuiseries"
+                        value={fenetres[0].quantite}
+                        onChange={(value) => updateFenetre(0, "quantite", value)}
+                        type="number"
+                        min="0"
+                      />
+                    </div>
+                    <div className="form-field">
+                      <label className="form-label">Matière</label>
+                      <select
+                        value={fenetres[0].matiere}
+                        onChange={(e) => updateFenetre(0, "matiere", e.target.value)}
+                        className="form-select"
+                      >
+                        <option value="">Sélectionner</option>
+                        {fenetreMatiereOptions.map((option) => (
+                          <option key={option.value} value={option.value}>
+                            {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="row-span-2 col-span-1">
+                  <div>
+                    <div className=" font-semibold">Volets roulants</div>
+                    <div className="form-field">
+                      <FormInput
+                        label="Quantité"
+                        name="quantiteVolets"
+                        value={data.quantiteVolets}
+                        onChange={(v) => onChange("quantiteVolets", v)}
+                        type="number"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="row-span-3">
+                  <div className="-mt-4 mb-4 text-sm text-center">Arguments OKNOPLAST</div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedImage({
+                        src: "/images/Argument fenêtre oknoplast.jpg",
+                        alt: "arguments Oknoplast",
+                        caption: "Arguments Oknoplast",
+                      });
+                      setIsModalOpen(true);
+                    }}
+                    title="Cliquer pour agrandir"
+                    className="block w-full"
+                  >
+                    <img
+                      src="/images/Argument fenêtre oknoplast.jpg"
+                      alt="arguments Oknoplast"
+                      className="w-full h-40 md:h-56 object-contain"
+                      loading="lazy"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        }
+
       </SectionCard>
 
       {/* Autres produits */}
-      <SectionCard title="Autre produit" icon={Grid2x2}>
-        <div className="mb-4">
-          <FormInput
-            label="Détails"
-            name="detailsAutreProduit"
-            value={data.dimmensionnementAutreProduit}
-            onChange={(v) => onChange("dimmensionnementAutreProduit", v)}
-          />
-        </div>
+      <SectionCard
+        title="Autre produit"
+        icon={Grid2x2}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.autreProduit}
+        onCheckboxChange={(checked) => updateSelectedSection("autreProduit", checked)}
+      >
+        {data.selectedSections?.autreProduit &&
+          <div className="mb-4">
+            <FormInput
+              label="Détails"
+              name="detailsAutreProduit"
+              value={data.dimmensionnementAutreProduit}
+              onChange={(v) => onChange("dimmensionnementAutreProduit", v)}
+            />
+          </div>
+        }
+
       </SectionCard>
 
       <AppModal
