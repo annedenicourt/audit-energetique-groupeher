@@ -159,6 +159,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <CheckboxField label="Financement" checked={formDossier.reglementFinancement} onChange={(v) => update("reglementFinancement", v)} />
           <CheckboxField label="PTZ" checked={formDossier.reglementPTZ} onChange={(v) => update("reglementPTZ", v)} />
         </div>
+        {groupErrors.reglement && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((g) => g.key === "reglement")?.message}
+          </p>
+        )}
       </SectionCard>
 
       {/* DOSSIER DE PRIME */}
@@ -168,6 +174,13 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <CheckboxField label="Propriétaire bailleur" checked={formDossier.proprietaireBailleur} onChange={(v) => update("proprietaireBailleur", v)} />
           <CheckboxField label="Résid. secondaire" checked={formDossier.residSecondaire} onChange={(v) => update("residSecondaire", v)} />
           <CheckboxField label="SCI" checked={formDossier.sci} onChange={(v) => update("sci", v)} />
+        </div>
+        {groupErrors.dossierPrime && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((g) => g.key === "dossierPrime")?.message}
+          </p>
+        )}
         </div>
       </SectionCard>
 
