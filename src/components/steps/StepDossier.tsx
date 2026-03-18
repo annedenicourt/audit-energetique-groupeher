@@ -14,6 +14,7 @@ import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import FormTextarea from "../FormTextarea";
 import { OUI_NON, MATERIAUX_RADIATEUR } from "@/utils/handleForm";
+import { useDossierValidation, REQUIRED_GROUPS } from "@/hooks/useDossierValidation";
 
 
 interface CheckboxFieldProps {
