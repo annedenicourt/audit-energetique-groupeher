@@ -181,7 +181,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             {REQUIRED_GROUPS.find((g) => g.key === "dossierPrime")?.message}
           </p>
         )}
-        </div>
       </SectionCard>
 
       {/* PIECES CHECKLITS*/}
