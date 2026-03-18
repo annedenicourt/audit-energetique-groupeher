@@ -37,9 +37,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange 
 
 interface StepDossierProps {
   simulData: FormData;
+  onValidationChange?: (isValid: boolean) => void;
 }
 
-const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
+const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange }) => {
   const STORAGE_KEY = "dossier_form";
 
   const [formDossier, setForm] = useState<DossierFormData>(() => {
