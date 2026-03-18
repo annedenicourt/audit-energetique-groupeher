@@ -46,6 +46,7 @@ const Index: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [missingFields, setMissingFields] = useState<MissingField[]>([]);
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const [isStepDossierValid, setIsStepDossierValid] = useState(false);
 
   useEffect(() => {
     const stepLocation = location.state?.step;
@@ -292,7 +293,7 @@ const Index: React.FC = () => {
       case 10:
         return <StepAvis data={formData.aides} onChange={updateAides} accompagnateur={formData.client.accompagnateur} />;
       case 11:
-        return <StepDossier simulData={formData} />;
+        return <StepDossier simulData={formData} onValidationChange={setIsStepDossierValid} />;
       default:
         return null;
     }

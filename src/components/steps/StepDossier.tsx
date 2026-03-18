@@ -14,6 +14,7 @@ import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import FormTextarea from "../FormTextarea";
 import { OUI_NON, MATERIAUX_RADIATEUR } from "@/utils/handleForm";
+import { useDossierValidation, REQUIRED_GROUPS } from "@/hooks/useDossierValidation";
 
 
 interface CheckboxFieldProps {
@@ -36,9 +37,10 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange 
 
 interface StepDossierProps {
   simulData: FormData;
+  onValidationChange?: (isValid: boolean) => void;
 }
 
-const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
+const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange }) => {
   const STORAGE_KEY = "dossier_form";
 
   const [formDossier, setForm] = useState<DossierFormData>(() => {
@@ -75,6 +77,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formDossier));
   }, [formDossier]);
+
+  const { groupErrors, isStepDossierValid } = useDossierValidation(formDossier);
+
+  useEffect(() => {
+    onValidationChange?.(isStepDossierValid);
+  }, [isStepDossierValid, onValidationChange]);
 
   const update = useCallback(<K extends keyof DossierFormData>(field: K, value: DossierFormData[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -151,6 +159,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
           <CheckboxField label="Financement" checked={formDossier.reglementFinancement} onChange={(v) => update("reglementFinancement", v)} />
           <CheckboxField label="PTZ" checked={formDossier.reglementPTZ} onChange={(v) => update("reglementPTZ", v)} />
         </div>
+        {groupErrors.reglement && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((g) => g.key === "reglement")?.message}
+          </p>
+        )}
       </SectionCard>
 
       {/* DOSSIER DE PRIME */}
@@ -161,6 +175,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData }) => {
           <CheckboxField label="Résid. secondaire" checked={formDossier.residSecondaire} onChange={(v) => update("residSecondaire", v)} />
           <CheckboxField label="SCI" checked={formDossier.sci} onChange={(v) => update("sci", v)} />
         </div>
+        {groupErrors.dossierPrime && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((g) => g.key === "dossierPrime")?.message}
+          </p>
+        )}
       </SectionCard>
 
       {/* PIECES CHECKLITS*/}
