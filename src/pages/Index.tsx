@@ -46,6 +46,7 @@ const Index: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [missingFields, setMissingFields] = useState<MissingField[]>([]);
   const [showMissingModal, setShowMissingModal] = useState(false);
+  const [isStepDossierValid, setIsStepDossierValid] = useState(false);
 
   useEffect(() => {
     const stepLocation = location.state?.step;
