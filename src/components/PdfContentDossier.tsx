@@ -6,7 +6,7 @@ import { DossierFormData } from "@/types/dossierFormData";
 
 interface PdfContentCommercialProps {
   data: DossierFormData;
-  selectedOptions: SelectedDimensionnementSections
+  selectedOptions?: SelectedDimensionnementSections
 }
 
 // Composant pour afficher une ligne de résumé
