@@ -78,6 +78,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formDossier));
   }, [formDossier]);
 
+  const { groupErrors, isStepDossierValid } = useDossierValidation(formDossier);
+
+  useEffect(() => {
+    onValidationChange?.(isStepDossierValid);
+  }, [isStepDossierValid, onValidationChange]);
+
   const update = useCallback(<K extends keyof DossierFormData>(field: K, value: DossierFormData[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   }, []);
