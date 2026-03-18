@@ -293,7 +293,7 @@ const Index: React.FC = () => {
       case 10:
         return <StepAvis data={formData.aides} onChange={updateAides} accompagnateur={formData.client.accompagnateur} />;
       case 11:
-        return <StepDossier simulData={formData} />;
+        return <StepDossier simulData={formData} onValidationChange={setIsStepDossierValid} />;
       default:
         return null;
     }
