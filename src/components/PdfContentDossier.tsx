@@ -93,12 +93,12 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
               <SummaryRow label="2 derniers avis d'impôts" value={data.deuxDerniersAvisImpots ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Taxe foncière ou acte notarié" value={data.taxeFonciereActeNotarie ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Identité numérique si compte MPR bloqué" value={data.idNumerique ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Identité numérique" value={data.idNumerique ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Attestation indivisionnaire si 2 proprios" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Attestation indivisionnaire" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Attestation bailleur" value={data.attestationProprietaireBailleur ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Note de dimensionnement" value={data.noteDimensionnement ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Étude solaire Revolt" value={data.revolt ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Revolt" value={data.revolt ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Pouvoir" value={data.pouvoir ? DisplayTrue : DisplayFalse} />
             </div>
           </SectionCard>

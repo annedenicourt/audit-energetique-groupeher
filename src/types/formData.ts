@@ -145,7 +145,6 @@
   | "isolation"
   | "ite"
   | "menuiseries"
-  | "vmc"
   | "autreProduit";
 
  export type SelectedDimensionnementSections = Record<DimensionnementSectionKey, boolean>;
@@ -171,12 +170,9 @@
   // Isolation
   dimensionnementComblesPerdus: string;
   dimensionnementRampants: string;
-  dimensionnementPlancherBas: string;
   // Fenêtres / Menuiseries
   dimensionnementFenetres: FenetreData[];
   quantiteVolets: string;
-  // VMC
-  dimensionnementVMC: string,
   // Autre produit
   dimmensionnementAutreProduit: string;
 }
@@ -333,7 +329,6 @@
       isolation: false,
       ite: false,
       menuiseries: false,
-      vmc: false,
       autreProduit: false,
     },
 
@@ -354,12 +349,10 @@
 
   dimensionnementComblesPerdus: "",
   dimensionnementRampants: "",
-  dimensionnementPlancherBas:"",
 
   dimensionnementFenetres: [{ quantite: "", type: "", ouverture: "", matiere: "" }],
   quantiteVolets:"",
 
-  dimensionnementVMC: "",
   dimmensionnementAutreProduit: "",
 },
 

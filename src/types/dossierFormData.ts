@@ -18,11 +18,6 @@ export interface DossierFormData {
   // 1) DOSSIER DE LIAISON
   conseiller: string;
   perso: boolean;
-  parrain: boolean;
-  t1: boolean;
-  t2: boolean;
-  t3: boolean;
-  lead: boolean;
   nomClient: string;
   telephone: string;
   adresseFiscale: string;
@@ -250,11 +245,6 @@ export const defaultRadiateur: RadiateurData = {
 export const defaultDossierFormData: DossierFormData = {
   conseiller: "",
   perso: false,
-  parrain: false,
-  t1: false,
-  t2: false,
-  t3: false,
-  lead: false,
   nomClient: "",
   telephone: "",
   adresseFiscale: "",

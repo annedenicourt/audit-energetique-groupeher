@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { DossierFormData } from "@/types/dossierFormData";
+import { FormData } from "@/types/formData";
 
-/**
- * Configuration d'un groupe de checkboxes requis.
- * Pour ajouter un nouveau groupe, il suffit d'ajouter une entrée ici.
- */
+// ── Groupes de checkboxes (au moins une cochée) ──
+
 interface RequiredGroup {
   key: string;
   label: string;
@@ -17,79 +16,127 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     key: "reglement",
     label: "Règlement",
     fields: ["reglementCheque", "reglementFinancement", "reglementPTZ"],
-    message: "Veuillez sélectionner au moins un mode de règlement",
+    message: "Veuillez sélectionner au moins un mode de règlement.",
   },
   {
     key: "dossierPrime",
     label: "Dossier de prime",
     fields: ["proprietaireOccupant", "proprietaireBailleur", "residSecondaire", "sci"],
-    message: "Veuillez sélectionner au moins un statut de propriétaire",
-  },
-  /* {
-    key: "elementsObligatoires",
-    label: "Éléments obligatoires",
-    fields: ["devisNonSigne", "devisSigne"],
-    message: "Il manque des pièces au dossier",
-  }, */
-  {
-    key: "structure",
-    label: "Structure Maison",
-    fields: ["plainPied", "etages", "sousSol", "videSanitaire"],
-    message: "Veuillez choisir au moins une option",
-  },
-  {
-    key: "combles",
-    label: "Combles",
-    fields: ["comblePerdu", "combleAmenage"],
-    message: "Veuillez choisir au moins une option",
-  },
-  {
-    key: "planchers",
-    label: "Planchers",
-    fields: ["plancherBois", "plancherPlaco", "plancherHourdis"],
-    message: "Veuillez choisir au moins une option",
-  },
-  {
-    key: "chauffage",
-    label: "Chauffage",
-    fields: ["chauffageFioul", "chauffageGaz", "chauffageRadiateursElec", "chauffageBois","chauffageAutre"],
-    message: "Veuillez choisir au moins une option",
-  },
-  
-  {
-    key: "dossierFinancement",
-    label: "Dossier de financement",
-    fields: ["justificatifDomicile", "bulletinsSalaires", "bilanEntrepreneur"],
-    message: "Veuillez sélectionner au moins une option",
+    message: "Veuillez sélectionner au moins un statut de propriétaire.",
   },
 ];
-  
 
-export interface DossierGroupErrors {
-  [groupKey: string]: boolean; // true = erreur (aucune case cochée)
+// ── Champs individuels conditionnels ──
+
+export interface ConditionalField {
+  key: keyof DossierFormData;
+  label: string;
+  isRequired: (form: DossierFormData, simul: FormData | null) => boolean;
 }
 
-export function useDossierValidation(formDossier: DossierFormData) {
-  const { groupErrors, isStepDossierValid } = useMemo(() => {
-    const errors: DossierGroupErrors = {};
+const isMprNotEmpty = (form: DossierFormData) => {
+  const v = form.montantPrimeRenov;
+  return v !== "" && v !== null && v !== undefined;
+};
 
-    /* for (const group of REQUIRED_GROUPS) {
-      const hasAtLeastOne = group.fields.some(
-        (field) => formDossier[field] === true
-      );
-      errors[group.key] = !hasAtLeastOne;
-    } */
-    REQUIRED_GROUPS.forEach((group)=> {
-      const hasAtLeastOne = group.fields.some(
-        (field) => formDossier[field] === true
-      );
-      errors[group.key] = !hasAtLeastOne;
-    })
+const isMprNotEmptyAndNotZero = (form: DossierFormData) => {
+  return isMprNotEmpty(form) && form.montantPrimeRenov !== "0" && Number(form.montantPrimeRenov) !== 0;
+};
 
-    const isValid = Object.values(errors).every((hasError) => !hasError);
+export const CONDITIONAL_FIELDS: ConditionalField[] = [
+  { key: "devisNonSigne", label: "Devis non signé", isRequired: () => true },
+  { key: "devisSigne", label: "Devis signé", isRequired: () => true },
+  { key: "carteIdentite", label: "Carte d'identité", isRequired: () => true },
+  {
+    key: "deuxDerniersAvisImpots",
+    label: "2 derniers avis d'impôts",
+    isRequired: (form) => isMprNotEmptyAndNotZero(form),
+  },
+  {
+    key: "taxeFonciereActeNotarie",
+    label: "Taxe foncière / acte notarié",
+    isRequired: (form) => isMprNotEmpty(form),
+  },
+  {
+    key: "mandatMaPrimeRenov",
+    label: "Mandat MaPrimeRénov'",
+    isRequired: (form) => isMprNotEmpty(form),
+  },
+  {
+    key: "rib",
+    label: "RIB",
+    isRequired: (form) => isMprNotEmpty(form),
+  },
+  {
+    key: "attestationProprietaireBailleur",
+    label: "Attestation propriétaire bailleur",
+    isRequired: (form) => form.proprietaireBailleur === true && isMprNotEmpty(form),
+  },
+  {
+    key: "attestationFioul",
+    label: "Attestation fioul",
+    isRequired: (_form, simul) => simul?.client?.typeChauffage === "fioul",
+  },
+  {
+    key: "noteDimensionnement",
+    label: "Note de dimensionnement",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.pacAirEau === true,
+  },
+  {
+    key: "revolt",
+    label: "Revolt",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.photovoltaique === true,
+  },
+  {
+    key: "pouvoir",
+    label: "Pouvoir",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
+      simul?.dimensionnement?.selectedSections?.ssc === true,
+  },
+];
 
-    return { groupErrors: errors, isStepDossierValid: isValid };
-  }, [formDossier]);
+// ── Types de retour ──
 
-  return { groupErrors, isStepDossierValid };
+export interface DossierGroupErrors {
+  [groupKey: string]: boolean; // true = erreur
+}
+
+export interface DossierFieldErrors {
+  [fieldKey: string]: boolean; // true = erreur
+}
+
+// ── Hook ──
+
+export function useDossierValidation(
+  formDossier: DossierFormData,
+  simulData?: FormData | null
+) {
+  const { groupErrors, fieldErrors, isStepDossierValid } = useMemo(() => {
+    // Groupes
+    const gErrors: DossierGroupErrors = {};
+    for (const group of REQUIRED_GROUPS) {
+      const hasAtLeastOne = group.fields.some((f) => formDossier[f] === true);
+      gErrors[group.key] = !hasAtLeastOne;
+    }
+
+    // Champs conditionnels
+    const fErrors: DossierFieldErrors = {};
+    for (const cf of CONDITIONAL_FIELDS) {
+      if (cf.isRequired(formDossier, simulData ?? null)) {
+        fErrors[cf.key] = formDossier[cf.key] !== true;
+      }
+    }
+
+    const groupsValid = Object.values(gErrors).every((e) => !e);
+    const fieldsValid = Object.values(fErrors).every((e) => !e);
+
+    return {
+      groupErrors: gErrors,
+      fieldErrors: fErrors,
+      isStepDossierValid: groupsValid && fieldsValid,
+    };
+  }, [formDossier, simulData]);
+
+  return { groupErrors, fieldErrors, isStepDossierValid };
 }
