@@ -21,17 +21,18 @@ interface CheckboxFieldProps {
   label: string;
   checked: boolean;
   onChange: (v: boolean) => void;
+  isMissing?: boolean
 }
 
-const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange }) => (
+const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange, isMissing }) => (
   <label className="flex items-center gap-2 cursor-pointer py-1">
     <input
       type="checkbox"
       checked={checked}
       onChange={(e) => onChange(e.target.checked)}
-      className="w-4 h-4 rounded border-input accent-primary"
+      className={`w-4 h-4 accent-primary ${isMissing && "ring-2 ring-red-500"}`}
     />
-    <span className="text-sm">{label}</span>
+    <span className={`text-sm ${isMissing ? "text-red-500 font-semibold" : ""}`}>{label}</span>
   </label>
 );
 
@@ -78,10 +79,10 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formDossier));
   }, [formDossier]);
 
-  const { groupErrors, isStepDossierValid } = useDossierValidation(formDossier);
-  console.log(groupErrors)
+  const { groupErrors, fieldErrors, isStepDossierValid } = useDossierValidation(formDossier, simulData);
 
-  console.log(isStepDossierValid)
+  //console.log(groupErrors)
+  console.log(fieldErrors)
 
   useEffect(() => {
     onValidationChange?.(isStepDossierValid);
@@ -129,9 +130,13 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     }));
   }, []);
 
-  const displaySection = () => {
-
-    return true;
+  const onlyForElectricProduct = () => {
+    const { pacAirAir, pacAirEau, multiplus, poele, thermodynamique, vmc, photovoltaique, ecsSolaire, ssc } = simulData?.dimensionnement?.selectedSections || {}
+    if (pacAirAir || pacAirEau || multiplus || poele || thermodynamique || vmc || photovoltaique || ecsSolaire || ssc) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   return (
@@ -200,20 +205,20 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       <SectionCard title="Éléments obligatoires pour pose">
         <h3 className="font-semibold text-lime-600 mb-2">Pièces / checklist</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
-          <CheckboxField label="Devis non signé" checked={formDossier.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} />
-          <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} />
-          <CheckboxField label="Carte d'identité" checked={formDossier.carteIdentite} onChange={(v) => update("carteIdentite", v)} />
-          <CheckboxField label="2 derniers avis d'impôts" checked={formDossier.deuxDerniersAvisImpots} onChange={(v) => update("deuxDerniersAvisImpots", v)} />
-          <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} />
-          <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} />
+          <CheckboxField label="Devis non signé" checked={formDossier.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} isMissing={fieldErrors["devisNonSigne"]} />
+          <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} />
+          <CheckboxField label="Carte d'identité" checked={formDossier.carteIdentite} onChange={(v) => update("carteIdentite", v)} isMissing={fieldErrors["carteIdentite"]} />
+          <CheckboxField label="2 derniers avis d'impôts" checked={formDossier.deuxDerniersAvisImpots} onChange={(v) => update("deuxDerniersAvisImpots", v)} isMissing={fieldErrors["deuxDerniersAvisImpots"]} />
+          <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} isMissing={fieldErrors["taxeFonciereActeNotarie"]} />
+          <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} />
           <CheckboxField label="Identité numérique" checked={formDossier.idNumerique} onChange={(v) => update("idNumerique", v)} />
-          <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} />
-          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} />
+          <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} isMissing={fieldErrors["rib"]} />
+          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} isMissing={fieldErrors["attestationFioul"]} />
           <CheckboxField label="Attestation indivisionnaire" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
-          <CheckboxField label="Attestation propriétaire bailleur" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} />
-          <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} />
-          <CheckboxField label="Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} />
-          <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} />
+          <CheckboxField label="Attestation propriétaire bailleur" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} />
+          <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} isMissing={fieldErrors["noteDimensionnement"]} />
+          <CheckboxField label="Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} isMissing={fieldErrors["revolt"]} />
+          <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} isMissing={fieldErrors["pouvoir"]} />
         </div>
       </SectionCard>
 
@@ -392,23 +397,22 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       </SectionCard>
 
       {/* ÉLECTRICITÉ */}
-      {displaySection &&
-        <div>display</div>
+      {onlyForElectricProduct() &&
+        <SectionCard title="Électricité">
+          <div className="flex flex-wrap gap-6 mb-4">
+            <CheckboxField label="Monophasé" checked={formDossier.monophase} onChange={(v) => update("monophase", v)} />
+            <CheckboxField label="Triphasé" checked={formDossier.triphase} onChange={(v) => update("triphase", v)} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <FormSelect label="Installation aux normes" name="installationAuxNormes" value={formDossier.installationAuxNormes} onChange={(v) => update("installationAuxNormes", v)} options={OUI_NON} />
+            <FormInput label="Ampérage disjoncteur général" name="amperageDisjoncteur" value={formDossier.amperageDisjoncteur} onChange={(v) => update("amperageDisjoncteur", v)} suffix="A" />
+            <FormInput label="Ampérage max" name="amperageMax" value={formDossier.amperageMax} onChange={(v) => update("amperageMax", v)} suffix="A" />
+            <FormInput label="Emplacement tableau principal" name="emplacementTableauPrincipal" value={formDossier.emplacementTableauPrincipal} onChange={(v) => update("emplacementTableauPrincipal", v)} />
+            <FormSelect label="Linky" name="linky" value={formDossier.linky} onChange={(v) => update("linky", v)} options={OUI_NON} />
+            <FormInput label="Abonnement kVA" name="abonnementKva" value={formDossier.abonnementKva} onChange={(v) => update("abonnementKva", v)} suffix="kVA" />
+          </div>
+        </SectionCard>
       }
-      <SectionCard title="Électricité">
-        <div className="flex flex-wrap gap-6 mb-4">
-          <CheckboxField label="Monophasé" checked={formDossier.monophase} onChange={(v) => update("monophase", v)} />
-          <CheckboxField label="Triphasé" checked={formDossier.triphase} onChange={(v) => update("triphase", v)} />
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <FormSelect label="Installation aux normes" name="installationAuxNormes" value={formDossier.installationAuxNormes} onChange={(v) => update("installationAuxNormes", v)} options={OUI_NON} />
-          <FormInput label="Ampérage disjoncteur général" name="amperageDisjoncteur" value={formDossier.amperageDisjoncteur} onChange={(v) => update("amperageDisjoncteur", v)} suffix="A" />
-          <FormInput label="Ampérage max" name="amperageMax" value={formDossier.amperageMax} onChange={(v) => update("amperageMax", v)} suffix="A" />
-          <FormInput label="Emplacement tableau principal" name="emplacementTableauPrincipal" value={formDossier.emplacementTableauPrincipal} onChange={(v) => update("emplacementTableauPrincipal", v)} />
-          <FormSelect label="Linky" name="linky" value={formDossier.linky} onChange={(v) => update("linky", v)} options={OUI_NON} />
-          <FormInput label="Abonnement kVA" name="abonnementKva" value={formDossier.abonnementKva} onChange={(v) => update("abonnementKva", v)} suffix="kVA" />
-        </div>
-      </SectionCard>
 
       {/* PAC AIR EAU */}
       {simulData?.dimensionnement?.selectedSections.pacAirEau &&
@@ -499,7 +503,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         </SectionCard>
       }
 
-
       {/* PAC AIR AIR */}
       {simulData?.dimensionnement?.selectedSections.pacAirAir &&
         <SectionCard title="PAC Air Air ou Multi+">
@@ -552,7 +555,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           </div>
         </SectionCard>
       }
-
 
       {/* PV ou SSC */}
       {simulData?.dimensionnement?.selectedSections.photovoltaique || simulData?.dimensionnement?.selectedSections.ssc &&
@@ -637,20 +639,20 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       <SectionCard title="Photos à faire (obligatoire)">
         <h3 className="font-semibold text-lime-600 mb-2">Équipement</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
-          <CheckboxField label="Compteur" checked={formDossier.photoCompteur} onChange={(v) => update("photoCompteur", v)} />
-          <CheckboxField label="Chaudière à remplacer" checked={formDossier.photoChaudiere} onChange={(v) => update("photoChaudiere", v)} />
-          <CheckboxField label="Emplacement du groupe extérieur" checked={formDossier.photoGroupeExt} onChange={(v) => update("photoGroupeExt", v)} />
-          <CheckboxField label="Maison vue de la rue" checked={formDossier.photoMaison} onChange={(v) => update("photoMaison", v)} />
-          <CheckboxField label="Combles" checked={formDossier.photoCombles} onChange={(v) => update("photoCombles", v)} />
-          <CheckboxField label="Système ECS" checked={formDossier.photoECS} onChange={(v) => update("photoECS", v)} />
-          <CheckboxField label="Disjoncteur" checked={formDossier.photoDisjoncteur} onChange={(v) => update("photoDisjoncteur", v)} />
-          <CheckboxField label="Tuyauterie de la chaudière" checked={formDossier.photoTuyauterie} onChange={(v) => update("photoTuyauterie", v)} />
-          <CheckboxField label="Radiateurs" checked={formDossier.photoRadiateurs} onChange={(v) => update("photoRadiateurs", v)} />
-          <CheckboxField label="Plafonds" checked={formDossier.photoPlafonds} onChange={(v) => update("photoPlafonds", v)} />
-          <CheckboxField label="Sous-sol" checked={formDossier.photoSousSol} onChange={(v) => update("photoSousSol", v)} />
-          <CheckboxField label="Tableaux électriques existants" checked={formDossier.photoTableauElec} onChange={(v) => update("photoTableauElec", v)} />
-          <CheckboxField label="Ventilation" checked={formDossier.photoVentilation} onChange={(v) => update("photoVentilation", v)} />
-          <CheckboxField label="Emplacement des unités intérieures" checked={formDossier.photoUniteInt} onChange={(v) => update("photoUniteInt", v)} />
+          <CheckboxField label="Compteur" checked={formDossier.photoCompteur} onChange={(v) => update("photoCompteur", v)} isMissing={fieldErrors["photoCompteur"]} />
+          <CheckboxField label="Chaudière à remplacer" checked={formDossier.photoChaudiere} onChange={(v) => update("photoChaudiere", v)} isMissing={fieldErrors["photoChaudiere"]} />
+          <CheckboxField label="Emplacement du groupe extérieur" checked={formDossier.photoGroupeExt} onChange={(v) => update("photoGroupeExt", v)} isMissing={fieldErrors["photoGroupeExt"]} />
+          <CheckboxField label="Maison vue de la rue" checked={formDossier.photoMaison} onChange={(v) => update("photoMaison", v)} isMissing={fieldErrors["photoMaison"]} />
+          <CheckboxField label="Combles" checked={formDossier.photoCombles} onChange={(v) => update("photoCombles", v)} isMissing={fieldErrors["photoCombles"]} />
+          <CheckboxField label="Système ECS" checked={formDossier.photoECS} onChange={(v) => update("photoECS", v)} isMissing={fieldErrors["photoECS"]} />
+          <CheckboxField label="Disjoncteur" checked={formDossier.photoDisjoncteur} onChange={(v) => update("photoDisjoncteur", v)} isMissing={fieldErrors["photoDisjoncteur"]} />
+          <CheckboxField label="Tuyauterie de la chaudière" checked={formDossier.photoTuyauterie} onChange={(v) => update("photoTuyauterie", v)} isMissing={fieldErrors["photoTuyauterie"]} />
+          <CheckboxField label="Radiateurs" checked={formDossier.photoRadiateurs} onChange={(v) => update("photoRadiateurs", v)} isMissing={fieldErrors["photoRadiateurs"]} />
+          <CheckboxField label="Plafonds" checked={formDossier.photoPlafonds} onChange={(v) => update("photoPlafonds", v)} isMissing={fieldErrors["photoPlafonds"]} />
+          <CheckboxField label="Sous-sol" checked={formDossier.photoSousSol} onChange={(v) => update("photoSousSol", v)} isMissing={fieldErrors["photoSousSol"]} />
+          <CheckboxField label="Tableaux électriques existants" checked={formDossier.photoTableauElec} onChange={(v) => update("photoTableauElec", v)} isMissing={fieldErrors["photoTableauElec"]} />
+          <CheckboxField label="Ventilation" checked={formDossier.photoVentilation} onChange={(v) => update("photoVentilation", v)} isMissing={fieldErrors["photoVentilation"]} />
+          <CheckboxField label="Emplacement des unités intérieures" checked={formDossier.photoUniteInt} onChange={(v) => update("photoUniteInt", v)} isMissing={fieldErrors["photoUniteInt"]} />
           <CheckboxField label="Planchers" checked={formDossier.photoPlancher} onChange={(v) => update("photoPlancher", v)} />
           <CheckboxField label="Rez-de-chaussée" checked={formDossier.photoRDC} onChange={(v) => update("photoRDC", v)} />
         </div>
@@ -665,7 +667,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
 
       {/* COMMENTAIRES */}
       <SectionCard title="Détails chantier">
-        <FormTextarea label="Commentaires" name="commentaires_dossier" value={formDossier.commentaires} onChange={(v) => update("commentaires", v)} rows={6} />
+        <FormTextarea label="Commentaires" name="commentaires_dossier" value={formDossier.commentaires} onChange={(v) => update("commentaires", v)} rows={6} isMissing={fieldErrors["commentaires"]} />
       </SectionCard>
     </div>
   );

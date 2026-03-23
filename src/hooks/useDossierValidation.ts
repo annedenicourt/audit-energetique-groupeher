@@ -56,8 +56,7 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     }
 ];
 
-// ── Champs individuels conditionnels ──
-
+/* Champs individuels conditionnels */
 export interface ConditionalField {
   key: keyof DossierFormData;
   label: string;
@@ -85,22 +84,22 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
   {
     key: "taxeFonciereActeNotarie",
     label: "Taxe foncière / acte notarié",
-    isRequired: (form) => isMprNotEmpty(form),
+    isRequired: (form) => isMprNotEmptyAndNotZero(form),
   },
   {
     key: "mandatMaPrimeRenov",
     label: "Mandat MaPrimeRénov'",
-    isRequired: (form) => isMprNotEmpty(form),
+    isRequired: (form) => isMprNotEmptyAndNotZero(form),
   },
   {
     key: "rib",
     label: "RIB",
-    isRequired: (form) => isMprNotEmpty(form),
+    isRequired: (form) => isMprNotEmptyAndNotZero(form),
   },
   {
     key: "attestationProprietaireBailleur",
     label: "Attestation propriétaire bailleur",
-    isRequired: (form) => form.proprietaireBailleur === true && isMprNotEmpty(form),
+    isRequired: (form) => form.proprietaireBailleur === true && isMprNotEmptyAndNotZero(form),
   },
   {
     key: "attestationFioul",
@@ -124,20 +123,134 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
       simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
       simul?.dimensionnement?.selectedSections?.ssc === true,
   },
+  {
+    key: "photoCompteur",
+    label: "Photo compteur",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
+      simul?.dimensionnement?.selectedSections?.ssc === true ||
+      simul?.dimensionnement?.selectedSections?.ecsSolaire === true ||
+      simul?.dimensionnement?.selectedSections?.vmc === true ||
+      simul?.dimensionnement?.selectedSections?.thermodynamique === true ||
+      simul?.dimensionnement?.selectedSections?.poele === true ||
+      simul?.dimensionnement?.selectedSections?.multiplus === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirEau === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirAir === true
+  },
+  {
+    key: "photoChaudiere",
+    label: "Chaudière à remplacer",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.pacAirEau === true,
+  },
+  {
+    key: "photoGroupeExt",
+    label: "Emplacement groupe extérieur",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.pacAirEau === true,
+  },
+    { key: "photoMaison", label: "Maison vue de la rue", isRequired: () => true },
+  {
+    key: "photoCombles",
+    label: "Combles",
+    isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementComblesPerdus !== "",
+  },
+  {
+    key: "photoECS",
+    label: "Système ECS",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.ssc === true ||
+      simul?.dimensionnement?.selectedSections?.ecsSolaire === true ||
+      simul?.dimensionnement?.selectedSections?.thermodynamique === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirEau === true
+  },
+  {
+    key: "photoDisjoncteur",
+    label: "Photo disjoncteur",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
+      simul?.dimensionnement?.selectedSections?.ssc === true ||
+      simul?.dimensionnement?.selectedSections?.ecsSolaire === true ||
+      simul?.dimensionnement?.selectedSections?.vmc === true ||
+      simul?.dimensionnement?.selectedSections?.thermodynamique === true ||
+      simul?.dimensionnement?.selectedSections?.poele === true ||
+      simul?.dimensionnement?.selectedSections?.multiplus === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirEau === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirAir === true
+  },
+  {
+    key: "photoTuyauterie",
+    label: "Tuyauterie chaudière",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.ssc === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirEau === true
+  },
+  {
+    key: "photoRadiateurs",
+    label: "Radiateurs",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.pacAirEau === true,
+  },
+  {
+    key: "photoPlafonds",
+    label: "Plafonds",
+    isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementRampants !== "",
+  },
+  {
+    key: "photoSousSol",
+    label: "Planchers",
+    isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementPlancherBas !== "",
+  },
+  {
+    key: "photoTableauElec",
+    label: "Planchers",
+    isRequired: (_form, simul) =>
+      simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
+      simul?.dimensionnement?.selectedSections?.ssc === true ||
+      simul?.dimensionnement?.selectedSections?.ecsSolaire === true ||
+      simul?.dimensionnement?.selectedSections?.vmc === true ||
+      simul?.dimensionnement?.selectedSections?.thermodynamique === true ||
+      simul?.dimensionnement?.selectedSections?.poele === true ||
+      simul?.dimensionnement?.selectedSections?.multiplus === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirEau === true ||
+      simul?.dimensionnement?.selectedSections?.pacAirAir === true  },
+  {
+    key: "photoVentilation",
+    label: "Planchers",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.vmc === true && simul?.dimensionnement?.dimensionnementVMC==="remplacement",
+  },
+  {
+    key: "photoUniteInt",
+    label: "Emplacement unité intérieure",
+    isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementPlancherBas !== "",
+  },
+  {
+    key: "photoPorteFenetre",
+    label: "Fenêtres",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.ite === true,
+  },
+  {
+    key: "photoFacade",
+    label: "Façade",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.ite === true,
+  },
+  {
+    key: "photoPorte",
+    label: "Porte",
+    isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.ite === true,
+  },
+  {
+    key: "commentaires",
+    label: "Détails chantier",
+    isRequired: (_form, simul) => _form.commentaires.length <= 15
+  },
 ];
-
-// ── Types de retour ──
-
+/* Types de retour */
 export interface DossierGroupErrors {
   [groupKey: string]: boolean; // true = erreur
 }
-
 export interface DossierFieldErrors {
   [fieldKey: string]: boolean; // true = erreur
 }
 
 // ── Hook ──
-
 export function useDossierValidation(
   formDossier: DossierFormData,
   simulData?: FormData | null
@@ -145,18 +258,18 @@ export function useDossierValidation(
   const { groupErrors, fieldErrors, isStepDossierValid } = useMemo(() => {
     // Groupes
     const gErrors: DossierGroupErrors = {};
-    for (const group of REQUIRED_GROUPS) {
+    REQUIRED_GROUPS?.forEach((group)=> {
       const hasAtLeastOne = group.fields.some((f) => formDossier[f] === true);
       gErrors[group.key] = !hasAtLeastOne;
-    }
+    })
 
     // Champs conditionnels
     const fErrors: DossierFieldErrors = {};
-    for (const cf of CONDITIONAL_FIELDS) {
-      if (cf.isRequired(formDossier, simulData ?? null)) {
-        fErrors[cf.key] = formDossier[cf.key] !== true;
+    CONDITIONAL_FIELDS?.forEach((field)=> {
+       if (field.isRequired(formDossier, simulData ?? null)) {
+        fErrors[field.key] = formDossier[field.key] !== true;
       }
-    }
+    })
 
     const groupsValid = Object.values(gErrors).every((e) => !e);
     const fieldsValid = Object.values(fErrors).every((e) => !e);
