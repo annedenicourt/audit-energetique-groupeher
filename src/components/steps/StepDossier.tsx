@@ -195,19 +195,30 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         <h3 className="font-semibold text-lime-600 mb-2">Pièces / checklist</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
           <CheckboxField label="Devis non signé" checked={formDossier.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} />
+          {fieldErrorBadge("devisNonSigne")}
           <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} />
+          {fieldErrorBadge("devisSigne")}
           <CheckboxField label="Carte d'identité" checked={formDossier.carteIdentite} onChange={(v) => update("carteIdentite", v)} />
+          {fieldErrorBadge("carteIdentite")}
           <CheckboxField label="2 derniers avis d'impôts" checked={formDossier.deuxDerniersAvisImpots} onChange={(v) => update("deuxDerniersAvisImpots", v)} />
+          {fieldErrorBadge("deuxDerniersAvisImpots")}
           <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} />
+          {fieldErrorBadge("taxeFonciereActeNotarie")}
           <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} />
+          {fieldErrorBadge("mandatMaPrimeRenov")}
           <CheckboxField label="Identité numérique" checked={formDossier.idNumerique} onChange={(v) => update("idNumerique", v)} />
           {/*            <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} />
  */}          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} />
+          {fieldErrorBadge("attestationFioul")}
           <CheckboxField label="Attestation indivisionnaire" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
           <CheckboxField label="Attestation propriétaire bailleur" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} />
+          {fieldErrorBadge("attestationProprietaireBailleur")}
           <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} />
+          {fieldErrorBadge("noteDimensionnement")}
           <CheckboxField label="Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} />
+          {fieldErrorBadge("revolt")}
           <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} />
+          {fieldErrorBadge("pouvoir")}
         </div>
       </SectionCard>
 
