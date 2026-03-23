@@ -43,7 +43,7 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
           <div className="py-2 text-lg font-semibold">
             Votre avis est précieux pour soutenir personnellement votre accompagnateur
           </div>
-          <div className="w-56 px-2 py-1 mx-auto flex items-center justify-center text-white font-bold bg-orange-500 rounded-full">
+          <div className="w-fit px-2 py-1 mx-auto flex items-center justify-center text-white font-bold bg-orange-500 rounded-full">
             <ThumbsUp className="mr-1 h-5 w-5 text-white" />
             <span>Je soutiens {accompagnateur !== undefined ? accompagnateur : "mon accompagnateur"}</span>
           </div>
@@ -67,22 +67,30 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
             {/* Boutons */}
             <div className="flex flex-col">
               {/* <a className="text-sm underline" href="https://g.page/r/CQI02Dc6rnnQEBM/review" target="_blank">Cliquez ici pour déposer un avis Google</a> */}
-              {/* <Button onClick={handleCopy} className="h-7 mt-4 px-2 ml-2 text-xs gap-1">
+              <Button variant="outline" onClick={handleCopy} className="w-full mt-4 px-2 text-xs gap-1 hover:bg-orange-500">
                 {copied ? (
                   <Check className="w-3 h-3" />
                 ) : (
                   <Copy className="w-3 h-3" />
                 )}
-                {copied ? "Copié !" : "Copier le lien"}
+                {copied ? "Copié !" : "Copier le lien et envoyer au client"}
+              </Button>
+              {/* <Button variant="outline" onClick={sendSms} className="w-full mt-4 px-2 text-xs gap-1">
+                {copied ? (
+                  <Check className="w-3 h-3" />
+                ) : (
+                  <Copy className="w-3 h-3" />
+                )}
+                {copied ? "Envoyé !" : "Envoyer le lien par sms au client"}
               </Button> */}
-              <Button
+              {/* <Button
                 variant="outline"
                 onClick={() => window.open("https://g.page/r/CQI02Dc6rnnQEBM/review", "_blank")}
                 className="w-full hover:bg-orange-500"
               >
                 <Star className="w-4 h-4 mr-2" />
                 Donner mon avis en ligne
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
@@ -106,7 +114,7 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
               //onClick={() => window.open("https://g.page/r/CQI02Dc6rnnQEBM/review", "_blank")}
               className="mt-8 w-full hover:bg-orange-500"
             >
-              <a href="images/parrainage.pdf" download>
+              <a href="images/formulaire_parrainage.pdf" download>
                 Télécharger le PDF
               </a>
             </Button>
@@ -119,9 +127,9 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
               title="Cliquer pour agrandir"
             >
               <img
-                src={"/images/parrainage.png"}
+                src={"/images/formulaire_parrainage.jpg"}
                 alt={"formulaire parrainage HER-Enr"}
-                className="w-full h-[60vh] object-contain"
+                className="w-fit mx-auto h-[60vh] shadow-md rounded object-contain"
                 loading="lazy"
               />
             </button>
@@ -132,7 +140,7 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
         {isModalOpen && (
           <div className="flex flex-col gap-3">
             <img
-              src={"images/parrainage.png"}
+              src={"images/formulaire_parrainage.jpg"}
               alt={"formulaire parrainage Her-Enr"}
               className="w-full max-h-[90vh] object-contain rounded-lg"
             />

@@ -1,11 +1,13 @@
 import React, { useMemo, useState } from "react";
-import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Trash2, SquareArrowOutUpRight, CircleAlert } from "lucide-react";
+import { TrendingUp, Sun, Thermometer, Flame, Droplets, Grid2x2, Fan, SquareArrowOutUpRight, CircleAlert, AlertCircle } from "lucide-react";
 import FormInput from "../FormInput";
 import FormSelect from "../FormSelect";
 import SectionCard from "../SectionCard";
-import { ScenariosData, ScenarioData, DimensionnementData, FenetreData, SelectedDimensionnementSections, DimensionnementSectionKey } from "@/types/formData";
+import { DimensionnementData, FenetreData, SelectedDimensionnementSections, DimensionnementSectionKey } from "@/types/formData";
 import { fenetreMatiereOptions, fenetreOuvrantOptions, fenetreTypeOptions } from "@/utils/handleForm";
 import AppModal from "../Modal";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 interface StepDimensionnementProps {
   data: DimensionnementData;
@@ -68,7 +70,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       fenetres.map((f, i) => (i === index ? { ...f, [field]: value } : f))
     );
   };
-
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -79,7 +80,7 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
       </div>
       {/* Dimensionnement pac air-eau */}
       <SectionCard
-        title="PAC air-eau (chauffage / ECS)"
+        title="PAC air-eau & hybride (chauffage / ECS)"
         icon={Thermometer}
         link={[
           "https://www.prime-energie-edf.fr/controles-qualite/le-controle-de-la-qualite-d-installation-de-votre-pompe-a-chaleur",
@@ -476,6 +477,15 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
               placeholder=""
               suffix="m2"
             />
+            <FormInput
+              label="Plancher bas (surface mesurée en m2)"
+              name="dimensionnementPlancherBas"
+              value={data.dimensionnementPlancherBas}
+              onChange={(v) => onChange("dimensionnementPlancherBas", v)}
+              type="number"
+              placeholder=""
+              suffix="m2"
+            />
           </div>
         }
 
@@ -648,10 +658,52 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
 
       </SectionCard>
 
+      {/* VMC */}
+      <SectionCard
+        title="VMC"
+        icon={Fan}
+        showCheckbox
+        checkboxChecked={data.selectedSections?.vmc}
+        onCheckboxChange={(checked) => updateSelectedSection("vmc", checked)}
+      >
+        {data.selectedSections?.vmc &&
+          <div>
+            <div className="flex gap-2">
+              <label className="flex items-center gap-2 cursor-pointer py-1">
+                <input
+                  type="checkbox"
+                  name="dimensionnementVMC"
+                  checked={data.dimensionnementVMC === "creation"}
+                  onChange={() => onChange("dimensionnementVMC", "creation")}
+                  className="w-4 h-4 rounded border-input accent-primary"
+                />
+                <span className="text-sm">Création</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer py-1">
+                <input
+                  type="checkbox"
+                  checked={data.dimensionnementVMC === "remplacement"}
+                  onChange={() => onChange("dimensionnementVMC", "remplacement")}
+                  className="w-4 h-4 rounded border-input accent-primary"
+                />
+                <span className="text-sm">Remplacement</span>
+              </label>
+            </div>
+            {data.dimensionnementVMC === "creation" &&
+              <button className="mt-4 py-1 px-2 flex items-center font-semibold text-sm text-white bg-orange-500 rounded-md gap-2 cursor-default">
+                <CircleAlert size={15} />
+                Création VMC impossible avec plafonds hourdis
+              </button>
+            }
+          </div>
+
+        }
+      </SectionCard>
+
       {/* Autres produits */}
       <SectionCard
         title="Autre produit"
-        icon={Grid2x2}
+        //icon={Grid2x2}
         showCheckbox
         checkboxChecked={data.selectedSections?.autreProduit}
         onCheckboxChange={(checked) => updateSelectedSection("autreProduit", checked)}
@@ -666,7 +718,6 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
             />
           </div>
         }
-
       </SectionCard>
 
       <AppModal

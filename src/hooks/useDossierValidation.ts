@@ -24,6 +24,36 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     fields: ["proprietaireOccupant", "proprietaireBailleur", "residSecondaire", "sci"],
     message: "Veuillez sélectionner au moins un statut de propriétaire.",
   },
+  { 
+    key: "structure", 
+    label: "Structure Maison", 
+    fields: ["plainPied", "etages", "sousSol", "videSanitaire"], 
+    message: "Veuillez choisir au moins une option", 
+  }, 
+    { 
+      key: "combles", 
+      label: "Combles", 
+      fields: ["comblePerdu", "combleAmenage"], 
+      message: "Veuillez choisir au moins une option", 
+    }, 
+    { 
+      key: "planchers",
+      label: "Planchers", 
+      fields: ["plancherBois", "plancherPlaco", "plancherHourdis"], 
+      message: "Veuillez choisir au moins une option", 
+    }, 
+    { 
+      key: "chauffage", 
+      label: "Chauffage", 
+      fields: ["chauffageFioul", "chauffageGaz", "chauffageRadiateursElec", "chauffageBois","chauffageAutre"], 
+      message: "Veuillez choisir au moins une option", 
+    }, 
+    {
+      key: "dossierFinancement", 
+      label: "Dossier de financement", 
+      fields: ["justificatifDomicile", "bulletinsSalaires", "bilanEntrepreneur"],
+      message: "Veuillez sélectionner au moins une option", 
+    }
 ];
 
 // ── Champs individuels conditionnels ──
