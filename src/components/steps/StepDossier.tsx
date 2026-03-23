@@ -78,7 +78,14 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formDossier));
   }, [formDossier]);
 
-  const { groupErrors, isStepDossierValid } = useDossierValidation(formDossier);
+  const { groupErrors, fieldErrors, isStepDossierValid } = useDossierValidation(formDossier, simulData);
+
+  const fieldErrorBadge = (key: keyof DossierFormData) =>
+    fieldErrors[key] ? (
+      <span className="text-destructive text-xs ml-2 inline-flex items-center gap-1">
+        <TriangleAlert className="w-3 h-3" /> Requis
+      </span>
+    ) : null;
 
   useEffect(() => {
     onValidationChange?.(isStepDossierValid);
