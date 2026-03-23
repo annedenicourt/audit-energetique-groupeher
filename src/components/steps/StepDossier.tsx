@@ -79,6 +79,9 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
   }, [formDossier]);
 
   const { groupErrors, isStepDossierValid } = useDossierValidation(formDossier);
+  console.log(groupErrors)
+
+  console.log(isStepDossierValid)
 
   useEffect(() => {
     onValidationChange?.(isStepDossierValid);
@@ -126,6 +129,11 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     }));
   }, []);
 
+  const displaySection = () => {
+
+    return true;
+  }
+
   return (
     <div className="space-y-4">
       {/* Page title */}
@@ -138,8 +146,13 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       <SectionCard title="Infos générales">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput label="Accompagnateur" name="conseiller" value={formDossier.conseiller} readonly={true} />
-          <div className="flex items-end">
+          <div className="flex items-end gap-2">
             <CheckboxField label="Perso" checked={formDossier.perso} onChange={(v) => update("perso", v)} />
+            <CheckboxField label="Parrainage" checked={formDossier.parrain} onChange={(v) => update("parrain", v)} />
+            <CheckboxField label="T1" checked={formDossier.t1} onChange={(v) => update("t1", v)} />
+            <CheckboxField label="T2" checked={formDossier.t2} onChange={(v) => update("t2", v)} />
+            <CheckboxField label="T3" checked={formDossier.t3} onChange={(v) => update("t3", v)} />
+            <CheckboxField label="Lead" checked={formDossier.lead} onChange={(v) => update("lead", v)} />
           </div>
           <FormInput label="Nom / prénom client" name="nomClient" value={formDossier.nomClient} readonly={true} />
           <FormInput label="Téléphone" name="telephone" value={formDossier.telephone} type="tel" readonly={true} />
@@ -162,7 +175,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         {groupErrors.reglement && (
           <p className="mt-2 text-sm text-destructive flex items-center gap-1">
             <TriangleAlert className="h-4 w-4" />
-            {REQUIRED_GROUPS.find((g) => g.key === "reglement")?.message}
+            {REQUIRED_GROUPS.find((group) => group.key === "reglement")?.message}
           </p>
         )}
       </SectionCard>
@@ -178,7 +191,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         {groupErrors.dossierPrime && (
           <p className="mt-2 text-sm text-destructive flex items-center gap-1">
             <TriangleAlert className="h-4 w-4" />
-            {REQUIRED_GROUPS.find((g) => g.key === "dossierPrime")?.message}
+            {REQUIRED_GROUPS.find((group) => group.key === "dossierPrime")?.message}
           </p>
         )}
       </SectionCard>
@@ -194,8 +207,8 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} />
           <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} />
           <CheckboxField label="Identité numérique" checked={formDossier.idNumerique} onChange={(v) => update("idNumerique", v)} />
-          {/*            <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} />
- */}          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} />
+          <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} />
+          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} />
           <CheckboxField label="Attestation indivisionnaire" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
           <CheckboxField label="Attestation propriétaire bailleur" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} />
           <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} />
@@ -203,6 +216,23 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} />
         </div>
       </SectionCard>
+
+      {/* DOSSIER DE FINANCEMENT */}
+      {formDossier.reglementFinancement &&
+        <SectionCard title="Dossier de financement">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
+            <CheckboxField label="Justificatif de domicile < 3 mois (électricité, gaz, téléphone)" checked={formDossier.justificatifDomicile} onChange={(v) => update("justificatifDomicile", v)} />
+            <CheckboxField label="Dernier(s) bulletin(s) de salaires + contrat de travail (si CDD ou CDI depuis moins d'un an)" checked={formDossier.bulletinsSalaires} onChange={(v) => update("bulletinsSalaires", v)} />
+            <CheckboxField label="Bilan (entrepreneur)" checked={formDossier.bilanEntrepreneur} onChange={(v) => update("bilanEntrepreneur", v)} />
+          </div>
+          {(formDossier.reglementFinancement && groupErrors.dossierFinancement) && (
+            <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+              <TriangleAlert className="h-4 w-4" />
+              {REQUIRED_GROUPS.find((group) => group.key === "dossierFinancement")?.message}
+            </p>
+          )}
+        </SectionCard>
+      }
 
       {/* COMPTE CEE  et MPR */}
       <SectionCard title="Compte Prime EDF & MaPrimeRénov'">
@@ -243,15 +273,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         </div>
       </SectionCard>
 
-      {/* DOSSIER DE FINANCEMENT */}
-      <SectionCard title="Dossier de financement">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1">
-          <CheckboxField label="Justificatif de domicile < 3 mois (électricité, gaz, téléphone)" checked={formDossier.justificatifDomicile} onChange={(v) => update("justificatifDomicile", v)} />
-          <CheckboxField label="Dernier(s) bulletin(s) de salaires + contrat de travail (si CDD ou CDI depuis moins d'un an)" checked={formDossier.bulletinsSalaires} onChange={(v) => update("bulletinsSalaires", v)} />
-          <CheckboxField label="Bilan (entrepreneur)" checked={formDossier.bilanEntrepreneur} onChange={(v) => update("bilanEntrepreneur", v)} />
-        </div>
-      </SectionCard>
-
       {/* MAISON */}
       <SectionCard title="Maison">
         <FormInput type="number" label="Année de construction" name="anneeConstruction_d" value={formDossier.anneeConstruction} onChange={(v) => update("anneeConstruction", v)} readonly={true} />
@@ -274,6 +295,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
               />
             </div>
           }
+          {groupErrors.structure && (
+            <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+              <TriangleAlert className="h-4 w-4" />
+              {REQUIRED_GROUPS.find((group) => group.key === "structure")?.message}
+            </p>
+          )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-4">
           <FormInput label="Type de mur" name="typeMur_d" value={formDossier.typeMur} onChange={(v) => update("typeMur", v)} />
@@ -296,13 +323,24 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             )}
           </div>
         )}
-
+        {groupErrors.combles && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((group) => group.key === "combles")?.message}
+          </p>
+        )}
         <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de plancher</h3>
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Bois" checked={formDossier.plancherBois} onChange={(v) => update("plancherBois", v)} />
           <CheckboxField label="Placo" checked={formDossier.plancherPlaco} onChange={(v) => update("plancherPlaco", v)} />
           <CheckboxField label="Hourdis" checked={formDossier.plancherHourdis} onChange={(v) => update("plancherHourdis", v)} />
         </div>
+        {groupErrors.planchers && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((group) => group.key === "planchers")?.message}
+          </p>
+        )}
 
         <h3 className="font-semibold text-lime-600 mt-4 mb-2">Chauffage actuel</h3>
         <div className="flex flex-wrap gap-6 mb-2">
@@ -315,19 +353,25 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         {formDossier.chauffageAutre && (
           <FormInput label="" name="chauffageAutreTexte" value={formDossier.chauffageAutreTexte} onChange={(v) => update("chauffageAutreTexte", v)} placeholder="Précisez" />
         )}
+        {groupErrors.chauffage && (
+          <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((group) => group.key === "chauffage")?.message}
+          </p>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 mb-4">
           <FormSelect label="Circuit hydraulique fonctionnel" name="circuitHydraulique" value={formDossier.circuitHydraulique} onChange={(v) => update("circuitHydraulique", v)} options={OUI_NON} />
         </div>
 
-        <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de radiateurs</h3>
+        {/* <h3 className="font-semibold text-lime-600 mt-4 mb-2">Type de radiateurs</h3>
         <div className="flex flex-wrap gap-6 mb-2">
           <CheckboxField label="Radiat. Acier" checked={formDossier.radiateurAcier} onChange={(v) => update("radiateurAcier", v)} />
           <CheckboxField label="Radiat. Alu" checked={formDossier.radiateurAlu} onChange={(v) => update("radiateurAlu", v)} />
           <CheckboxField label="Radiat. Fonte" checked={formDossier.radiateurFonte} onChange={(v) => update("radiateurFonte", v)} />
           <CheckboxField label="Plancher chauffant" checked={formDossier.plancherChauffant} onChange={(v) => update("plancherChauffant", v)} />
         </div>
-        <FormInput label="Nombre de radiateurs" name="nombreRadiateurs" value={formDossier.nombreRadiateurs} onChange={(v) => update("nombreRadiateurs", v)} />
+        <FormInput label="Nombre de radiateurs" name="nombreRadiateurs" value={formDossier.nombreRadiateurs} onChange={(v) => update("nombreRadiateurs", v)} /> */}
 
         <h3 className="font-semibold text-lime-600 mt-4 mb-2">Thermostats</h3>
         <div className="flex flex-wrap gap-6">
@@ -348,6 +392,9 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       </SectionCard>
 
       {/* ÉLECTRICITÉ */}
+      {displaySection &&
+        <div>display</div>
+      }
       <SectionCard title="Électricité">
         <div className="flex flex-wrap gap-6 mb-4">
           <CheckboxField label="Monophasé" checked={formDossier.monophase} onChange={(v) => update("monophase", v)} />
@@ -558,30 +605,33 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       }
 
       {/* RADIATEURS */}
-      <SectionCard title="Radiateurs">
-        <div className="overflow-x-auto">
-          {formDossier.radiateurs.map((rad, i) => (
-            <div key={i} className="mb-3">
-              <div className="mb-2 text-lime-600 ">Radiateur {i + 1}</div>
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-                <FormSelect label={`Matériau`} name={`radiateur_${i}_materiau`} value={rad.materiau} onChange={(v) => updateRadiateur(i, "materiau", v)} options={MATERIAUX_RADIATEUR} />
-                <FormInput type="number" label="Hauteur" name={`radiateur_${i}_hauteur`} value={rad.hauteur} onChange={(v) => updateRadiateur(i, "hauteur", v)} suffix="cm" />
-                <FormInput type="number" label="Largeur" name={`radiateur_${i}_largeur`} value={rad.largeur} onChange={(v) => updateRadiateur(i, "largeur", v)} suffix="cm" />
-                <FormInput type="number" label="Épaisseur" name={`radiateur_${i}_epaisseur`} value={rad.epaisseur} onChange={(v) => updateRadiateur(i, "epaisseur", v)} suffix="cm" />
-                <div className="flex items-end">
-                  <button type="button" onClick={() => removeRadiateur(i)} className="mb-4 text-destructive hover:text-destructive/80">
-                    <Trash2 size={20} />
-                  </button>
+      {simulData?.dimensionnement?.selectedSections?.pacAirEau &&
+        <SectionCard title="Radiateurs">
+          <CheckboxField label="Plancher chauffant" checked={formDossier.plancherChauffant} onChange={(v) => update("plancherChauffant", v)} />
+          <div className="mt-4 overflow-x-auto">
+            {formDossier.radiateurs.map((rad, i) => (
+              <div key={i} className="mb-3">
+                <div className="mb-2 text-lime-600 ">Radiateur {i + 1}</div>
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
+                  <FormSelect label={`Matériau`} name={`radiateur_${i}_materiau`} value={rad.materiau} onChange={(v) => updateRadiateur(i, "materiau", v)} options={MATERIAUX_RADIATEUR} />
+                  <FormInput type="number" label="Hauteur" name={`radiateur_${i}_hauteur`} value={rad.hauteur} onChange={(v) => updateRadiateur(i, "hauteur", v)} suffix="cm" />
+                  <FormInput type="number" label="Largeur" name={`radiateur_${i}_largeur`} value={rad.largeur} onChange={(v) => updateRadiateur(i, "largeur", v)} suffix="cm" />
+                  <FormInput type="number" label="Épaisseur" name={`radiateur_${i}_epaisseur`} value={rad.epaisseur} onChange={(v) => updateRadiateur(i, "epaisseur", v)} suffix="cm" />
+                  <div className="flex items-end">
+                    <button type="button" onClick={() => removeRadiateur(i)} className="mb-4 text-destructive hover:text-destructive/80">
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </div>
-              </div>
 
-            </div>
-          ))}
-        </div>
-        <button type="button" onClick={addRadiateur} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
-          <Plus className="w-4 h-4" /> Ajouter un radiateur
-        </button>
-      </SectionCard>
+              </div>
+            ))}
+          </div>
+          <button type="button" onClick={addRadiateur} className="mt-3 py-2 px-3 flex items-center gap-1 text-sm text-white font-bold rounded-md bg-primary hover:underline">
+            <Plus className="w-4 h-4" /> Ajouter un radiateur
+          </button>
+        </SectionCard>
+      }
 
       {/* PHOTOS CHECKLIST*/}
       <SectionCard title="Photos à faire (obligatoire)">
@@ -614,7 +664,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       </SectionCard>
 
       {/* COMMENTAIRES */}
-      <SectionCard title="Particularités chantier">
+      <SectionCard title="Détails chantier">
         <FormTextarea label="Commentaires" name="commentaires_dossier" value={formDossier.commentaires} onChange={(v) => update("commentaires", v)} rows={6} />
       </SectionCard>
     </div>

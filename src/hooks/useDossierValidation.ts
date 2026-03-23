@@ -17,15 +17,53 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     key: "reglement",
     label: "Règlement",
     fields: ["reglementCheque", "reglementFinancement", "reglementPTZ"],
-    message: "Veuillez sélectionner au moins un mode de règlement.",
+    message: "Veuillez sélectionner au moins un mode de règlement",
   },
   {
     key: "dossierPrime",
     label: "Dossier de prime",
     fields: ["proprietaireOccupant", "proprietaireBailleur", "residSecondaire", "sci"],
-    message: "Veuillez sélectionner au moins un statut de propriétaire.",
+    message: "Veuillez sélectionner au moins un statut de propriétaire",
+  },
+  /* {
+    key: "elementsObligatoires",
+    label: "Éléments obligatoires",
+    fields: ["devisNonSigne", "devisSigne"],
+    message: "Il manque des pièces au dossier",
+  }, */
+  {
+    key: "structure",
+    label: "Structure Maison",
+    fields: ["plainPied", "etages", "sousSol", "videSanitaire"],
+    message: "Veuillez choisir au moins une option",
+  },
+  {
+    key: "combles",
+    label: "Combles",
+    fields: ["comblePerdu", "combleAmenage"],
+    message: "Veuillez choisir au moins une option",
+  },
+  {
+    key: "planchers",
+    label: "Planchers",
+    fields: ["plancherBois", "plancherPlaco", "plancherHourdis"],
+    message: "Veuillez choisir au moins une option",
+  },
+  {
+    key: "chauffage",
+    label: "Chauffage",
+    fields: ["chauffageFioul", "chauffageGaz", "chauffageRadiateursElec", "chauffageBois","chauffageAutre"],
+    message: "Veuillez choisir au moins une option",
+  },
+  
+  {
+    key: "dossierFinancement",
+    label: "Dossier de financement",
+    fields: ["justificatifDomicile", "bulletinsSalaires", "bilanEntrepreneur"],
+    message: "Veuillez sélectionner au moins une option",
   },
 ];
+  
 
 export interface DossierGroupErrors {
   [groupKey: string]: boolean; // true = erreur (aucune case cochée)
@@ -35,12 +73,18 @@ export function useDossierValidation(formDossier: DossierFormData) {
   const { groupErrors, isStepDossierValid } = useMemo(() => {
     const errors: DossierGroupErrors = {};
 
-    for (const group of REQUIRED_GROUPS) {
+    /* for (const group of REQUIRED_GROUPS) {
       const hasAtLeastOne = group.fields.some(
         (field) => formDossier[field] === true
       );
       errors[group.key] = !hasAtLeastOne;
-    }
+    } */
+    REQUIRED_GROUPS.forEach((group)=> {
+      const hasAtLeastOne = group.fields.some(
+        (field) => formDossier[field] === true
+      );
+      errors[group.key] = !hasAtLeastOne;
+    })
 
     const isValid = Object.values(errors).every((hasError) => !hasError);
 

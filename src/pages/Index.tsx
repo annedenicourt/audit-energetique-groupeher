@@ -195,7 +195,7 @@ const Index: React.FC = () => {
 
   // ─── Navigation ──────────────────────────────────────────────────────────
   const goToNextStep = () => {
-    if (currentStep === 9) {
+    if (currentStep === 10) {
       const missing = validateSimulationForm();
       if (missing.length > 0) {
         setMissingFields(missing);
@@ -217,7 +217,7 @@ const Index: React.FC = () => {
   };
 
   const handleStepClick = (stepId: number): boolean => {
-    if (stepId >= 10 && currentStep < 10) {
+    if (stepId >= 11 && currentStep < 11) {
       const missing = validateSimulationForm();
       if (missing.length > 0) {
         setMissingFields(missing);
@@ -310,6 +310,7 @@ const Index: React.FC = () => {
       canGoPrevious={currentStep > 1}
       canGoNext={currentStep < STEPS.length}
       onStepClick={handleStepClick}
+    //isDossierValid={isStepDossierValid}
     >
       {renderCurrentStep()}
       <MissingFieldsModal
