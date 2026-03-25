@@ -92,6 +92,7 @@ const StepAvis: React.FC<StepAvisProps> = ({ data, onChange, accompagnateur }) =
                 Donner mon avis en ligne
               </Button> */}
             </div>
+            <div className="mt-6 text-sm text-red-500 font-medium">Si travaux réalisés, un 2e avis sur la qualité de la pose sera demandé</div>
           </div>
         </div>
       </SectionCard>

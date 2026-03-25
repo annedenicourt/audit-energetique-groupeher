@@ -4,14 +4,19 @@ import { useNavigate } from "react-router-dom";
 import { FormData, initialFormData } from "@/types/formData";
 import { saveStudy } from "@/utils/saveStudy";
 import html2pdf from "html2pdf.js";
-import PreviewCommercial from "@/components/PreviewCommercial";
-import PreviewDossier from "@/components/PreviewDossier";
 import { DossierFormData } from "@/types/dossierFormData";
 import { saveDossier } from "@/utils/saveDossier";
-import { Check, FileCheck, X } from "lucide-react";
+import { Check, FileCheck, X, AlertTriangle, Info } from "lucide-react";
 import AppModal from "@/components/Modal";
 import PdfContentDossier from "@/components/PdfContentDossier";
 import PdfContentCommercial from "@/components/PdfContentCommercial";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import {
+  useDossierValidation,
+  REQUIRED_GROUPS,
+  CONDITIONAL_FIELDS,
+} from "@/hooks/useDossierValidation";
 
 
 const Synthese: React.FC = () => {
@@ -19,6 +24,7 @@ const Synthese: React.FC = () => {
   const [pdfMode, setPdfMode] = useState("dossier");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isErrorsModalOpen, setIsErrorsModalOpen] = useState(false);
 
   const [formSim, setFormSim] = useState<FormData>(() => {
     try {
@@ -35,6 +41,25 @@ const Synthese: React.FC = () => {
     } catch { /* ignore */ }
     return { ...initialFormData };
   });
+
+  const { groupErrors, fieldErrors, isStepDossierValid } = useDossierValidation(formDossier, formSim);
+
+  // Construire la liste des erreurs pour la modale
+  const errorsList = useMemo(() => {
+    const errors: { label: string; message?: string }[] = [];
+    for (const group of REQUIRED_GROUPS) {
+      if (groupErrors[group.key]) {
+        errors.push({ label: group.label, message: group.message });
+      }
+    }
+    for (const cf of CONDITIONAL_FIELDS) {
+      if (fieldErrors[cf.key]) {
+        errors.push({ label: cf.label });
+      }
+    }
+    return errors;
+  }, [groupErrors, fieldErrors]);
+
 
   const downloadPdfGeneric = async () => {
     setIsSaving(true);
@@ -127,7 +152,7 @@ const Synthese: React.FC = () => {
     <div className="w-[50rem] md:w-full md:max-w-5xl mx-auto px-4 py-8">
       <div className="mb-4">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/", { replace: true, state: { step: 11 } })}
           className="text-sm text-muted-foreground hover:text-primary"
         >
           ← Retour Simulateur
@@ -142,7 +167,16 @@ const Synthese: React.FC = () => {
             Synthèse dossier de liaison
           </div>
         </div>
-        <div>
+        <div className="flex items-center gap-3">
+          {!isStepDossierValid && (
+            <div className="flex">
+              <button className="py-1 px-2 bg-white text-red-500 font-medium text-sm border border-red-500 rounded" onClick={() => setIsErrorsModalOpen(true)}>Infos manquantes</button>
+              <span className="-mt-2 -ml-1 relative flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+              </span>
+            </div>
+          )}
           <button
             className="nav-button nav-button--primary px-6"
             disabled={isSaving}
@@ -198,6 +232,39 @@ const Synthese: React.FC = () => {
         </div>
       </div>
 
+      <AppModal
+        isOpen={isErrorsModalOpen}
+        onClose={() => setIsErrorsModalOpen(false)}
+        title="Informations manquantes dans le dossier"
+        className="bg-white rounded-xl shadow-xl max-w-lg max-h-[80vh] overflow-auto outline-none p-6"
+      >
+        <p className="text-sm text-muted-foreground mb-4">
+          Veuillez corriger les éléments suivants avant de valider :
+        </p>
+
+        {/* Erreurs de groupes */}
+        {REQUIRED_GROUPS.filter((g) => groupErrors[g.key]).map((group) => (
+          <div key={group.key} className="mb-3 flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+            <div>
+              <div className="text-sm font-semibold">{group.label}</div>
+              <div className="text-xs text-muted-foreground">{group.message}</div>
+            </div>
+          </div>
+        ))}
+        {/* Erreurs de champs conditionnels */}
+        {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).length > 0 && (
+          <div className="mt-4">
+            <div className="text-sm font-semibold mb-2">Documents manquants</div>
+            {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).map((cf) => (
+              <div key={cf.key} className="mb-1 ml-4 flex items-center gap-2">
+                <Info className="w-4 h-4 text-destructive shrink-0" />
+                <span className="text-sm">{cf.label}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </AppModal>
 
       {/* AFFICHAGE MODALE */}
       <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="">

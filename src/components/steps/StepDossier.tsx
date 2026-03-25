@@ -81,9 +81,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
 
   const { groupErrors, fieldErrors, isStepDossierValid } = useDossierValidation(formDossier, simulData);
 
-  //console.log(groupErrors)
-  console.log(fieldErrors)
-
   useEffect(() => {
     onValidationChange?.(isStepDossierValid);
   }, [isStepDossierValid, onValidationChange]);
@@ -666,7 +663,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       </SectionCard>
 
       {/* COMMENTAIRES */}
-      <SectionCard title="Détails chantier">
+      <SectionCard title="Détails dossier & chantier">
         <FormTextarea label="Commentaires" name="commentaires_dossier" value={formDossier.commentaires} onChange={(v) => update("commentaires", v)} rows={6} isMissing={fieldErrors["commentaires"]} />
       </SectionCard>
     </div>

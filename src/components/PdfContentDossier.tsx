@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { User, Home, Layers, Grid3X3, Flame, Zap, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs } from "lucide-react";
+import { User, Home, Layers, Grid3X3, Flame, Zap, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs, TriangleAlert } from "lucide-react";
 import SectionCard from "./SectionCard";
 import { SelectedDimensionnementSections } from "@/types/formData";
 import { DossierFormData } from "@/types/dossierFormData";
+import { useDossierValidation, REQUIRED_GROUPS } from "@/hooks/useDossierValidation";
 
 interface PdfContentCommercialProps {
   data: DossierFormData;
@@ -10,12 +11,15 @@ interface PdfContentCommercialProps {
 }
 
 // Composant pour afficher une ligne de résumé
-const SummaryRow: React.FC<{ label: string; value }> = ({ label, value }) => (
-  <div className="flex justify-between py-1 border-b border-border/50 last:border-0">
-    <span className="text-muted-foreground">{label}</span>
-    <span className="font-medium text-sm text-foreground">{value || "—"}</span>
-  </div>
-);
+const SummaryRow: React.FC<{ label: string; value }> = ({ label, value }) => {
+  return (
+    <div className={` justify-between py-1 border-b border-border/50 last:border-0 ${value ? "flex" : "hidden"}`}>
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium text-sm text-foreground">{value || "—"}</span>
+    </div>
+  )
+}
+
 const DisplayTrue = <Check className="text-lime-500" strokeWidth={6} />
 const DisplayFalse = "—"
 
@@ -44,6 +48,7 @@ const PageFooter: React.FC<{ nomClient: string; pagesRef: React.RefObject<HTMLDi
 
 const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selectedOptions }) => {
   const pagesRef = useRef<HTMLDivElement | null>(null);
+  const { groupErrors } = useDossierValidation(data);
 
   return (
     <div ref={pagesRef}>
@@ -53,7 +58,12 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
           <SectionCard title="Client" icon={User} className="">
             <div className="grid gap-x-8">
               <SummaryRow label="Accompagnateur" value={data.conseiller} />
-              <SummaryRow label="Perso" value={data.perso} />
+              <SummaryRow label="Perso" value={data.perso ? DisplayTrue : ""} />
+              <SummaryRow label="T1" value={data.t1 ? DisplayTrue : ""} />
+              <SummaryRow label="T2" value={data.t2 ? DisplayTrue : ""} />
+              <SummaryRow label="T3" value={data.t3 ? DisplayTrue : ""} />
+              <SummaryRow label="Parrain" value={data.parrain ? DisplayTrue : ""} />
+              <SummaryRow label="Lead" value={data.lead ? DisplayTrue : ""} />
               <SummaryRow label="Nom client" value={data.nomClient} />
               <SummaryRow label="Téléphone" value={data.telephone} />
             </div>
@@ -64,20 +74,34 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
           </SectionCard>
           {/* Règlement */}
           <SectionCard title="Règlement" icon={CreditCard} className="">
-            <div className="grid gap-x-8">
-              <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : DisplayFalse} />
-            </div>
+            {groupErrors.reglement ? (
+              <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+                <TriangleAlert className="h-4 w-4" />
+                {REQUIRED_GROUPS.find((group) => group.key === "reglement")?.message}
+              </p>
+            ) : (
+              <div className="grid gap-x-8">
+                <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : ""} />
+                <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : ""} />
+                <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : ""} />
+              </div>
+            )}
           </SectionCard>
           {/* Dossier de prime */}
           <SectionCard title="Dossier de prime" icon={CreditCard} className="">
-            <div className="grid gap-x-8">
-              <SummaryRow label="Propriétaire occupant" value={data.proprietaireOccupant ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Propriétaire bailleur" value={data.proprietaireBailleur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Résidence secondaire" value={data.residSecondaire ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="SCI" value={data.sci ? DisplayTrue : DisplayFalse} />
-            </div>
+            {groupErrors.dossierPrime ? (
+              <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+                <TriangleAlert className="h-4 w-4" />
+                {REQUIRED_GROUPS.find((group) => group.key === "dossierPrime")?.message}
+              </p>
+            ) : (
+              <div className="grid gap-x-8">
+                <SummaryRow label="Propriétaire occupant" value={data.proprietaireOccupant ? DisplayTrue : ""} />
+                <SummaryRow label="Propriétaire bailleur" value={data.proprietaireBailleur ? DisplayTrue : ""} />
+                <SummaryRow label="Résidence secondaire" value={data.residSecondaire ? DisplayTrue : ""} />
+                <SummaryRow label="SCI" value={data.sci ? DisplayTrue : ""} />
+              </div>
+            )}
           </SectionCard>
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
@@ -119,15 +143,19 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
           {/* Dossier de financement */}
-          <SectionCard title="Dossier de financement">
-            <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : DisplayFalse} />
-            <SummaryRow label="Bilan (entrepreneur)" value={data.bilanEntrepreneur ? DisplayTrue : DisplayFalse} />
-          </SectionCard>
+          {data.reglementFinancement && (
+            <SectionCard title="Dossier de financement">
+              <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Bilan (entrepreneur)" value={data.bilanEntrepreneur ? DisplayTrue : DisplayFalse} />
+            </SectionCard>
+          )}
+
           {/* Habitation */}
           <SectionCard title="Habitation" icon={Home}>
-            <div className="grid gap-x-8">
+            <div className="">
               <SummaryRow label="Année de construction" value={data.anneeConstruction} />
+              <div className="my-4 font-medium text-green-500">Structure</div>
               <SummaryRow label="Plain-pied" value={data.plainPied ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Étages" value={data.etages ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Nombre d'étages" value={data.nbEtages} />
@@ -142,8 +170,8 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
           {/* Murs */}
           <SectionCard title="Murs" icon={Layers}>
             <div className="grid gap-x-8">
-              <SummaryRow label="Type de mur" value={data.typeMur} />
-              <SummaryRow label="Épaisseur mur (en cm)" value={data.epaisseurMur} />
+              <SummaryRow label="Type de mur" value={data.typeMur ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Épaisseur mur (en cm)" value={data.epaisseurMur ? DisplayTrue : DisplayFalse} />
             </div>
           </SectionCard>
         </div>
