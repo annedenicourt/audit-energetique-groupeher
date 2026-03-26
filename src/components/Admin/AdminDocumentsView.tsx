@@ -1,9 +1,9 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, ArrowRightLeft, Download } from "lucide-react";
+import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, Printer, Download } from "lucide-react";
 import { downloadPdfFromDb } from "@/utils/pdf/generatePdfFromPayload";
 import { Input } from "@/components/ui/input";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Card, CardContent } from "../ui/card";
@@ -11,6 +11,8 @@ import { Skeleton } from "../ui/skeleton";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../ui/table";
 import { Badge } from "../ui/badge";
 import { useNavigate } from "react-router-dom";
+import PdfContentDossier from "@/components/PdfContentDossier";
+import { DossierFormData } from "@/types/dossierFormData";
 
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
@@ -59,6 +61,8 @@ const AdminDocumentsView: React.FC<{
   const [sortKey, setSortKey] = useState<SortKey>("date_desc");
   const [restoringId, setRestoringId] = useState<string | null>(null);
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
+  const [printPayload, setPrintPayload] = useState(null);
+  const [printSimulData, setPrintSimulData] = useState(null);
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -167,8 +171,59 @@ const AdminDocumentsView: React.FC<{
     }
   };
 
+  const handlePrintDossier = useCallback(async (row: ClientRow) => {
+    if (!row.dossier) return;
+    try {
+      // Fetch dossier payload
+      const { data: dossierData, error: dossierErr } = await supabase
+        .from("dossiers")
+        .select("payload")
+        .eq("id", row.dossier.id)
+        .single();
+
+      setPrintPayload(dossierData.payload);
+
+      if (dossierErr || !dossierData) {
+        toast.error("Impossible de récupérer le dossier.");
+        return;
+      }
+
+      // Fetch study payload for simulData
+      let simulData;
+      if (row.dossier.study_id) {
+        const { data: studyData } = await supabase
+          .from("etudes_energetiques")
+          .select("payload")
+          .eq("id", row.dossier.study_id)
+          .single();
+        if (studyData) simulData = studyData.payload;
+        setPrintSimulData(studyData.payload);
+      }
+
+
+      const originalTitle = document.title;
+
+      document.title = `Dossier_liaison_${row.dossier.client_name}`;
+
+      // Wait for render then print
+      setTimeout(() => {
+        window.print();
+        document.title = originalTitle;
+
+        // Reset after print
+        setPrintPayload(null);
+        setPrintSimulData(null);
+      }, 400);
+    } catch {
+      toast.error("Erreur lors de la préparation de l'impression.");
+    }
+  }, []);
+
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
+
+  console.log(printPayload)
+  console.log(printSimulData)
 
   return (
     <div className="space-y-6">
@@ -288,6 +343,17 @@ const AdminDocumentsView: React.FC<{
                           {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Liaison"}
                         </Button>
                       )}
+                      {/* {row.dossier && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePrintDossier(row)}
+                          className="hover:bg-orange-500/80"
+                        >
+                          <Printer className="h-4 w-4 mr-1" />
+                          Imprimer
+                        </Button>
+                      )} */}
                     </div>
                   </TableCell>
                   <TableCell className="text-center space-x-2">
@@ -350,6 +416,12 @@ const AdminDocumentsView: React.FC<{
               </CardContent>
             </Card>
           ))}
+        </div>
+      )}
+      {/* Hidden print container */}
+      {printPayload && (
+        <div className="print-only">
+          <PdfContentDossier data={printPayload} simulData={printSimulData} />
         </div>
       )}
     </div>

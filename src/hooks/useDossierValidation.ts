@@ -244,7 +244,7 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
   },
   {
     key: "commentaires",
-    label: "Détails chantier",
+    label: "Détails dossier & chantier",
     isRequired: (_form, simul) => _form.commentaires.length <= 15
   },
 ];

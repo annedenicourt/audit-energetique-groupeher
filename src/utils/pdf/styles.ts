@@ -9,6 +9,7 @@ export const colors = {
   gray900: "#111827",
   white: "#ffffff",
   border: "#e5e7eb",
+  blue: "#122F62"
 };
 
 export const styles = StyleSheet.create({
@@ -42,7 +43,7 @@ export const styles = StyleSheet.create({
     color: colors.gray400,
   },
   sectionTitle: {
-    backgroundColor: colors.orange,
+    backgroundColor: colors.blue,
     color: colors.white,
     paddingVertical: 4,
     paddingHorizontal: 8,

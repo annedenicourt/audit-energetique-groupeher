@@ -5,11 +5,13 @@ import { styles } from "./styles";
 import PdfSection, { val } from "./PdfSection";
 import { Check } from "lucide-react";
 import { DossierFormData } from "@/types/dossierFormData";
+import { useDossierValidation } from "@/hooks/useDossierValidation";
 
 /* const b = (v: unknown) => (v ? "✓" : "—");
  */
 
 const DossierDocument: React.FC<{ data: DossierFormData }> = ({ data: d }) => {
+
 
   const splitRows = Array.isArray(d.splits)
     ? d.splits.flatMap((s: any, i: number) => [
@@ -36,9 +38,17 @@ const DossierDocument: React.FC<{ data: DossierFormData }> = ({ data: d }) => {
 
       {/* Content */}
       <Page size="A4" style={styles.page}>
-        <PdfSection title="Client" rows={[
+        <PdfSection title="Infos RDV" rows={[
           { label: "Accompagnateur", value: val(d.conseiller) },
           { label: "Perso", value: d.perso },
+          { label: "Parrainage", value: d.parrain },
+          { label: "T1", value: d.t1 },
+          { label: "T2", value: d.t2 },
+          { label: "T3", value: d.t3 },
+          { label: "Lead", value: d.lead },
+        ]} />
+
+        <PdfSection title="Infos Client" rows={[
           { label: "Nom client", value: val(d.nomClient) },
           { label: "Téléphone", value: val(d.telephone) },
           { label: "Adresse fiscale", value: `${val(d.adresseFiscale)}—${val(d.codePostalFiscal)} ${val(d.villeFiscale)}` },
@@ -72,6 +82,7 @@ const DossierDocument: React.FC<{ data: DossierFormData }> = ({ data: d }) => {
           { label: "Note dimensionnement", value: d.noteDimensionnement },
           { label: "Revolt", value: d.revolt },
           { label: "Pouvoir", value: d.pouvoir },
+          { label: "RIB", value: d.rib },
         ]} />
 
         <PdfSection title="Prime EDF / MaPrimeRénov'" rows={[

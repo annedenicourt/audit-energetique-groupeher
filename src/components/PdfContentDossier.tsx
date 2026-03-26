@@ -410,7 +410,7 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
-      {selectedOptions?.photovoltaique || selectedOptions.ssc &&
+      {selectedOptions?.photovoltaique || selectedOptions?.ssc &&
         <div className="a4-page flex flex-col justify-between space-y-1">
           <div className="space-y-1">
             {/* PV */}

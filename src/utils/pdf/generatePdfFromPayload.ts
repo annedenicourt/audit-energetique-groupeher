@@ -34,18 +34,6 @@ export async function downloadPdfFromDb(
 
     const blob = await pdf(DocComponent as any).toBlob();
 
-    // Download
-    /* const prefix = type === "etude" ? "Etude_NRJ" : "Dossier_Liaison";
-    const filename = `${prefix}_${clientName}.pdf`;
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url); */
-
     // Ouvrir dans un nouvel onglet
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");

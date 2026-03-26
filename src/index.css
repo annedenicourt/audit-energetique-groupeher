@@ -262,3 +262,46 @@
   background-attachment: fixed;
 }
 }
+/* ── Print styles ── */
+.print-only {
+  display: none;
+}
+
+@media print {
+  /* Hide everything except print container */
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 210mm;
+    padding: 0;
+    margin: 0;
+    /* background: white; */
+  }
+
+  .print-only .a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    padding: 10mm;
+    margin: 0;
+    box-shadow: none;
+    border: none;
+    page-break-after: always;
+    break-after: page;
+  }
+
+  .print-only .a4-page:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  body {
+    background: #122F62 !important;
+  }
+}
+

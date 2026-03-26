@@ -203,7 +203,7 @@ const Synthese: React.FC = () => {
       </div>
 
       {/* AFFICHAGE MODALE */}
-      <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="" className="bg-white rounded-xl shadow-xl w-[70vw] max-h-[90vh] overflow-auto outline-none p-6">
+      <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="" className="bg-white rounded-xl shadow-xl w-[60vw] max-h-[90vh] overflow-auto outline-none p-6">
         {isModalOpen && (
           <div className="relative flex flex-col gap-6">
             <img src="./images/Logo-HER-WEB.webp" alt="" className="absolute -top-10 w-28" />
@@ -249,7 +249,7 @@ const Synthese: React.FC = () => {
 
                 </div>
               )}
-              <div className="mt-4 text-red-500 text-center text-xs">Obligatoire : expliquer pourquoi il manque ces documents dans la rubrique "Détails chantier"</div>
+              <div className="mt-4 text-red-500 text-center text-xs">Obligatoire : expliquer pourquoi il manque ces documents dans la rubrique "Détails dossier & chantier"</div>
 
             </div>
             <div className="mx-auto">

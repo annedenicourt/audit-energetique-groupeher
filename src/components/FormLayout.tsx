@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Calculator, Check, ChevronLeft, ChevronRight, LayoutDashboard, Leaf, LogOut, Trash2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Check, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Save, Trash2 } from "lucide-react";
 import { NavLink } from "./NavLink";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Button } from "./ui/button";
-import { MissingField, validateSimulationForm } from "@/utils/validateSimulation";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "./ui/alert-dialog";
+import { saveStudy } from "@/utils/saveStudy";
+import { saveDossier } from "@/utils/saveDossier";
+import { toast } from "sonner";
 
 interface Step {
   id: number;
@@ -45,6 +45,62 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { role } = useUserRole();
+  const [isSaving, setIsSaving] = useState(false);
+
+
+  const handleSaveToDb = async () => {
+    setIsSaving(true);
+    try {
+      const dataStudy = localStorage.getItem("simulation_form");
+      const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
+      const existingStudyId = localStorage.getItem("current_study_id");
+      let savedStudyId: string | null = existingStudyId;
+
+      if (studyPayload) {
+        const resStudy = await saveStudy(studyPayload, existingStudyId);
+        if (!resStudy.success) {
+          toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
+          return;
+        }
+        savedStudyId = resStudy.studyId ?? null;
+      }
+
+      const dataDossier = localStorage.getItem("dossier_form");
+      const dossierPayload = dataDossier ? JSON.parse(dataDossier) : null;
+      const existingDossierId = localStorage.getItem("current_dossier_id");
+
+      if (dossierPayload) {
+        const resDossier = await saveDossier(dossierPayload, existingDossierId, savedStudyId);
+        if (!resDossier.success) {
+          toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
+          return;
+        }
+      }
+
+      if (!studyPayload && !dossierPayload) {
+        toast.error("Aucune donnée à enregistrer");
+        return;
+      }
+
+      toast.success("Données enregistrées avec succès !", {
+        position: "top-center",
+      });
+      localStorage.removeItem("simulation_form");
+      localStorage.removeItem("dossier_form");
+      localStorage.removeItem("current_study_id");
+      localStorage.removeItem("current_dossier_id");
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      return;
+    } catch (err) {
+      console.error("[handleSaveToDb] Erreur", err);
+      toast.error("Erreur lors de l'enregistrement");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleLogout = async () => {
     await signOut();
@@ -90,21 +146,6 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                     </button>
                   </NavLink>
                 }
-                {/* <button className="py-2 px-3 flex items-center text-xs lg:text-sm text-white font-bold rounded-full hover:text-orange-500" onClick={() => navigate(`/simulateur-mpr`, { state: { returnStep: currentStep } })}>
-                  <Calculator size={20} className="mr-1" />
-                  Simulateur MPR
-                </button> */}
-                {/* <Popover>
-                  <PopoverTrigger asChild>
-                    <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
-                  </PopoverTrigger>
-                  <PopoverContent className="w-80 text-center">
-                    <div className="mb-2 text-sm">Voulez-vous vraiment vous déconnecter ?</div>
-                    <div>
-                      <button className="px-3 py-2 text-sm text-white font-bold bg-orange-500 rounded-md" onClick={() => handleLogout()} >OUI, je me déconnecte</button>
-                    </div>
-                  </PopoverContent>
-                </Popover> */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <LogOut className="text-white hover:text-orange-500 cursor-pointer" />
@@ -204,7 +245,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
             <AlertDialogTrigger asChild>
               <Button variant="ghost" className="text-muted-foreground gap-2 hover:bg-orange-500">
                 <Trash2 className="h-4 w-4" />
-                Nouveau dossier
+                Réinitialiser
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
@@ -223,6 +264,15 @@ const FormLayout: React.FC<FormLayoutProps> = ({
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          <Button
+            variant="outline"
+            className="gap-2"
+            disabled={isSaving}
+            onClick={handleSaveToDb}
+          >
+            <Save className="h-4 w-4" />
+            {isSaving ? "Enregistrement…" : "Enregistrer"}
+          </Button>
           <button
             onClick={onPrevious}
             disabled={!canGoPrevious}
