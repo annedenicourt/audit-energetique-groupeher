@@ -10,8 +10,6 @@ import { Check, FileCheck, X, AlertTriangle, Info } from "lucide-react";
 import AppModal from "@/components/Modal";
 import PdfContentDossier from "@/components/PdfContentDossier";
 import PdfContentCommercial from "@/components/PdfContentCommercial";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import {
   useDossierValidation,
   REQUIRED_GROUPS,
@@ -24,7 +22,6 @@ const Synthese: React.FC = () => {
   const [pdfMode, setPdfMode] = useState("dossier");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isErrorsModalOpen, setIsErrorsModalOpen] = useState(false);
 
   const [formSim, setFormSim] = useState<FormData>(() => {
     try {
@@ -42,23 +39,7 @@ const Synthese: React.FC = () => {
     return { ...initialFormData };
   });
 
-  const { groupErrors, fieldErrors, isStepDossierValid } = useDossierValidation(formDossier, formSim);
-
-  // Construire la liste des erreurs pour la modale
-  const errorsList = useMemo(() => {
-    const errors: { label: string; message?: string }[] = [];
-    for (const group of REQUIRED_GROUPS) {
-      if (groupErrors[group.key]) {
-        errors.push({ label: group.label, message: group.message });
-      }
-    }
-    for (const cf of CONDITIONAL_FIELDS) {
-      if (fieldErrors[cf.key]) {
-        errors.push({ label: cf.label });
-      }
-    }
-    return errors;
-  }, [groupErrors, fieldErrors]);
+  const { groupErrors, fieldErrors } = useDossierValidation(formDossier, formSim);
 
 
   const downloadPdfGeneric = async () => {
@@ -167,25 +148,14 @@ const Synthese: React.FC = () => {
             Synthèse dossier de liaison
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          {!isStepDossierValid && (
-            <div className="flex">
-              <button className="py-1 px-2 bg-white text-red-500 font-medium text-sm border border-red-500 rounded" onClick={() => setIsErrorsModalOpen(true)}>Infos manquantes</button>
-              <span className="-mt-2 -ml-1 relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-              </span>
-            </div>
-          )}
-          <button
-            className="nav-button nav-button--primary px-6"
-            disabled={isSaving}
-            onClick={() => setIsModalOpen(true)}
-          >
-            <FileCheck className="w-5 h-5" />
-            Valider et sauvegarder le dossier
-          </button>
-        </div>
+        <button
+          className="nav-button nav-button--primary px-6"
+          disabled={isSaving}
+          onClick={() => setIsModalOpen(true)}
+        >
+          <FileCheck className="w-5 h-5" />
+          Valider et sauvegarder le dossier
+        </button>
       </div>
 
       {pdfMode === "etude" ? (
@@ -209,7 +179,7 @@ const Synthese: React.FC = () => {
             </div>
           </div>
           <div>
-            <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} />
+            <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} simulData={formSim} />
           </div>
         </div>
       )}
@@ -228,60 +198,59 @@ const Synthese: React.FC = () => {
           <div className="a4-page">
             <img src="/images/couv_dossier_liaison.png" alt="couverture pdf" />
           </div>
-          <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} />
+          <PdfContentDossier data={formDossier} selectedOptions={formSim?.dimensionnement?.selectedSections} simulData={formSim} />
         </div>
       </div>
 
-      <AppModal
-        isOpen={isErrorsModalOpen}
-        onClose={() => setIsErrorsModalOpen(false)}
-        title="Informations manquantes dans le dossier"
-        className="bg-white rounded-xl shadow-xl max-w-lg max-h-[80vh] overflow-auto outline-none p-6"
-      >
-        <p className="text-sm text-muted-foreground mb-4">
-          Veuillez corriger les éléments suivants avant de valider :
-        </p>
-
-        {/* Erreurs de groupes */}
-        {REQUIRED_GROUPS.filter((g) => groupErrors[g.key]).map((group) => (
-          <div key={group.key} className="mb-3 flex items-start gap-2">
-            <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
-            <div>
-              <div className="text-sm font-semibold">{group.label}</div>
-              <div className="text-xs text-muted-foreground">{group.message}</div>
-            </div>
-          </div>
-        ))}
-        {/* Erreurs de champs conditionnels */}
-        {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).length > 0 && (
-          <div className="mt-4">
-            <div className="text-sm font-semibold mb-2">Documents manquants</div>
-            {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).map((cf) => (
-              <div key={cf.key} className="mb-1 ml-4 flex items-center gap-2">
-                <Info className="w-4 h-4 text-destructive shrink-0" />
-                <span className="text-sm">{cf.label}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </AppModal>
-
       {/* AFFICHAGE MODALE */}
-      <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="">
+      <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="" className="bg-white rounded-xl shadow-xl w-[70vw] max-h-[90vh] overflow-auto outline-none p-6">
         {isModalOpen && (
-          <div className="flex flex-col gap-6">
-            <div className="mx-auto">
-              <img src="./images/Logo-HER-WEB.webp" alt="" className="w-56" />
-            </div>
-            <div className="mx-auto">
-              <div className="text-center uppercase">Dossier client</div>
-              <div className="text-center text-xl font-bold uppercase">
-                {formDossier.nomClient}
+          <div className="relative flex flex-col gap-6">
+            <img src="./images/Logo-HER-WEB.webp" alt="" className="absolute -top-10 w-28" />
+            <div className="flex items-center">
+              <div className="mx-auto">
+                <div className="text-center uppercase">Dossier client</div>
+                <div className="text-center text-lg font-bold uppercase">
+                  {formDossier.nomClient}
+                </div>
               </div>
             </div>
-            <div className="text-center">
+            <div className="text-center text-sm">
               Une fois clôturé, le dossier de liaison  <br />et les données entrées dans le simulateur seront sauvegardés. <br />
               Assurez-vous que les données envoyées sont exactes avant validation
+            </div>
+
+            <div>
+              <p className="text-sm text-muted-foreground mb-4">
+                Veuillez choisir au moins une option dans les catégories ci-dessous :
+              </p>
+
+              {/* Erreurs de groupes */}
+              {REQUIRED_GROUPS.filter((g) => groupErrors[g.key]).map((group) => (
+                <div key={group.key} className="mb-2 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+                  <div>
+                    <div className="text-sm font-semibold">{group.label}</div>
+                  </div>
+                </div>
+              ))}
+              {/* Erreurs de champs conditionnels */}
+              {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).length > 0 && (
+                <div className="mt-4">
+                  <div className="text-sm font-semibold mb-2">Documents manquants</div>
+                  <div className="grid md:grid-cols-2">
+                    {CONDITIONAL_FIELDS.filter((cf) => fieldErrors[cf.key]).map((cf) => (
+                      <div key={cf.key} className="mb-1 ml-4 flex items-center gap-2">
+                        <Info className="w-4 h-4 text-destructive shrink-0" />
+                        <span className="text-sm">{cf.label}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                </div>
+              )}
+              <div className="mt-4 text-red-500 text-center text-xs">Obligatoire : expliquer pourquoi il manque ces documents dans la rubrique "Détails chantier"</div>
+
             </div>
             <div className="mx-auto">
               <button

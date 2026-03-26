@@ -13,6 +13,12 @@ interface RequiredGroup {
 
 export const REQUIRED_GROUPS: RequiredGroup[] = [
   {
+    key: "infosRDV",
+    label: "Perso, parrainage, lead...",
+    fields: ["perso", "parrain", "t1", "t2", "t3", "lead"],
+    message: "Veuillez sélectionner au moins une option",
+  },
+  {
     key: "reglement",
     label: "Règlement",
     fields: ["reglementCheque", "reglementFinancement", "reglementPTZ"],
@@ -30,30 +36,30 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     fields: ["plainPied", "etages", "sousSol", "videSanitaire"], 
     message: "Veuillez choisir au moins une option", 
   }, 
-    { 
-      key: "combles", 
-      label: "Combles", 
-      fields: ["comblePerdu", "combleAmenage"], 
-      message: "Veuillez choisir au moins une option", 
-    }, 
-    { 
-      key: "planchers",
-      label: "Planchers", 
-      fields: ["plancherBois", "plancherPlaco", "plancherHourdis"], 
-      message: "Veuillez choisir au moins une option", 
-    }, 
-    { 
-      key: "chauffage", 
-      label: "Chauffage", 
-      fields: ["chauffageFioul", "chauffageGaz", "chauffageRadiateursElec", "chauffageBois","chauffageAutre"], 
-      message: "Veuillez choisir au moins une option", 
-    }, 
-    {
-      key: "dossierFinancement", 
-      label: "Dossier de financement", 
-      fields: ["justificatifDomicile", "bulletinsSalaires", "bilanEntrepreneur"],
-      message: "Veuillez sélectionner au moins une option", 
-    }
+  { 
+    key: "combles", 
+    label: "Combles", 
+    fields: ["comblePerdu", "combleAmenage"], 
+    message: "Veuillez choisir au moins une option", 
+  }, 
+  { 
+    key: "planchers",
+    label: "Planchers", 
+    fields: ["plancherBois", "plancherPlaco", "plancherHourdis"], 
+    message: "Veuillez choisir au moins une option", 
+  }, 
+  { 
+    key: "chauffage", 
+    label: "Chauffage", 
+    fields: ["chauffageFioul", "chauffageGaz", "chauffageRadiateursElec", "chauffageBois","chauffageAutre"], 
+    message: "Veuillez choisir au moins une option", 
+  }, 
+  {
+    key: "dossierFinancement", 
+    label: "Dossier de financement", 
+    fields: ["justificatifDomicile", "bulletinsSalaires", "bilanEntrepreneur"],
+    message: "Veuillez choisir au moins une option", 
+  }
 ];
 
 /* Champs individuels conditionnels */
@@ -195,12 +201,12 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
   },
   {
     key: "photoSousSol",
-    label: "Planchers",
+    label: "Sous-sol",
     isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementPlancherBas !== "",
   },
   {
     key: "photoTableauElec",
-    label: "Planchers",
+    label: "Tableau électrique",
     isRequired: (_form, simul) =>
       simul?.dimensionnement?.selectedSections?.photovoltaique === true ||
       simul?.dimensionnement?.selectedSections?.ssc === true ||
@@ -213,7 +219,7 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
       simul?.dimensionnement?.selectedSections?.pacAirAir === true  },
   {
     key: "photoVentilation",
-    label: "Planchers",
+    label: "Ventilation",
     isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.vmc === true && simul?.dimensionnement?.dimensionnementVMC==="remplacement",
   },
   {
@@ -222,7 +228,7 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
     isRequired: (_form, simul) => simul?.dimensionnement?.dimensionnementPlancherBas !== "",
   },
   {
-    key: "photoPorteFenetre",
+    key: "photoFenetres",
     label: "Fenêtres",
     isRequired: (_form, simul) => simul?.dimensionnement?.selectedSections?.ite === true,
   },

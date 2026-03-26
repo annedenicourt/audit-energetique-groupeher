@@ -1,27 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
-import { User, Home, Layers, Grid3X3, Flame, Zap, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs, TriangleAlert } from "lucide-react";
+import { User, Home, Layers, Grid3X3, Flame, Zap, Thermometer, Wind, BadgeEuro, FileText, Sun, CreditCard, Check, X, NotebookTabs, TriangleAlert, CircleAlert } from "lucide-react";
 import SectionCard from "./SectionCard";
-import { SelectedDimensionnementSections } from "@/types/formData";
+import { SelectedDimensionnementSections, FormData } from "@/types/formData";
 import { DossierFormData } from "@/types/dossierFormData";
 import { useDossierValidation, REQUIRED_GROUPS } from "@/hooks/useDossierValidation";
 
-interface PdfContentCommercialProps {
+interface PdfContentDossierProps {
   data: DossierFormData;
-  selectedOptions?: SelectedDimensionnementSections
+  selectedOptions?: SelectedDimensionnementSections;
+  simulData?: FormData | null;
 }
 
 // Composant pour afficher une ligne de résumé
 const SummaryRow: React.FC<{ label: string; value }> = ({ label, value }) => {
   return (
-    <div className={` justify-between py-1 border-b border-border/50 last:border-0 ${value ? "flex" : "hidden"}`}>
+    <div className={`${value ? "flex" : "hidden"} justify-between py-1 text-sm border-b border-border/50 last:border-0 `}>
       <span className="text-muted-foreground">{label}</span>
-      <span className="font-medium text-sm text-foreground">{value || "—"}</span>
+      <span className="font-medium text-foreground">{value || "—"}</span>
     </div>
   )
 }
 
 const DisplayTrue = <Check className="text-lime-500" strokeWidth={6} />
 const DisplayFalse = "—"
+const DisplayWarning = <CircleAlert className="w-5 h-5 text-red-500" />
 
 const PageFooter: React.FC<{ nomClient: string; pagesRef: React.RefObject<HTMLDivElement> }> =
   ({ nomClient, pagesRef }) => {
@@ -46,62 +48,80 @@ const PageFooter: React.FC<{ nomClient: string; pagesRef: React.RefObject<HTMLDi
     );
   };
 
-const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selectedOptions }) => {
+const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOptions, simulData }) => {
   const pagesRef = useRef<HTMLDivElement | null>(null);
-  const { groupErrors } = useDossierValidation(data);
+  const { groupErrors, fieldErrors } = useDossierValidation(data, simulData);
+
+  const onlyForElectricProduct = () => {
+    const { pacAirAir, pacAirEau, multiplus, poele, thermodynamique, vmc, photovoltaique, ecsSolaire, ssc } = simulData?.dimensionnement?.selectedSections || {}
+    if (pacAirAir || pacAirEau || multiplus || poele || thermodynamique || vmc || photovoltaique || ecsSolaire || ssc) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const getLabel = (key) => {
+    let label = "";
+    label = key.replace(/([A-Z])/g, " $1")
+      .replace(/^./, (s) => s.toUpperCase())
+      .toUpperCase();
+    return label;
+  }
+
+  const selectedProducts = Object.keys(simulData?.dimensionnement?.selectedSections)
+    .filter((k) => simulData?.dimensionnement?.selectedSections[k])
 
   return (
     <div ref={pagesRef}>
       <div className="a4-page flex flex-col justify-between">
         <div className="space-y-1">
-          {/* Client */}
-          <SectionCard title="Client" icon={User} className="">
-            <div className="grid gap-x-8">
-              <SummaryRow label="Accompagnateur" value={data.conseiller} />
-              <SummaryRow label="Perso" value={data.perso ? DisplayTrue : ""} />
-              <SummaryRow label="T1" value={data.t1 ? DisplayTrue : ""} />
-              <SummaryRow label="T2" value={data.t2 ? DisplayTrue : ""} />
-              <SummaryRow label="T3" value={data.t3 ? DisplayTrue : ""} />
-              <SummaryRow label="Parrain" value={data.parrain ? DisplayTrue : ""} />
-              <SummaryRow label="Lead" value={data.lead ? DisplayTrue : ""} />
-              <SummaryRow label="Nom client" value={data.nomClient} />
-              <SummaryRow label="Téléphone" value={data.telephone} />
+          {/* Infos RDV */}
+          <SectionCard title="Infos RDV" icon={User} className="">
+            <div className="flex items-center justify-between text-sm">
+              <div className="mr-4 text-muted-foreground">Produit(s) choisi(s)</div>
+              {selectedProducts?.length > 0 &&
+                <div className="flex">
+                  {selectedProducts?.map((product, index) => {
+                    return (
+                      <div key={product}>
+                        <div className="font-medium">{getLabel(product)}{index < selectedProducts.length - 1 &&
+                          <span className="mx-2">—</span>
+                        }</div>
+
+                      </div>
+                    )
+                  })}
+                </div>
+              }
             </div>
-            <div>
-              <SummaryRow label="Adresse fiscale" value={`${data.adresseFiscale}-${data.codePostalFiscal}-${data.villeFiscale}`} />
-              <SummaryRow label="Adresse de chantier" value={`${data.adresseInstallation}-${data.codePostal}-${data.ville}`} />
-            </div>
+            <SummaryRow label="Accompagnateur" value={data.conseiller} />
+            <SummaryRow label="Perso" value={data.perso ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="Parrainage" value={data.parrain ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T1" value={data.t1 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T2" value={data.t2 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T3" value={data.t3 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="Lead" value={data.lead ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+          </SectionCard>
+          {/* Infos Client */}
+          <SectionCard title="Infos Client" icon={User} className="">
+            <SummaryRow label="Nom client" value={data.nomClient} />
+            <SummaryRow label="Téléphone" value={data.telephone} />
+            <SummaryRow label="Adresse fiscale" value={`${data.adresseFiscale}-${data.codePostalFiscal}-${data.villeFiscale}`} />
+            <SummaryRow label="Adresse de chantier" value={`${data.adresseInstallation}-${data.codePostal}-${data.ville}`} />
           </SectionCard>
           {/* Règlement */}
           <SectionCard title="Règlement" icon={CreditCard} className="">
-            {groupErrors.reglement ? (
-              <p className="mt-2 text-sm text-destructive flex items-center gap-1">
-                <TriangleAlert className="h-4 w-4" />
-                {REQUIRED_GROUPS.find((group) => group.key === "reglement")?.message}
-              </p>
-            ) : (
-              <div className="grid gap-x-8">
-                <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : ""} />
-                <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : ""} />
-                <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : ""} />
-              </div>
-            )}
+            <SummaryRow label="Chèque" value={data.reglementCheque ? DisplayTrue : groupErrors.reglement ? DisplayWarning : ""} />
+            <SummaryRow label="Financement" value={data.reglementFinancement ? DisplayTrue : groupErrors.reglement ? DisplayWarning : ""} />
+            <SummaryRow label="PTZ" value={data.reglementPTZ ? DisplayTrue : groupErrors.reglement ? DisplayWarning : ""} />
           </SectionCard>
           {/* Dossier de prime */}
           <SectionCard title="Dossier de prime" icon={CreditCard} className="">
-            {groupErrors.dossierPrime ? (
-              <p className="mt-2 text-sm text-destructive flex items-center gap-1">
-                <TriangleAlert className="h-4 w-4" />
-                {REQUIRED_GROUPS.find((group) => group.key === "dossierPrime")?.message}
-              </p>
-            ) : (
-              <div className="grid gap-x-8">
-                <SummaryRow label="Propriétaire occupant" value={data.proprietaireOccupant ? DisplayTrue : ""} />
-                <SummaryRow label="Propriétaire bailleur" value={data.proprietaireBailleur ? DisplayTrue : ""} />
-                <SummaryRow label="Résidence secondaire" value={data.residSecondaire ? DisplayTrue : ""} />
-                <SummaryRow label="SCI" value={data.sci ? DisplayTrue : ""} />
-              </div>
-            )}
+            <SummaryRow label="Propriétaire occupant" value={data.proprietaireOccupant ? DisplayTrue : groupErrors.dossierPrime ? DisplayWarning : ""} />
+            <SummaryRow label="Propriétaire bailleur" value={data.proprietaireBailleur ? DisplayTrue : groupErrors.dossierPrime ? DisplayWarning : ""} />
+            <SummaryRow label="Résidence secondaire" value={data.residSecondaire ? DisplayTrue : groupErrors.dossierPrime ? DisplayWarning : ""} />
+            <SummaryRow label="SCI" value={data.sci ? DisplayTrue : groupErrors.dossierPrime ? DisplayWarning : ""} />
           </SectionCard>
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
@@ -110,27 +130,44 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
         <div className="space-y-1">
           {/* Pièces / Attestations */}
           <SectionCard title="Pièces / Attestations" icon={FileText}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Devis non signé" value={data.devisNonSigne ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Devis signé" value={data.devisSigne ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Carte identité" value={data.carteIdentite ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="2 derniers avis d'impôts" value={data.deuxDerniersAvisImpots ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Taxe foncière ou acte notarié" value={data.taxeFonciereActeNotarie ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Identité numérique si compte MPR bloqué" value={data.idNumerique ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Attestation indivisionnaire si 2 proprios" value={data.attestationIndivisionnaire ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Attestation bailleur" value={data.attestationProprietaireBailleur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Note de dimensionnement" value={data.noteDimensionnement ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Étude solaire Revolt" value={data.revolt ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Pouvoir" value={data.pouvoir ? DisplayTrue : DisplayFalse} />
+            <div className="">
+              <div className="my-2 text-sm underline">Documents client à récupérer</div>
+              <SummaryRow label="Carte identité" value={data.carteIdentite ? DisplayTrue : fieldErrors?.carteIdentite ? DisplayWarning : ""} />
+              <SummaryRow label="2 derniers avis d'impôts" value={data.deuxDerniersAvisImpots ? DisplayTrue : fieldErrors?.carteIdentite ? DisplayWarning : ""} />
+              <SummaryRow label="Taxe foncière ou acte notarié" value={data.taxeFonciereActeNotarie ? DisplayTrue : fieldErrors?.carteIdentite ? DisplayWarning : ""} />
+              <SummaryRow label="RIB" value={data.rib ? DisplayTrue : fieldErrors?.rib ? DisplayWarning : ""} />
+
+              <div className="my-2 text-sm underline">Documents à fournir</div>
+              <SummaryRow label="Devis non signé" value={data.devisNonSigne ? DisplayTrue : fieldErrors?.devisNonSigne ? DisplayWarning : ""} />
+              <SummaryRow label="Identité numérique si compte MPR bloqué" value={data.idNumerique ? DisplayTrue : ""} />
+              <SummaryRow label="Note de dimensionnement" value={data.noteDimensionnement ? DisplayTrue : fieldErrors?.noteDimensionnement ? DisplayWarning : ""} />
+              <SummaryRow label="Étude solaire Revolt" value={data.revolt ? DisplayTrue : fieldErrors?.revolt ? DisplayWarning : ""} />
+
+              <div className="my-2 text-sm underline">Documents client à faire signer</div>
+              <SummaryRow label="Devis signé" value={data.devisSigne ? DisplayTrue : fieldErrors?.devisSigne ? DisplayWarning : ""} />
+              <SummaryRow label="Mandat MaPrimeRénov" value={data.mandatMaPrimeRenov ? DisplayTrue : fieldErrors?.carteIdentite ? DisplayWarning : ""} />
+              <SummaryRow label="Attestation fioul" value={data.attestationFioul ? DisplayTrue : fieldErrors?.attestationFioul ? DisplayWarning : ""} />
+              <SummaryRow label="Attestation indivisionnaire MPR (si 2 proprios)" value={data.attestationIndivisionnaire ? DisplayTrue : ""} />
+              <SummaryRow label="Attestation bailleur MPR" value={data.attestationProprietaireBailleur ? DisplayTrue : fieldErrors?.attestationProprietaireBailleur ? DisplayWarning : ""} />
+              <SummaryRow label="Pouvoir" value={data.pouvoir ? DisplayTrue : fieldErrors?.pouvoir ? DisplayWarning : ""} />
             </div>
           </SectionCard>
-          {/* Aides / Mails */}
+          {/* Dossier de financement */}
+          {data.reglementFinancement &&
+            <SectionCard title="Dossier de financement">
+              <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : groupErrors?.dossierFinancement ? DisplayWarning : ""} />
+              <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : groupErrors?.dossierFinancement ? DisplayWarning : ""} />
+              <SummaryRow label="Bilan (entrepreneur)" value={data.bilanEntrepreneur ? DisplayTrue : groupErrors?.dossierFinancement ? DisplayWarning : ""} />
+            </SectionCard>
+          }
+          {/* COMPTE CEE  et MPR */}
           <SectionCard title="Prime EDF / MaPrimeRénov'" icon={BadgeEuro}>
+            <SummaryRow label="Prime CEE déduite" value={data.primeCeeDeduite ? DisplayTrue : ""} />
             <SummaryRow label="Montant Prime EDF" value={data.montantPrimeEDF ? `${data.montantPrimeEDF} €` : ""} />
+            <SummaryRow label="Compte Prime CEE EDF" value={data.compteCeeEdf ? DisplayTrue : ""} />
             <SummaryRow label="Mail Prime EDF" value={data.mailPrimeEDF} />
             <SummaryRow label="MDP Prime EDF" value={data.mdpPrimeEDF} />
+            <SummaryRow label="Non éligible MPR" value={data.nonEligibleMpr ? DisplayTrue : ""} />
             <SummaryRow label="Montant MaPrimeRénov" value={data.montantPrimeRenov ? `${data.montantPrimeRenov} €` : ""} />
             <SummaryRow label="Mail MaPrimeRénov" value={data.mailPrimeRenov} />
             <SummaryRow label="MDP MaPrimeRénov" value={data.mdpPrimeRenov} />
@@ -142,36 +179,32 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
-          {/* Dossier de financement */}
-          {data.reglementFinancement && (
-            <SectionCard title="Dossier de financement">
-              <SummaryRow label="Justificatif domicile" value={data.justificatifDomicile ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Bulletins salaires" value={data.bulletinsSalaires ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Bilan (entrepreneur)" value={data.bilanEntrepreneur ? DisplayTrue : DisplayFalse} />
-            </SectionCard>
-          )}
-
           {/* Habitation */}
           <SectionCard title="Habitation" icon={Home}>
             <div className="">
               <SummaryRow label="Année de construction" value={data.anneeConstruction} />
               <div className="my-4 font-medium text-green-500">Structure</div>
-              <SummaryRow label="Plain-pied" value={data.plainPied ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Étages" value={data.etages ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Plain-pied" value={data.plainPied ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
+              <SummaryRow label="Étages" value={data.etages ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
               <SummaryRow label="Nombre d'étages" value={data.nbEtages} />
-              <SummaryRow label="Sous-sol" value={data.sousSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Vide sanitaire" value={data.videSanitaire ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Vide sanitaire accessible" value={data.videSanitaireAccessible ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Menuiseries à changer (quantité)" value={data.quantiteFenetres} />
-              <SummaryRow label="Menuiseries à changer (matière)" value={data.matiereFenetres} />
-              <SummaryRow label="Volets roulants (quantité)" value={data.quantiteVolets} />
-            </div>
-          </SectionCard>
-          {/* Murs */}
-          <SectionCard title="Murs" icon={Layers}>
-            <div className="grid gap-x-8">
+              <SummaryRow label="Sous-sol" value={data.sousSol ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
+              <SummaryRow label="Vide sanitaire" value={data.videSanitaire ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
+              <SummaryRow label="Vide sanitaire accessible" value={data.videSanitaireAccessible ? DisplayTrue : ""} />
               <SummaryRow label="Type de mur" value={data.typeMur ? DisplayTrue : DisplayFalse} />
               <SummaryRow label="Épaisseur mur (en cm)" value={data.epaisseurMur ? DisplayTrue : DisplayFalse} />
+              <div className="my-4 font-medium text-green-500">Combles</div>
+              <SummaryRow label="Combles perdus" value={data.comblePerdu ? DisplayTrue : groupErrors?.combles ? DisplayWarning : ""} />
+              <SummaryRow label="Combles aménagés" value={data.combleAmenage ? DisplayTrue : groupErrors?.combles ? DisplayWarning : ""} />
+              <SummaryRow label="Combles perdus accessibles" value={data.comblePerduAccessible ? DisplayTrue : ""} />
+              <SummaryRow label="Accès trappe" value={data.comblePerduTrappe ? DisplayTrue : ""} />
+              <SummaryRow label="Accès toit" value={data.comblePerduToit ? DisplayTrue : ""} />
+              <SummaryRow label="Accès autre" value={data.comblePerduAutre ? DisplayTrue : ""} />
+              <SummaryRow label="Précision autre" value={data.comblePerduAutreTexte} />
+              <div className="my-4 font-medium text-green-500">Type de plancher</div>
+              <SummaryRow label="Plancher bois" value={data.plancherBois ? DisplayTrue : groupErrors?.planchers ? DisplayWarning : ""} />
+              <SummaryRow label="Plancher placo" value={data.plancherPlaco ? DisplayTrue : groupErrors?.planchers ? DisplayWarning : ""} />
+              <SummaryRow label="Plancher hourdis" value={data.plancherHourdis ? DisplayTrue : groupErrors?.planchers ? DisplayWarning : ""} />
+
             </div>
           </SectionCard>
         </div>
@@ -179,36 +212,27 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
-          {/* Combles */}
-          <SectionCard title="Combles" icon={Layers}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Combles perdus" value={data.comblePerdu ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Combles aménagés" value={data.combleAmenage ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Combles perdus accessibles" value={data.comblePerduAccessible ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Accès trappe" value={data.comblePerduTrappe ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Accès toit" value={data.comblePerduToit ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Accès autre" value={data.comblePerduAutre ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Précision autre" value={data.comblePerduAutreTexte} />
-            </div>
-          </SectionCard>
-          {/* Planchers */}
-          <SectionCard title="Planchers" icon={Grid3X3}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Plancher bois" value={data.plancherBois ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Plancher placo" value={data.plancherPlaco ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Plancher hourdis" value={data.plancherHourdis ? DisplayTrue : DisplayFalse} />
-            </div>
-          </SectionCard>
           {/* Chauffage actuel */}
-          <SectionCard title="Chauffage actuel" icon={Flame}>
+          <SectionCard title="Habitation (suite)" icon={Flame}>
             <div className="grid gap-x-8">
-              <SummaryRow label="Bois" value={data.chauffageBois ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Fioul" value={data.chauffageFioul ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Gaz" value={data.chauffageGaz ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Radiateurs électriques" value={data.chauffageRadiateursElec ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Autre chauffage" value={data.chauffageAutre ? DisplayTrue : DisplayFalse} />
+              <div className="my-4 font-medium text-green-500">Chauffage actuel</div>
+              <SummaryRow label="Bois" value={data.chauffageBois ? DisplayTrue : groupErrors?.chauffage ? DisplayWarning : ""} />
+              <SummaryRow label="Fioul" value={data.chauffageFioul ? DisplayTrue : groupErrors?.chauffage ? DisplayWarning : ""} />
+              <SummaryRow label="Gaz" value={data.chauffageGaz ? DisplayTrue : groupErrors?.chauffage ? DisplayWarning : ""} />
+              <SummaryRow label="Radiateurs électriques" value={data.chauffageRadiateursElec ? DisplayTrue : groupErrors?.chauffage ? DisplayWarning : ""} />
+              <SummaryRow label="Autre chauffage" value={data.chauffageAutre ? DisplayTrue : groupErrors?.chauffage ? DisplayWarning : ""} />
               <SummaryRow label="Précision autre" value={data.chauffageAutreTexte} />
               <SummaryRow label="Circuit hydraulique fonctionnel" value={data.circuitHydraulique} />
+              <div className="my-4 font-medium text-green-500">Thermostats</div>
+              <SummaryRow label="Kit bi-zone" value={data.thermostatBiZone ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Thermostat filaire" value={data.thermostatFilaire ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Thermostat non filaire" value={data.thermostatNonFilaire ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Plancher chauffant" value={data.plancherChauffant ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Pas de thermostat" value={data.pasDeThermostat} />
+              <div className="my-4 font-medium text-green-500">Menuiseries à remplacer</div>
+              <SummaryRow label="Menuiseries à changer (quantité)" value={data.quantiteFenetres} />
+              <SummaryRow label="Menuiseries à changer (matière)" value={data.matiereFenetres} />
+              <SummaryRow label="Volets roulants (quantité)" value={data.quantiteVolets} />
             </div>
           </SectionCard>
 
@@ -217,39 +241,21 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
       </div>
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
-          {/* Type de radiateurs */}
-          <SectionCard title="Type de radiateurs" icon={Flame}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Radiateurs alu" value={data.radiateurAlu ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Radiateurs acier" value={data.radiateurAcier ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Radiateurs fonte" value={data.radiateurFonte ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Plancher chauffant" value={data.plancherChauffant ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Nombre de radiateurs" value={data.nombreRadiateurs} />
-            </div>
-          </SectionCard>
-          {/* Thermostats */}
-          <SectionCard title="Thermostats" icon={Flame}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Kit bi-zone" value={data.thermostatBiZone ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Thermostat filaire" value={data.thermostatFilaire ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Thermostat non filaire" value={data.thermostatNonFilaire ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Plancher chauffant" value={data.plancherChauffant ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Pas de thermostat" value={data.pasDeThermostat} />
-            </div>
-          </SectionCard>
           {/* Électricité */}
-          <SectionCard title="Électricité" icon={Zap}>
-            <div className="grid gap-x-8">
-              <SummaryRow label="Monophasé" value={data.monophase ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Triphasé" value={data.triphase ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Installation aux normes" value={data.installationAuxNormes} />
-              <SummaryRow label="Ampérage disjoncteur général" value={data.amperageDisjoncteur ? `${data.amperageDisjoncteur} A` : ""} />
-              <SummaryRow label="Ampérage max" value={data.amperageMax ? `${data.amperageMax} A` : ""} />
-              <SummaryRow label="Emplacement tableau principal" value={data.emplacementTableauPrincipal} />
-              <SummaryRow label="Linky" value={data.linky} />
-              <SummaryRow label="Abonnement kVA" value={data.abonnementKva ? `${data.abonnementKva} kVA` : ""} />
-            </div>
-          </SectionCard>
+          {onlyForElectricProduct() &&
+            <SectionCard title="Électricité" icon={Zap}>
+              <div className="grid gap-x-8">
+                <SummaryRow label="Monophasé" value={data.monophase ? DisplayTrue : DisplayWarning} />
+                <SummaryRow label="Triphasé" value={data.triphase ? DisplayTrue : DisplayWarning} />
+                <SummaryRow label="Installation aux normes" value={data.installationAuxNormes ? data.installationAuxNormes : DisplayWarning} />
+                <SummaryRow label="Ampérage disjoncteur général" value={data.amperageDisjoncteur ? `${data.amperageDisjoncteur} A` : DisplayWarning} />
+                <SummaryRow label="Ampérage max" value={data.amperageMax ? `${data.amperageMax} A` : DisplayWarning} />
+                <SummaryRow label="Emplacement tableau principal" value={data.emplacementTableauPrincipal ? data.emplacementTableauPrincipal : DisplayWarning} />
+                <SummaryRow label="Linky" value={data.linky ? data.linky : DisplayWarning} />
+                <SummaryRow label="Abonnement kVA" value={data.abonnementKva ? `${data.abonnementKva} kVA` : DisplayWarning} />
+              </div>
+            </SectionCard>
+          }
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
@@ -340,36 +346,40 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
           {/* SPLITS détail */}
-          <SectionCard title="Splits PAC air-air(détail par pièces)" icon={Wind}>
-            {Array.isArray(data.splits) && data.splits.length > 0 ? (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-center">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-2 pr-4">Pièce</th>
-                      <th className="py-2 pr-4">Puissance</th>
-                      <th className="py-2 pr-4">Dos à dos</th>
-                      <th className="py-2 pr-4">Pompe de relevage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.splits.map((split, i) => (
-                      <tr key={i} className="border-b last:border-b-0">
-                        <td className="py-2 pr-4">{split?.nomPiece ? split?.nomPiece : "—"}</td>
-                        <td className="py-2 pr-4">{split?.puissanceKw ? `${split.puissanceKw} kW` : "—"}</td>
-                        <td className="py-2 pr-4">{split?.dosADos ? split?.dosADos : "—"}</td>
-                        <td className="py-2 pr-4">{split?.pompeRelevage ? split.pompeRelevage : "—"}</td>
+          {selectedOptions?.pacAirAir &&
+            <SectionCard title="Splits PAC air-air(détail par pièces)" icon={Wind}>
+              {Array.isArray(data.splits) && data.splits.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm text-center">
+                    <thead>
+                      <tr className="border-b">
+                        <th className="py-2 pr-4">Pièce</th>
+                        <th className="py-2 pr-4">Puissance</th>
+                        <th className="py-2 pr-4">Dos à dos</th>
+                        <th className="py-2 pr-4">Pompe de relevage</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            ) : (
-              <div className="text-sm text-muted-foreground">Aucun split renseigné.</div>
-            )}
-          </SectionCard>
+                    </thead>
+                    <tbody>
+                      {data.splits.map((split, i) => (
+                        <tr key={i} className="border-b last:border-b-0">
+                          <td className="py-2 pr-4">{split?.nomPiece ? split?.nomPiece : "—"}</td>
+                          <td className="py-2 pr-4">{split?.puissanceKw ? `${split.puissanceKw} kW` : "—"}</td>
+                          <td className="py-2 pr-4">{split?.dosADos ? split?.dosADos : "—"}</td>
+                          <td className="py-2 pr-4">{split?.pompeRelevage ? split.pompeRelevage : "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-sm text-muted-foreground">Aucun split renseigné.</div>
+              )}
+            </SectionCard>
+          }
+
           {/* RADIATEURS */}
           <SectionCard title="Radiateurs (détail)" icon={Sun}>
+            <SummaryRow label="Plancher chauffant" value={data.plancherChauffant ? DisplayTrue : ""} />
             {Array.isArray(data.radiateurs) && data.radiateurs.length > 0 ? (
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-center">
@@ -400,10 +410,10 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
-      <div className="a4-page flex flex-col justify-between space-y-1">
-        <div className="space-y-1">
-          {/* PV */}
-          {selectedOptions?.pacAirAir &&
+      {selectedOptions?.photovoltaique || selectedOptions.ssc &&
+        <div className="a4-page flex flex-col justify-between space-y-1">
+          <div className="space-y-1">
+            {/* PV */}
             <SectionCard title="Photovoltaïque" icon={Sun}>
               <div className="grid gap-x-8">
                 <SummaryRow label="Pose au sol" value={data.pvTypePoseAuSol ? DisplayTrue : DisplayFalse} />
@@ -425,42 +435,42 @@ const PdfContentDossier: React.FC<PdfContentCommercialProps> = ({ data, selected
                 {/* <SummaryRow label="Taille SSC" value={data.pvSscTaille} /> */}
               </div>
             </SectionCard>
-          }
-          {/* Commentaires*/}
-          <SectionCard title="Commentaires & particularités chantier" icon={NotebookTabs}>
-            <div className="text-sm">
-              {data.commentaires}
-            </div>
-          </SectionCard>
+          </div>
+          <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
         </div>
-        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
-      </div>
+      }
       <div className="a4-page flex flex-col justify-between space-y-1">
         <div className="space-y-1">
           {/* Photos checklist */}
           <SectionCard title="Photos à faire (obligatoire)">
             <h3 className="font-semibold text-lime-600 mb-2">Équipement</h3>
             <div className="grid gap-x-8">
-              <SummaryRow label="Compteur" value={data.photoCompteur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Chaudière à remplacer" value={data.photoChaudiere ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement du groupe extérieur" value={data.photoGroupeExt ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Maison vue de la rue" value={data.photoMaison ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Combles" value={data.photoCombles ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Système ECS" value={data.photoECS ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Disjoncteur" value={data.photoDisjoncteur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Tuyauterie de la chaudière" value={data.photoTuyauterie ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Radiateurs" value={data.photoRadiateurs ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Plafonds" value={data.photoPlafonds ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Sous-sol" value={data.photoSousSol ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Tableaux électriques existants" value={data.photoTableauElec ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Ventilation" value={data.photoVentilation ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Emplacement des unités intérieures" value={data.photoUniteInt ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Planchers" value={data.photoPlancher ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Rez-de-chaussée" value={data.photoRDC ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Fenêtres" value={data.photoFenetres ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Portes-fenêtres" value={data.photoPorteFenetre ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Façades extérieures" value={data.photoFacade ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Porte" value={data.photoPorte ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Compteur" value={data.photoCompteur ? DisplayTrue : fieldErrors?.photoCompteur ? DisplayWarning : ""} />
+              <SummaryRow label="Chaudière à remplacer" value={data.photoChaudiere ? DisplayTrue : fieldErrors?.photoChaudiere ? DisplayWarning : ""} />
+              <SummaryRow label="Emplacement du groupe extérieur" value={data.photoGroupeExt ? DisplayTrue : fieldErrors?.photoGroupeExt ? DisplayWarning : ""} />
+              <SummaryRow label="Maison vue de la rue" value={data.photoMaison ? DisplayTrue : fieldErrors?.photoMaison ? DisplayWarning : ""} />
+              <SummaryRow label="Combles" value={data.photoCombles ? DisplayTrue : fieldErrors?.photoCombles ? DisplayWarning : ""} />
+              <SummaryRow label="Système ECS" value={data.photoECS ? DisplayTrue : fieldErrors?.photoECS ? DisplayWarning : ""} />
+              <SummaryRow label="Disjoncteur" value={data.photoDisjoncteur ? DisplayTrue : fieldErrors?.photoDisjoncteur ? DisplayWarning : ""} />
+              <SummaryRow label="Tuyauterie de la chaudière" value={data.photoTuyauterie ? DisplayTrue : fieldErrors?.photoTuyauterie ? DisplayWarning : ""} />
+              <SummaryRow label="Radiateurs" value={data.photoRadiateurs ? DisplayTrue : fieldErrors?.photoRadiateurs ? DisplayWarning : ""} />
+              <SummaryRow label="Plafonds" value={data.photoPlafonds ? DisplayTrue : fieldErrors?.photoPlafonds ? DisplayWarning : ""} />
+              <SummaryRow label="Sous-sol" value={data.photoSousSol ? DisplayTrue : fieldErrors?.photoSousSol ? DisplayWarning : ""} />
+              <SummaryRow label="Tableaux électriques existants" value={data.photoTableauElec ? DisplayTrue : fieldErrors?.photoTableauElec ? DisplayWarning : ""} />
+              <SummaryRow label="Ventilation" value={data.photoVentilation ? DisplayTrue : fieldErrors?.photoVentilation ? DisplayWarning : ""} />
+              <SummaryRow label="Emplacement des unités intérieures" value={data.photoUniteInt ? DisplayTrue : fieldErrors?.photoUniteInt ? DisplayWarning : ""} />
+              <SummaryRow label="Planchers" value={data.photoPlancher ? DisplayTrue : ""} />
+              <SummaryRow label="Rez-de-chaussée" value={data.photoRDC ? DisplayTrue : ""} />
+              <SummaryRow label="Fenêtres" value={data.photoFenetres ? DisplayTrue : fieldErrors?.photoFenetres ? DisplayWarning : ""} />
+              <SummaryRow label="Portes-fenêtres" value={data.photoPorteFenetre ? DisplayTrue : ""} />
+              <SummaryRow label="Façades extérieures" value={data.photoFacade ? DisplayTrue : fieldErrors?.photoFacade ? DisplayWarning : ""} />
+              <SummaryRow label="Porte" value={data.photoPorte ? DisplayTrue : fieldErrors?.photoPorte ? DisplayWarning : ""} />
+            </div>
+          </SectionCard>
+          {/* Commentaires*/}
+          <SectionCard title="Détails dossier & chantier" icon={NotebookTabs}>
+            <div className="text-sm">
+              {data.commentaires}
             </div>
           </SectionCard>
         </div>

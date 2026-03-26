@@ -136,6 +136,17 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     }
   }
 
+  const getLabel = (key) => {
+    let label = "";
+    label = key.replace(/([A-Z])/g, " $1")
+      .replace(/^./, (s) => s.toUpperCase())
+      .toUpperCase();
+    return label;
+  }
+
+  const selectedProducts = Object.keys(simulData?.dimensionnement?.selectedSections)
+    .filter((k) => simulData?.dimensionnement?.selectedSections[k])
+
   return (
     <div className="space-y-4">
       {/* Page title */}
@@ -144,18 +155,46 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           Montage du dossier de liaison
         </h2>
       </div>
-      {/* DOSSIER DE LIAISON */}
-      <SectionCard title="Infos générales">
+      <SectionCard title="Infos RDV">
+        <div className="my-2 flex items-center text-sm">
+          <div className="mr-4 font-medium">Produit(s) choisi(s)</div>
+          {selectedProducts?.length > 0 &&
+            <div className="flex">
+              {selectedProducts?.map((product, index) => {
+                return (
+                  <div key={product}>
+                    <div className="font-medium">{getLabel(product)}{index < selectedProducts.length - 1 &&
+                      <span className="mx-2">—</span>
+                    }</div>
+
+                  </div>
+                )
+              })}
+            </div>
+          }
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput label="Accompagnateur" name="conseiller" value={formDossier.conseiller} readonly={true} />
-          <div className="flex items-end gap-2">
-            <CheckboxField label="Perso" checked={formDossier.perso} onChange={(v) => update("perso", v)} />
-            <CheckboxField label="Parrainage" checked={formDossier.parrain} onChange={(v) => update("parrain", v)} />
-            <CheckboxField label="T1" checked={formDossier.t1} onChange={(v) => update("t1", v)} />
-            <CheckboxField label="T2" checked={formDossier.t2} onChange={(v) => update("t2", v)} />
-            <CheckboxField label="T3" checked={formDossier.t3} onChange={(v) => update("t3", v)} />
-            <CheckboxField label="Lead" checked={formDossier.lead} onChange={(v) => update("lead", v)} />
+          <div className={`flex flex-col ${groupErrors.infosRDV ? "justify-end" : "justify-center"}`}>
+            <div className="flex gap-2">
+              <CheckboxField label="Perso" checked={formDossier.perso} onChange={(v) => update("perso", v)} />
+              <CheckboxField label="Parrainage" checked={formDossier.parrain} onChange={(v) => update("parrain", v)} />
+              <CheckboxField label="T1" checked={formDossier.t1} onChange={(v) => update("t1", v)} />
+              <CheckboxField label="T2" checked={formDossier.t2} onChange={(v) => update("t2", v)} />
+              <CheckboxField label="T3" checked={formDossier.t3} onChange={(v) => update("t3", v)} />
+              <CheckboxField label="Lead" checked={formDossier.lead} onChange={(v) => update("lead", v)} />
+            </div>
+            {groupErrors.infosRDV && (
+              <p className="mt-2 text-sm text-destructive flex items-center gap-1">
+                <TriangleAlert className="h-4 w-4" />
+                {REQUIRED_GROUPS.find((group) => group.key === "infosRDV")?.message}
+              </p>
+            )}
           </div>
+        </div>
+      </SectionCard>
+      <SectionCard title="Infos Client">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormInput label="Nom / prénom client" name="nomClient" value={formDossier.nomClient} readonly={true} />
           <FormInput label="Téléphone" name="telephone" value={formDossier.telephone} type="tel" readonly={true} />
           <FormInput label="Adresse fiscale" name="adresseDossier" value={formDossier.adresseFiscale} readonly={true} className="md:col-span-2" />
@@ -166,7 +205,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <FormInput label="Ville chantier" name="adresseInstallation" value={formDossier.ville} readonly={true} className="" />
         </div>
       </SectionCard>
-
       {/* RÈGLEMENT */}
       <SectionCard title="Règlement">
         <div className="flex flex-wrap gap-6">
@@ -181,7 +219,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           </p>
         )}
       </SectionCard>
-
       {/* DOSSIER DE PRIME */}
       <SectionCard title="Dossier de prime">
         <div className="flex flex-wrap gap-6 mb-4">
@@ -197,28 +234,36 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           </p>
         )}
       </SectionCard>
-
       {/* PIECES CHECKLITS*/}
       <SectionCard title="Éléments obligatoires pour pose">
         <h3 className="font-semibold text-lime-600 mb-2">Pièces / checklist</h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 mb-4">
-          <CheckboxField label="Devis non signé" checked={formDossier.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} isMissing={fieldErrors["devisNonSigne"]} />
-          <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} />
-          <CheckboxField label="Carte d'identité" checked={formDossier.carteIdentite} onChange={(v) => update("carteIdentite", v)} isMissing={fieldErrors["carteIdentite"]} />
-          <CheckboxField label="2 derniers avis d'impôts" checked={formDossier.deuxDerniersAvisImpots} onChange={(v) => update("deuxDerniersAvisImpots", v)} isMissing={fieldErrors["deuxDerniersAvisImpots"]} />
-          <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} isMissing={fieldErrors["taxeFonciereActeNotarie"]} />
-          <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} />
-          <CheckboxField label="Identité numérique" checked={formDossier.idNumerique} onChange={(v) => update("idNumerique", v)} />
-          <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} isMissing={fieldErrors["rib"]} />
-          <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} isMissing={fieldErrors["attestationFioul"]} />
-          <CheckboxField label="Attestation indivisionnaire" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
-          <CheckboxField label="Attestation propriétaire bailleur" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} />
-          <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} isMissing={fieldErrors["noteDimensionnement"]} />
-          <CheckboxField label="Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} isMissing={fieldErrors["revolt"]} />
-          <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} isMissing={fieldErrors["pouvoir"]} />
+          <div>
+            <div className="mb-4 text-sm underline">Documents client à récupérer</div>
+            <CheckboxField label="2 derniers avis d'impôts" checked={formDossier.deuxDerniersAvisImpots} onChange={(v) => update("deuxDerniersAvisImpots", v)} isMissing={fieldErrors["deuxDerniersAvisImpots"]} />
+            <CheckboxField label="Taxe foncière ou acte notarié" checked={formDossier.taxeFonciereActeNotarie} onChange={(v) => update("taxeFonciereActeNotarie", v)} isMissing={fieldErrors["taxeFonciereActeNotarie"]} />
+            <CheckboxField label="RIB" checked={formDossier.rib} onChange={(v) => update("rib", v)} isMissing={fieldErrors["rib"]} />
+            <CheckboxField label="Carte d'identité" checked={formDossier.carteIdentite} onChange={(v) => update("carteIdentite", v)} isMissing={fieldErrors["carteIdentite"]} />
+          </div>
+          <div>
+            <div className="mb-4 text-sm underline">Documents à fournir</div>
+            <CheckboxField label="Devis non signé" checked={formDossier.devisNonSigne} onChange={(v) => update("devisNonSigne", v)} isMissing={fieldErrors["devisNonSigne"]} />
+            <CheckboxField label="Identité numérique" checked={formDossier.idNumerique} onChange={(v) => update("idNumerique", v)} />
+            <CheckboxField label="Note de dimensionnement" checked={formDossier.noteDimensionnement} onChange={(v) => update("noteDimensionnement", v)} isMissing={fieldErrors["noteDimensionnement"]} />
+            <CheckboxField label="Étude solaire Revolt" checked={formDossier.revolt} onChange={(v) => update("revolt", v)} isMissing={fieldErrors["revolt"]} />
+          </div>
+          <div>
+            <div className="mb-4 text-sm underline">Documents client à faire signer</div>
+            <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} />
+            <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} />
+            <CheckboxField label="Attestation indivisionnaire MPR" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
+            <CheckboxField label="Attestation propriétaire bailleur MPR" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} />
+            <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} isMissing={fieldErrors["attestationFioul"]} />
+            <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} isMissing={fieldErrors["pouvoir"]} />
+
+          </div>
         </div>
       </SectionCard>
-
       {/* DOSSIER DE FINANCEMENT */}
       {formDossier.reglementFinancement &&
         <SectionCard title="Dossier de financement">
@@ -235,7 +280,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           )}
         </SectionCard>
       }
-
       {/* COMPTE CEE  et MPR */}
       <SectionCard title="Compte Prime EDF & MaPrimeRénov'">
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime EDF</h3>
@@ -274,7 +318,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <FormInput label="MDP" name="mdpGmail" type="password" value={formDossier.mdpGmail} onChange={(v) => update("mdpGmail", v)} />
         </div>
       </SectionCard>
-
       {/* MAISON */}
       <SectionCard title="Maison">
         <FormInput type="number" label="Année de construction" name="anneeConstruction_d" value={formDossier.anneeConstruction} onChange={(v) => update("anneeConstruction", v)} readonly={true} />
