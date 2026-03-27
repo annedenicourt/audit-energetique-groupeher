@@ -172,54 +172,6 @@ const AdminDocumentsView: React.FC<{
   };
 
 
-  /* const handlePrintDossier = useCallback(async (row: ClientRow) => {
-    if (!row.dossier) return;
-    try {
-      // Fetch dossier payload
-      const { data: dossierData, error: dossierErr } = await supabase
-        .from("dossiers")
-        .select("payload")
-        .eq("id", row.dossier.id)
-        .single();
-
-
-      if (dossierErr || !dossierData) {
-        toast.error("Impossible de récupérer le dossier.");
-        return;
-      }
-
-      // Fetch study payload for simulData
-      let simulData;
-      if (row.dossier.study_id) {
-        console.log(printPayload)
-        const { data: studyData } = await supabase
-          .from("etudes_energetiques")
-          .select("payload")
-          .eq("id", row.dossier.study_id)
-          .single();
-        if (studyData) simulData = studyData.payload;
-        setPrintSimulData(studyData.payload);
-        console.log(studyData.payload)
-
-      }
-      setPrintPayload(dossierData.payload);
-
-      const originalTitle = document.title;
-
-      document.title = `Dossier_liaison_${row.dossier.client_name}`;
-
-      // Wait for render then print
-      setTimeout(() => {
-        window.print();
-        document.title = originalTitle;
-
-      }, 400);
-    } catch {
-      toast.error("Erreur lors de la préparation de l'impression.");
-    }
-  }, []); */
-
-
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
 
@@ -307,11 +259,24 @@ const AdminDocumentsView: React.FC<{
                   <TableCell className="text-center">{formatDate(row.study.updated_at)}</TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
-                      {isAdmin &&
+                      {/* {isAdmin &&
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleDownloadPdf("etude", row.study.id)}
+                          disabled={regeneratingId === `etude-${row.study.id}`}
+                          className="hover:bg-orange-500/80"
+                        >
+                          <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                          {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                        </Button>
+                      } */}
+                      {isAdmin &&
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          //onClick={() => handleDownloadPdf("etude", row.study.id)}
+                          onClick={() => window.open(`/print/etude/${row.study.id}`, "_blank")}
                           disabled={regeneratingId === `etude-${row.study.id}`}
                           className="hover:bg-orange-500/80"
                         >

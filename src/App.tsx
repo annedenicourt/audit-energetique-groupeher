@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Synthese from "./pages/Synthese";
 import SimulMpr from "./pages/SimulMpr";
 import PrintDossierPage from "./components/Admin/PrintDossierPage";
+import PrintEtudePage from "./components/Admin/PrintEtudePage";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/simulateur-mpr" element={<SimulMpr />} />
             <Route path="/synthese" element={<ProtectedRoute><Synthese /></ProtectedRoute>} />
             <Route path="/admin" element={<ProtectedRoute><Admin /></ProtectedRoute>} />
+            <Route path="/print/etude/:id" element={<ProtectedRoute><PrintEtudePage /></ProtectedRoute>} />
             <Route path="/print/dossier/:id" element={<ProtectedRoute><PrintDossierPage /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
