@@ -184,6 +184,19 @@ const Synthese: React.FC = () => {
         </div>
       )}
 
+      <div className="mt-4 flex justify-center">
+        <button
+          className="nav-button nav-button--primary px-6"
+          disabled={isSaving}
+          onClick={() => setIsModalOpen(true)}
+        >
+          <FileCheck className="w-5 h-5" />
+          Valider et sauvegarder le dossier
+        </button>
+      </div>
+
+
+
       {/* ZONE PDF OFF-SCREEN */}
       {/* <div className="fixed -left-[10000px] top-0">
         <div id="pdf-content-etude">

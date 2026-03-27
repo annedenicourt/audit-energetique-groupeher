@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, Printer, Download } from "lucide-react";
+import { Search, ArrowUpDown, LayoutList, LayoutGrid, FileText, RotateCcw, FolderOpen, Printer, Download, Eye } from "lucide-react";
 import { downloadPdfFromDb } from "@/utils/pdf/generatePdfFromPayload";
 import { Input } from "@/components/ui/input";
 import { useState, useMemo, useCallback } from "react";
@@ -13,6 +13,9 @@ import { Badge } from "../ui/badge";
 import { useNavigate } from "react-router-dom";
 import PdfContentDossier from "@/components/PdfContentDossier";
 import { DossierFormData } from "@/types/dossierFormData";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import { ScrollArea } from "../ui/scroll-area";
+import { useUserRole } from "@/hooks/useUserRole";
 
 
 type SortKey = "client_name_asc" | "client_name_desc" | "commercial_asc" | "commercial_desc" | "date_desc" | "date_asc";
@@ -63,6 +66,9 @@ const AdminDocumentsView: React.FC<{
   const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
   const [printPayload, setPrintPayload] = useState(null);
   const [printSimulData, setPrintSimulData] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const { role, loading: roleLoading } = useUserRole();
+  const isAdmin = role === "admin";
 
   const profileMap = useMemo(() => {
     const map = new Map<string, string>();
@@ -114,12 +120,6 @@ const AdminDocumentsView: React.FC<{
     });
   }, [rows, search, filterCommercial, sortKey, profileMap]);
 
-  /* const handleOpenPdf = async (pdfPath: string | null, label: string) => {
-    if (!pdfPath) { toast.error(`Aucun PDF ${label} disponible.`); return; }
-    const { data, error } = await supabase.storage.from("pdfs").createSignedUrl(pdfPath, 60);
-    if (error || !data?.signedUrl) { toast.error("Impossible de générer le lien PDF."); return; }
-    window.open(data.signedUrl, "_blank");
-  }; */
 
   const handleRestore = async (row: ClientRow) => {
     setRestoringId(row.study.id);
@@ -171,7 +171,8 @@ const AdminDocumentsView: React.FC<{
     }
   };
 
-  const handlePrintDossier = useCallback(async (row: ClientRow) => {
+
+  /* const handlePrintDossier = useCallback(async (row: ClientRow) => {
     if (!row.dossier) return;
     try {
       // Fetch dossier payload
@@ -181,7 +182,6 @@ const AdminDocumentsView: React.FC<{
         .eq("id", row.dossier.id)
         .single();
 
-      setPrintPayload(dossierData.payload);
 
       if (dossierErr || !dossierData) {
         toast.error("Impossible de récupérer le dossier.");
@@ -191,6 +191,7 @@ const AdminDocumentsView: React.FC<{
       // Fetch study payload for simulData
       let simulData;
       if (row.dossier.study_id) {
+        console.log(printPayload)
         const { data: studyData } = await supabase
           .from("etudes_energetiques")
           .select("payload")
@@ -198,8 +199,10 @@ const AdminDocumentsView: React.FC<{
           .single();
         if (studyData) simulData = studyData.payload;
         setPrintSimulData(studyData.payload);
-      }
+        console.log(studyData.payload)
 
+      }
+      setPrintPayload(dossierData.payload);
 
       const originalTitle = document.title;
 
@@ -210,20 +213,15 @@ const AdminDocumentsView: React.FC<{
         window.print();
         document.title = originalTitle;
 
-        // Reset after print
-        setPrintPayload(null);
-        setPrintSimulData(null);
       }, 400);
     } catch {
       toast.error("Erreur lors de la préparation de l'impression.");
     }
-  }, []);
+  }, []); */
+
 
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
-
-  console.log(printPayload)
-  console.log(printSimulData)
 
   return (
     <div className="space-y-6">
@@ -309,29 +307,19 @@ const AdminDocumentsView: React.FC<{
                   <TableCell className="text-center">{formatDate(row.study.updated_at)}</TableCell>
                   <TableCell>
                     <div className="flex justify-center gap-2">
-                      {/* <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
-                        <FolderOpen className="h-3 w-3" /> Étude
-                      </Badge>
-                      {row.dossier ? (
-                        <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.dossier!.pdf_path, "dossier")}>
-                          <ArrowRightLeft className="h-3 w-3" /> Dossier
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="gap-1 opacity-50">
-                          <ArrowRightLeft className="h-3 w-3" /> Pas de dossier
-                        </Badge>
-                      )} */}
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDownloadPdf("etude", row.study.id)}
-                        disabled={regeneratingId === `etude-${row.study.id}`}
-                        className="hover:bg-orange-500/80"
-                      >
-                        <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                        {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
-                      </Button>
-                      {row.dossier && (
+                      {isAdmin &&
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDownloadPdf("etude", row.study.id)}
+                          disabled={regeneratingId === `etude-${row.study.id}`}
+                          className="hover:bg-orange-500/80"
+                        >
+                          <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                          {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                        </Button>
+                      }
+                      {/* {row.dossier && (
                         <Button
                           variant="outline"
                           size="sm"
@@ -342,18 +330,18 @@ const AdminDocumentsView: React.FC<{
                           <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
                           {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Liaison"}
                         </Button>
-                      )}
-                      {/* {row.dossier && (
+                      )} */}
+                      {row.dossier && (
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => handlePrintDossier(row)}
+                          onClick={() => window.open(`/print/dossier/${row.dossier!.id}`, "_blank")}
                           className="hover:bg-orange-500/80"
                         >
-                          <Printer className="h-4 w-4 mr-1" />
-                          Imprimer
+                          <Printer className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
+                          {regeneratingId === `dossier-${row.dossier!.id}` ? "…" : "PDF Liaison"}
                         </Button>
-                      )} */}
+                      )}
                     </div>
                   </TableCell>
                   <TableCell className="text-center space-x-2">
@@ -365,7 +353,7 @@ const AdminDocumentsView: React.FC<{
                       className="hover:bg-orange-500/80"
                     >
                       <RotateCcw className="h-4 w-4 mr-1" />
-                      Restaurer
+                      Accès étude
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -384,25 +372,13 @@ const AdminDocumentsView: React.FC<{
                 {showCommercialFilter && <p className="text-sm text-muted-foreground">Commercial : {profileMap.get(row.study.user_id) ?? "—"}</p>}
                 <p className="text-xs text-muted-foreground">Créé le : {formatDate(row.study.created_at)}</p>
                 <p className="text-xs text-muted-foreground">Modifié le : {formatDate(row.study.updated_at)}</p>
-                {/* <div className="flex gap-2 flex-wrap">
-                  <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.study.pdf_path, "étude")}>
-                    <FolderOpen className="h-3 w-3" /> Étude PDF
-                  </Badge>
-                  {row.dossier ? (
-                    <Badge variant="outline" className="gap-1 cursor-pointer hover:bg-muted" onClick={() => handleOpenPdf(row.dossier!.pdf_path, "dossier")}>
-                      <ArrowRightLeft className="h-3 w-3" /> Dossier PDF
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary" className="gap-1 opacity-50">
-                      <ArrowRightLeft className="h-3 w-3" /> Pas de dossier
-                    </Badge>
-                  )}
-                </div> */}
                 <div className="flex gap-2 flex-wrap">
-                  <Button variant="outline" size="sm" className="flex-1 hover:bg-orange-500/80" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`} >
-                    <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
-                    {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
-                  </Button>
+                  {isAdmin &&
+                    <Button variant="outline" size="sm" className="flex-1 hover:bg-orange-500/80" onClick={() => handleDownloadPdf("etude", row.study.id)} disabled={regeneratingId === `etude-${row.study.id}`} >
+                      <Download className={`h-4 w-4 mr-1 ${regeneratingId === `etude-${row.study.id}` ? "animate-spin" : ""}`} />
+                      {regeneratingId === `etude-${row.study.id}` ? "…" : "PDF Étude"}
+                    </Button>
+                  }
                   {row.dossier && (
                     <Button variant="outline" size="sm" className="flex-1 hover:bg-orange-500/80" onClick={() => handleDownloadPdf("dossier", row.dossier!.id)} disabled={regeneratingId === `dossier-${row.dossier!.id}`}>
                       <Download className={`h-4 w-4 mr-1 ${regeneratingId === `dossier-${row.dossier!.id}` ? "animate-spin" : ""}`} />
@@ -424,6 +400,29 @@ const AdminDocumentsView: React.FC<{
           <PdfContentDossier data={printPayload} simulData={printSimulData} />
         </div>
       )}
+
+      {/* <Dialog open={openDialog} onOpenChange={() => setOpenDialog(false)} >
+        <DialogTrigger asChild>
+        </DialogTrigger>
+        <DialogContent className="h-[90vh] w-[90vw]">
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes to your profile here. Click save when you&apos;re
+              done.
+            </DialogDescription>
+          </DialogHeader>
+          <ScrollArea className="w-full rounded-md border">
+            <PdfContentDossier data={printPayload} simulData={printSimulData} />
+          </ScrollArea>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog> */}
     </div>
   );
 };

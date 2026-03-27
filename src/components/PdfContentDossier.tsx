@@ -95,13 +95,13 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
                 </div>
               }
             </div>
-            <SummaryRow label="Accompagnateur" value={data.conseiller} />
-            <SummaryRow label="Perso" value={data.perso ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
-            <SummaryRow label="Parrainage" value={data.parrain ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
-            <SummaryRow label="T1" value={data.t1 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
-            <SummaryRow label="T2" value={data.t2 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
-            <SummaryRow label="T3" value={data.t3 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
-            <SummaryRow label="Lead" value={data.lead ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="Accompagnateur" value={data?.conseiller} />
+            <SummaryRow label="Perso" value={data?.perso ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="Parrainage" value={data?.parrain ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T1" value={data?.t1 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T2" value={data?.t2 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="T3" value={data?.t3 ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
+            <SummaryRow label="Lead" value={data?.lead ? DisplayTrue : groupErrors.infosRDV ? DisplayWarning : ""} />
           </SectionCard>
           {/* Infos Client */}
           <SectionCard title="Infos Client" icon={User} className="">
@@ -235,14 +235,13 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
               <SummaryRow label="Volets roulants (quantité)" value={data.quantiteVolets} />
             </div>
           </SectionCard>
-
         </div>
         <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
       </div>
-      <div className="a4-page flex flex-col justify-between space-y-1">
-        <div className="space-y-1">
-          {/* Électricité */}
-          {onlyForElectricProduct() &&
+      {onlyForElectricProduct() &&
+        <div className="a4-page flex flex-col justify-between space-y-1">
+          <div className="space-y-1">
+            {/* Électricité */}
             <SectionCard title="Électricité" icon={Zap}>
               <div className="grid gap-x-8">
                 <SummaryRow label="Monophasé" value={data.monophase ? DisplayTrue : DisplayWarning} />
@@ -255,10 +254,10 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
                 <SummaryRow label="Abonnement kVA" value={data.abonnementKva ? `${data.abonnementKva} kVA` : DisplayWarning} />
               </div>
             </SectionCard>
-          }
+          </div>
+          <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
         </div>
-        <PageFooter nomClient={data.nomClient} pagesRef={pagesRef} />
-      </div>
+      }
       {selectedOptions?.pacAirEau &&
         <div className="a4-page flex flex-col justify-between space-y-1">
           <div className="space-y-1">

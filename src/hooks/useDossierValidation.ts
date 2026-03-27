@@ -70,12 +70,12 @@ export interface ConditionalField {
 }
 
 const isMprNotEmpty = (form: DossierFormData) => {
-  const v = form.montantPrimeRenov;
+  const v = form?.montantPrimeRenov;
   return v !== "" && v !== null && v !== undefined;
 };
 
 const isMprNotEmptyAndNotZero = (form: DossierFormData) => {
-  return isMprNotEmpty(form) && form.montantPrimeRenov !== "0" && Number(form.montantPrimeRenov) !== 0;
+  return isMprNotEmpty(form) && form?.montantPrimeRenov !== "0" && Number(form?.montantPrimeRenov) !== 0;
 };
 
 export const CONDITIONAL_FIELDS: ConditionalField[] = [
@@ -105,7 +105,7 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
   {
     key: "attestationProprietaireBailleur",
     label: "Attestation propriétaire bailleur",
-    isRequired: (form) => form.proprietaireBailleur === true && isMprNotEmptyAndNotZero(form),
+    isRequired: (form) => form?.proprietaireBailleur === true && isMprNotEmptyAndNotZero(form),
   },
   {
     key: "attestationFioul",
@@ -245,7 +245,7 @@ export const CONDITIONAL_FIELDS: ConditionalField[] = [
   {
     key: "commentaires",
     label: "Détails dossier & chantier",
-    isRequired: (_form, simul) => _form.commentaires.length <= 15
+    isRequired: (_form, simul) => _form?.commentaires.length <= 15
   },
 ];
 /* Types de retour */
@@ -265,15 +265,16 @@ export function useDossierValidation(
     // Groupes
     const gErrors: DossierGroupErrors = {};
     REQUIRED_GROUPS?.forEach((group)=> {
-      const hasAtLeastOne = group.fields.some((f) => formDossier[f] === true);
+      const hasAtLeastOne = group.fields.some((f) => formDossier?.[f] === true);
       gErrors[group.key] = !hasAtLeastOne;
     })
+    
 
     // Champs conditionnels
     const fErrors: DossierFieldErrors = {};
     CONDITIONAL_FIELDS?.forEach((field)=> {
        if (field.isRequired(formDossier, simulData ?? null)) {
-        fErrors[field.key] = formDossier[field.key] !== true;
+        fErrors[field.key] = formDossier?.[field.key] !== true;
       }
     })
 
