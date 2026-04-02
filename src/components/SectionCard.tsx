@@ -47,7 +47,7 @@ const SectionCard: React.FC<SectionCardProps> = ({
           <div className="flex gap-1">
             {(Array.isArray(link) ? link : [link]).map((item, index) => (
               <a
-                key={index}
+                key={`card-${index}`}
                 href={item}
                 target="_blank"
                 rel="noopener"

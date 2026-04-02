@@ -173,7 +173,7 @@ const AdminDocumentsView: React.FC<{
 
 
   const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric" });
+    new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 
   return (
     <div className="space-y-6">
@@ -258,7 +258,7 @@ const AdminDocumentsView: React.FC<{
                   <TableCell className="text-center">{formatDate(row.study.created_at)}</TableCell>
                   <TableCell className="text-center">{formatDate(row.study.updated_at)}</TableCell>
                   <TableCell>
-                    <div className="flex justify-center gap-2">
+                    <div className="ml-5 flex justify-start gap-2">
                       {/* {isAdmin &&
                         <Button
                           variant="outline"
