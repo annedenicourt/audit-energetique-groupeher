@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FileDown, Plus, Trash2, TriangleAlert } from "lucide-react";
+import { Plus, Trash2, TriangleAlert } from "lucide-react";
 import { FormData } from "@/types/formData";
 import {
   DossierFormData,
@@ -23,10 +23,9 @@ interface CheckboxFieldProps {
   checked: boolean;
   onChange: (v: boolean) => void;
   isMissing?: boolean,
-  download?: string | null,
 }
 
-const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange, isMissing, download }) => (
+const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange, isMissing }) => (
   <label className="flex items-center gap-2 cursor-pointer py-1">
     <input
       type="checkbox"
@@ -35,7 +34,6 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange,
       className={`w-4 h-4 accent-primary ${isMissing && "ring-2 ring-red-500"}`}
     />
     <span className={`text-sm ${isMissing ? "text-red-500 font-semibold" : ""}`}>{label}</span>
-    {!!download && <FileDown size="24" />}
   </label>
 );
 
@@ -257,7 +255,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           </div>
           <div>
             <div className="mb-4 text-sm underline">Documents client à faire signer</div>
-            <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} download={"devisSigne"} />
+            <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} />
             <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} />
             <CheckboxField label="Attestation indivisionnaire MPR" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
             <CheckboxField label="Attestation propriétaire bailleur MPR" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} />
