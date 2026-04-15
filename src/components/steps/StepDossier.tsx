@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Plus, Trash2, TriangleAlert } from "lucide-react";
+import { Plus, Trash2, TriangleAlert, PenLine } from "lucide-react";
 import { FormData } from "@/types/formData";
 import {
   DossierFormData,
@@ -16,17 +16,23 @@ import FormTextarea from "../FormTextarea";
 import { OUI_NON, MATERIAUX_RADIATEUR } from "@/utils/handleForm";
 import { useDossierValidation, REQUIRED_GROUPS } from "@/hooks/useDossierValidation";
 import { PDFDocument } from 'pdf-lib';
-
+import SignatureFlow from "@/components/signature/SignatureFlow";
+import type { SignableDocumentConfig, SignableDocumentId } from "@/types/signableDocuments";
+import { buildPdfFieldData } from "@/utils/pdf/buildPdfFieldData";
+import { useAuth } from "@/contexts/AuthContext";
+import { getSignaturePublicUrl } from "@/utils/saveUserSignature";
 
 interface CheckboxFieldProps {
   label: string;
   checked: boolean;
   onChange: (v: boolean) => void;
   isMissing?: boolean,
+  actionIcon?: React.ReactNode;
+  onActionClick?: () => void;
 }
 
-const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange, isMissing }) => (
-  <label className="flex items-center gap-2 cursor-pointer py-1">
+const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange, isMissing, actionIcon, onActionClick }) => (
+  <label className="flex items-start gap-2 cursor-pointer py-1">
     <input
       type="checkbox"
       checked={checked}
@@ -34,6 +40,20 @@ const CheckboxField: React.FC<CheckboxFieldProps> = ({ label, checked, onChange,
       className={`w-4 h-4 accent-primary ${isMissing && "ring-2 ring-red-500"}`}
     />
     <span className={`text-sm ${isMissing ? "text-red-500 font-semibold" : ""}`}>{label}</span>
+    {actionIcon && onActionClick && (
+      <button
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onActionClick();
+        }}
+        className="ml-1 p-1 rounded hover:bg-accent text-muted-foreground hover:text-foreground transition-colors"
+        title="Signer ce document"
+      >
+        {actionIcon}
+      </button>
+    )}
   </label>
 );
 
@@ -52,6 +72,16 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
     } catch { /* ignore */ }
     return { ...defaultDossierFormData };
   });
+  const [showSignatureFlow, setShowSignatureFlow] = useState(false);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<SignableDocumentId | null>(null);
+  const [signatureDataUrl, setSignatureDataUrl] = useState<string>("");
+  const [signatureVersion, setSignatureVersion] = useState(0);
+  const { profile } = useAuth()
+
+  const signatureCommercialUrl = profile?.signature_path
+    ? `${getSignaturePublicUrl(profile.signature_path)}?t=${signatureVersion}`
+    : "";
+
 
   useEffect(() => {
     try {
@@ -89,6 +119,11 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
   const update = useCallback(<K extends keyof DossierFormData>(field: K, value: DossierFormData[K]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   }, []);
+
+  const handleSignatureComplete = useCallback((signedDocId: SignableDocumentId) => {
+    update(signedDocId as keyof DossierFormData, true as DossierFormData[keyof DossierFormData]);
+    setShowSignatureFlow(false);
+  }, [update]);
 
   const updateSplit = useCallback((index: number, field: keyof SplitData, value: string) => {
     setForm((prev) => {
@@ -255,12 +290,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           </div>
           <div>
             <div className="mb-4 text-sm underline">Documents client à faire signer</div>
-            <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} />
-            <CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} />
-            <CheckboxField label="Attestation indivisionnaire MPR" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} />
-            <CheckboxField label="Attestation propriétaire bailleur MPR" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} />
-            <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} isMissing={fieldErrors["attestationFioul"]} />
-            <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} isMissing={fieldErrors["pouvoir"]} />
+            <CheckboxField label="Devis signé" checked={formDossier.devisSigne} onChange={(v) => update("devisSigne", v)} isMissing={fieldErrors["devisSigne"]} onActionClick={() => { setSelectedDocumentId("devisSigne"); setShowSignatureFlow(true); }} />
+            < CheckboxField label="Mandat MaPrimeRénov" checked={formDossier.mandatMaPrimeRenov} onChange={(v) => update("mandatMaPrimeRenov", v)} isMissing={fieldErrors["mandatMaPrimeRenov"]} actionIcon={<PenLine className="h-4 w-4" />} onActionClick={() => { setSelectedDocumentId("mandatMaPrimeRenov"); setShowSignatureFlow(true); }} />
+            <CheckboxField label="Attestation indivisionnaire MPR" checked={formDossier.attestationIndivisionnaire} onChange={(v) => update("attestationIndivisionnaire", v)} actionIcon={<PenLine className="h-4 w-4" />} onActionClick={() => { setSelectedDocumentId("attestationIndivisionnaire"); setShowSignatureFlow(true); }} />
+            <CheckboxField label="Attestation propriétaire bailleur MPR" checked={formDossier.attestationProprietaireBailleur} onChange={(v) => update("attestationProprietaireBailleur", v)} isMissing={fieldErrors["attestationProprietaireBailleur"]} actionIcon={<PenLine className="h-4 w-4" />} onActionClick={() => { setSelectedDocumentId("attestationProprietaireBailleur"); setShowSignatureFlow(true); }} />
+            <CheckboxField label="Attestation fioul" checked={formDossier.attestationFioul} onChange={(v) => update("attestationFioul", v)} isMissing={fieldErrors["attestationFioul"]} actionIcon={<PenLine className="h-4 w-4" />} onActionClick={() => { setSelectedDocumentId("attestationFioul"); setShowSignatureFlow(true); }} />
+            <CheckboxField label="Pouvoir" checked={formDossier.pouvoir} onChange={(v) => update("pouvoir", v)} isMissing={fieldErrors["pouvoir"]} actionIcon={<PenLine className="h-4 w-4" />} onActionClick={() => { setSelectedDocumentId("pouvoir"); setShowSignatureFlow(true); }} />
 
           </div>
         </div>
@@ -710,6 +745,22 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       <SectionCard title="Détails dossier & chantier">
         <FormTextarea label="Commentaires" name="commentaires_dossier" value={formDossier.commentaires} onChange={(v) => update("commentaires", v)} rows={6} isMissing={fieldErrors["commentaires"]} />
       </SectionCard>
+
+
+      {/* Flow de signature manuscrite */}
+      <SignatureFlow
+        open={showSignatureFlow}
+        onClose={() => {
+          setShowSignatureFlow(false);
+          setSelectedDocumentId(null);
+        }}
+        onComplete={handleSignatureComplete}
+        selectedDocumentId={selectedDocumentId}
+        signatureDataUrl={signatureDataUrl}
+        setSignatureDataUrl={setSignatureDataUrl}
+        commercialSignatureUrl={signatureCommercialUrl}
+        fieldData={buildPdfFieldData(formDossier)}
+      />
     </div>
   );
 };

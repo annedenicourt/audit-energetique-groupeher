@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Check, ChevronLeft, ChevronRight, LayoutDashboard, LogOut, Save, Trash2 } from "lucide-react";
+import { Check, ChevronLeft, ChevronRight, File, LayoutDashboard, LogOut, Menu, Save, Trash2 } from "lucide-react";
 import { NavLink } from "./NavLink";
 import { useUserRole } from "@/hooks/useUserRole";
 import { useAuth } from "@/contexts/AuthContext";
@@ -9,13 +9,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { saveStudy } from "@/utils/saveStudy";
 import { saveDossier } from "@/utils/saveDossier";
 import { toast } from "sonner";
+import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
+import DocToSignList from "./signature/DocToSignList";
 
 interface Step {
   id: number;
   label: string;
   shortLabel: string;
 }
-
 interface FormLayoutProps {
   children: React.ReactNode;
   currentStep: number;
@@ -46,6 +47,7 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   const { signOut } = useAuth();
   const { role } = useUserRole();
   const [isSaving, setIsSaving] = useState(false);
+  const [openSidebar, setOpenSideBar] = useState<boolean>(false)
 
 
   const handleSaveToDb = async () => {
@@ -138,14 +140,36 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                 </p>
               </div>
               <div className="flex items-center gap-4">
-                {(role === "admin" || role === "commercial") &&
-                  <NavLink to={"/admin"}>
-                    <button className="p-2 md:px-4 md:py-2 flex items-center gap-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
-                      <LayoutDashboard className="w-4 h-4" />
-                      {role === "admin" ? "Espace admin" : "Mes études"}
-                    </button>
-                  </NavLink>
-                }
+
+                {/* <NavLink to={"/admin"}>
+                  <button className="p-2 md:px-4 md:py-2 flex items-center gap-2 text-xs lg:text-sm font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500">
+                    <LayoutDashboard className="w-4 h-4" />
+                    {role === "admin" ? "Espace admin" : "Mes études"}
+                  </button>
+                </NavLink> */}
+                <Button
+                  className="p-2 flex items-center gap-2 text-xs text-primary font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500"
+                  onClick={() => navigate(`/admin`, { state: { returnStep: currentStep, adminView: "studies" } })}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  {role === "admin" ? "Espace admin" : "Mes études"}
+                </Button>
+
+                <Sheet open={openSidebar} onOpenChange={setOpenSideBar}>
+                  <SheetTrigger asChild>
+                    <Button
+                      className="p-2  flex items-center gap-1 text-xs text-primary font-medium bg-white rounded-xl transition-all duration-200 shadow-sm hover:shadow-md hover:bg-orange-500"
+                      //onClick={() => navigate(`/admin`, { state: { returnStep: currentStep, adminView: "library" } })}
+                      onClick={() => setOpenSideBar(true)}
+                    >
+                      <File className="w-4 h-4" />
+                      Documents
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="right" className="w-64 p-0">
+                    <DocToSignList />
+                  </SheetContent>
+                </Sheet>
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <LogOut className="text-white hover:text-orange-500 cursor-pointer" />

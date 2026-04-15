@@ -111,9 +111,9 @@ const StepAides: React.FC<StepAidesProps> = ({ data, onChange, ecoEstimees10ans,
       </SectionCard>
 
       {/* Simulateur  */}
-      <SectionCard title="Tableau prime CEE BTD déduite" icon={Calculator} legend="Obligatoire">
+      <SectionCard>
         <div className="flex text-sm font-bold">
-          <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau prime BTD</a>
+          <a href="https://drive.google.com/drive/u/1/folders/1_ZmlAL9VmCcvniJle6clxzp4pf04S-ww" target="_blank">Tableau synthèse prime</a>
           <SquareArrowOutUpRight size={18} className="ml-1" />
         </div>
       </SectionCard>

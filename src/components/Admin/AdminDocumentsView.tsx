@@ -90,9 +90,6 @@ const AdminDocumentsView: React.FC<{
 
     return studies.map((study) => {
       const dossier = dossierByStudy.get(study.id) ?? null;
-      const latestDate = dossier && new Date(dossier.created_at) > new Date(study.created_at)
-        ? dossier.created_at
-        : study.created_at;
       return { study, dossier };
     });
   }, [studies, dossiers]);

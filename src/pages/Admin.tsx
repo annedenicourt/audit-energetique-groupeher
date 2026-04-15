@@ -7,6 +7,9 @@ import FormLayoutAdmin, { AdminView, NAV_ITEMS } from "@/components/Admin/FormLa
 import AdminDashboardView from "@/components/Admin/AdminDashboardView";
 import AdminDocumentsView from "@/components/Admin/AdminDocumentsView";
 import AdminUsersView from "@/components/Admin/AdminUsersView";
+import AdminProfileView from "@/components/Admin/AdminProfileView";
+import AdminLibraryView from "@/components/Admin/AdminLibraryView";
+import { useLocation, useNavigate } from "react-router-dom";
 
 interface Study {
   id: string;
@@ -30,26 +33,37 @@ interface Profile {
   display_name: string | null;
   role: string;
   created_at: string;
+  signature_path: string;
 }
 
-const COMMERCIAL_VIEWS: AdminView[] = ["documents"];
+const COMMERCIAL_VIEWS: AdminView[] = ["studies", "library"];
 
 const Admin: React.FC = () => {
   const { user } = useAuth();
   const { role, loading: roleLoading } = useUserRole();
   const isAdmin = role === "admin";
+  const [view, setView] = useState<AdminView>("studies");
+
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const returnStep = location.state?.returnStep;
+
+  useEffect(() => {
+    if (location.state?.adminView) {
+      setView(location.state?.adminView);
+    }
+  }, [location.state]);
 
   const allowedNavItems = useMemo(
     () => isAdmin ? NAV_ITEMS : NAV_ITEMS.filter((item) => COMMERCIAL_VIEWS.includes(item.view)),
     [isAdmin]
   );
 
-  const defaultView = isAdmin ? "dashboard" : "documents";
-  const [view, setView] = useState<AdminView>(defaultView);
 
   useEffect(() => {
     if (!roleLoading && !isAdmin && !COMMERCIAL_VIEWS.includes(view)) {
-      setView("documents");
+      setView("studies");
     }
   }, [roleLoading, isAdmin, view]);
 
@@ -68,7 +82,7 @@ const Admin: React.FC = () => {
       if (isAdmin) {
         const [studiesRes, profilesRes, emailsRes, dossiersRes] = await Promise.all([
           supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
-          supabase.from("profiles").select("id, display_name, role, created_at"),
+          supabase.from("profiles").select("id, display_name, role, created_at, signature_path"),
           supabase.functions.invoke("list-users"),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);
@@ -80,12 +94,15 @@ const Admin: React.FC = () => {
         else setDossiers(dossiersRes.data ?? []);
         if (!emailsRes.error && emailsRes.data?.emails) setEmailMap(emailsRes.data.emails);
       } else {
-        const [studiesRes, dossiersRes] = await Promise.all([
+        const [studiesRes, profilesRes, dossiersRes] = await Promise.all([
           supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
+          supabase.from("profiles").select("id, display_name, role, created_at, signature_path").eq("id", user.id),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);
         if (studiesRes.error) toast.error("Erreur chargement études: " + studiesRes.error.message);
         else setStudies(studiesRes.data ?? []);
+        if (profilesRes.error) toast.error("Erreur chargement profils: " + profilesRes.error.message);
+        else setProfiles(profilesRes.data ?? []);
         if (dossiersRes.error) toast.error("Erreur chargement dossiers: " + dossiersRes.error.message);
         else setDossiers(dossiersRes.data ?? []);
       }
@@ -111,7 +128,7 @@ const Admin: React.FC = () => {
   const sidebarTitle = isAdmin ? "Espace admin" : "Mes documents";
 
   return (
-    <FormLayoutAdmin currentView={view} onViewChange={setView} navItems={allowedNavItems} title={sidebarTitle}>
+    <FormLayoutAdmin currentView={view} onViewChange={setView} navItems={allowedNavItems} title={sidebarTitle} returnStep={returnStep}>
       {view === "dashboard" && isAdmin && (
         <AdminDashboardView
           studyCount={studies.length}
@@ -122,7 +139,7 @@ const Admin: React.FC = () => {
           setView={setView}
         />
       )}
-      {view === "documents" && (
+      {view === "studies" && (
         <AdminDocumentsView
           studies={studies}
           dossiers={dossiers}
@@ -147,6 +164,10 @@ const Admin: React.FC = () => {
             )
           }
         />
+      )}
+      {view === "library" && (
+        /* <AdminProfileView profiles={profiles} /> */
+        < AdminLibraryView />
       )}
     </FormLayoutAdmin>
   );

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LayoutDashboard, FolderOpen, Users, Menu } from "lucide-react";
+import { LayoutDashboard, FolderOpen, Users, Menu, UserRoundPen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-export type AdminView = "dashboard" | "documents" | "users";
+export type AdminView = "dashboard" | "studies" | "users" | "library";
 
 interface NavItem {
   view: AdminView;
@@ -16,8 +16,9 @@ interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { view: "dashboard", label: "Tableau de bord", icon: LayoutDashboard },
-  { view: "documents", label: "Documents clients", icon: FolderOpen },
+  { view: "studies", label: "Études clients", icon: FolderOpen },
   { view: "users", label: "Utilisateurs", icon: Users },
+  { view: "library", label: "Bibliothèque", icon: UserRoundPen },
 ];
 
 // ─── Sidebar inner nav ──────────────────────────────────────────────────────────
@@ -80,6 +81,7 @@ interface FormLayoutAdminProps {
   onViewChange: (v: AdminView) => void;
   navItems?: NavItem[];
   title?: string;
+  returnStep?: number;
 }
 
 const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
@@ -88,6 +90,7 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
   onViewChange,
   navItems = NAV_ITEMS,
   title = "Espace admin",
+  returnStep
 }) => {
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -97,7 +100,13 @@ const FormLayoutAdmin: React.FC<FormLayoutAdminProps> = ({
     setMobileOpen(false);
   };
 
-  const handleBack = () => navigate(-1);
+  const handleBack = () => {
+    if (returnStep) {
+      navigate("/", { replace: true, state: { step: returnStep } })
+    } else {
+      navigate(-1)
+    }
+  }
 
   return (
     <div className="flex w-full h-screen bg-background overflow-hidden">

@@ -32,6 +32,7 @@ interface Profile {
   display_name: string | null;
   role: string;
   created_at: string;
+  signature_path: string | null;
 }
 
 type SortKey = "display_name_asc" | "display_name_desc" | "date_desc" | "date_asc";
@@ -147,6 +148,7 @@ const AdminUsersView: React.FC<{
         display_name: newDisplayName.trim() || null,
         role: newRole,
         created_at: new Date().toISOString(),
+        signature_path: null
       };
       onAddProfile(newProfile, newEmail.trim());
       toast.success("Utilisateur créé avec succès.");

@@ -51,7 +51,6 @@ export default function PrintDossierPage() {
 
   const handlePrint = () => {
     const originalTitle = document.title;
-    console.log(dossierData)
     document.title = `Dossier_liaison_${dossierData.nomClient}`;
 
     // Wait for render then print
@@ -64,9 +63,6 @@ export default function PrintDossierPage() {
       //setPrintSimulData(null);
     }, 400);
   }
-
-  /* console.log(dossierData)
-  console.log(simulData) */
 
   if (!dossierData) return <div>Chargement...</div>;
   if (!simulData) return <div>Chargement étude...</div>;

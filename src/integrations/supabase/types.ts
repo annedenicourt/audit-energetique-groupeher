@@ -91,18 +91,21 @@ export type Database = {
           display_name: string | null
           id: string
           role: Database["public"]["Enums"]["user_role"]
+          signature_path: string | null
         }
         Insert: {
           created_at?: string
           display_name?: string | null
           id: string
           role?: Database["public"]["Enums"]["user_role"]
+          signature_path: string | null
         }
         Update: {
           created_at?: string
           display_name?: string | null
           id?: string
           role?: Database["public"]["Enums"]["user_role"]
+          signature_path: string | null
         }
         Relationships: []
       }
