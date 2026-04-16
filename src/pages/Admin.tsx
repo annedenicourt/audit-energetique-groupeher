@@ -10,6 +10,8 @@ import AdminUsersView from "@/components/Admin/AdminUsersView";
 import AdminProfileView from "@/components/Admin/AdminProfileView";
 import AdminLibraryView from "@/components/Admin/AdminLibraryView";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FormData } from "@/types/formData";
+import { Json } from "@/integrations/supabase/types";
 
 interface Study {
   id: string;
@@ -18,6 +20,7 @@ interface Study {
   pdf_path: string | null;
   created_at: string;
   updated_at: string;
+  payload: Json | null;
 }
 interface Dossier {
   id: string;
@@ -81,7 +84,7 @@ const Admin: React.FC = () => {
 
       if (isAdmin) {
         const [studiesRes, profilesRes, emailsRes, dossiersRes] = await Promise.all([
-          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
+          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at, payload"),
           supabase.from("profiles").select("id, display_name, role, created_at, signature_path"),
           supabase.functions.invoke("list-users"),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
@@ -95,7 +98,7 @@ const Admin: React.FC = () => {
         if (!emailsRes.error && emailsRes.data?.emails) setEmailMap(emailsRes.data.emails);
       } else {
         const [studiesRes, profilesRes, dossiersRes] = await Promise.all([
-          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at"),
+          supabase.from("etudes_energetiques").select("id, user_id, client_name, pdf_path, created_at, updated_at, payload"),
           supabase.from("profiles").select("id, display_name, role, created_at, signature_path").eq("id", user.id),
           supabase.from("dossiers").select("id, user_id, client_name, pdf_path, created_at, study_id"),
         ]);

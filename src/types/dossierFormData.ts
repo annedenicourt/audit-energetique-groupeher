@@ -65,6 +65,7 @@ export interface DossierFormData {
   mdpPrimeEDF: string;
   // Prime Rénov
   nonEligibleMpr: boolean;
+  compteMPR: boolean;
   montantPrimeRenov: string;
   mailPrimeRenov: string;
   mdpPrimeRenov: string;
@@ -292,6 +293,7 @@ export const defaultDossierFormData: DossierFormData = {
   mailPrimeEDF: "",
   mdpPrimeEDF: "",
   nonEligibleMpr: false,
+  compteMPR: false,
   montantPrimeRenov: "",
   mailPrimeRenov: "",
   mdpPrimeRenov: "",

@@ -1,12 +1,16 @@
-import { Activity, Clock, FileText, TrendingUp, Users } from "lucide-react";
+import { Activity, AlertTriangle, BarChart3, Clock, FileText, Home, TrendingUp, Users, Wrench } from "lucide-react";
 import { Card, CardContent } from "../ui/card";
 import AdminActivityChart from "./AdminActivityChart";
+import { FormData } from "@/types/formData";
+import { useMemo } from "react";
+import { Json } from "@/integrations/supabase/types";
 
 interface Study {
   id: string;
   user_id: string;
   client_name: string | null;
   created_at: string;
+  payload: Json | null
 }
 
 interface Profile {
@@ -24,6 +28,26 @@ interface Props {
   setView: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const toNumber = (value?: string | null): number | null => {
+  if (!value) return null;
+  const normalized = value.replace(",", ".").replace(/[^\d.-]/g, "");
+  const num = Number(normalized);
+  return Number.isFinite(num) ? num : null;
+};
+
+const getDominantEntry = (record: Record<string, number>): string => {
+  const sorted = Object.entries(record)
+    .filter(([key]) => key.trim() !== "")
+    .sort((a, b) => b[1] - a[1]);
+
+  return sorted[0]?.[0] ?? "Non renseigné";
+};
+
+const inc = (record: Record<string, number>, key: string) => {
+  if (!key.trim()) return;
+  record[key] = (record[key] ?? 0) + 1;
+};
+
 const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentStudies, profiles, setView, allStudies }) => {
   const profileMap = new Map(profiles.map((p) => [p.id, p.display_name ?? "Inconnu"]));
 
@@ -34,6 +58,173 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       time: date.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" }),
     };
   };
+
+  const commerciaux = profiles.filter((p) => p.role === "commercial");
+
+  const stats = useMemo(() => {
+    const now = new Date();
+    const sevenDaysAgo = new Date(now);
+    sevenDaysAgo.setDate(now.getDate() - 7);
+
+    const thirtyDaysAgo = new Date(now);
+    thirtyDaysAgo.setDate(now.getDate() - 30);
+
+    const projectCounts = {
+      pacAirEau: 0,
+      pacAirAir: 0,
+      photovoltaique: 0,
+      isolation: 0,
+      ite: 0,
+      menuiseries: 0,
+      vmc: 0,
+      thermodynamique: 0,
+      poele: 0,
+      multiplus: 0,
+      ecsSolaire: 0,
+      ssc: 0,
+      autreProduit: 0,
+      multiProduits: 0,
+      nonRenseigne: 0,
+    };
+
+    const heatingCounts: Record<string, number> = {};
+    const aerationCounts: Record<string, number> = {};
+    const energyClassCounts: Record<string, number> = {};
+
+    let totalSurface = 0;
+    let surfaceCount = 0;
+
+    let totalYear = 0;
+    let yearCount = 0;
+
+    let studiesWithoutClient = 0;
+    let studiesWithoutProjectType = 0;
+    let incompleteTechnicalStudies = 0;
+
+    const rankingMap = new Map<
+      string,
+      {
+        userId: string;
+        name: string;
+        total: number;
+        last7Days: number;
+        last30Days: number;
+      }
+    >();
+
+    profiles.forEach((profile) => {
+      rankingMap.set(profile.id, {
+        userId: profile.id,
+        name: profile.display_name ?? "Inconnu",
+        total: 0,
+        last7Days: 0,
+        last30Days: 0,
+      });
+    });
+
+    for (const study of allStudies) {
+      console.log(allStudies)
+      const createdAt = new Date(study.created_at);
+      const payload = study.payload as unknown as FormData | null;
+      const client = payload?.client;
+      const bilan = payload?.bilan;
+      const dimensionnement = payload?.dimensionnement;
+
+      if (!study.client_name?.trim()) {
+        studiesWithoutClient++;
+      }
+
+      const selected = dimensionnement?.selectedSections;
+      const selectedEntries = selected
+        ? Object.entries(selected).filter(([, value]) => value)
+        : [];
+
+      if (selectedEntries.length === 0) {
+        projectCounts.nonRenseigne++;
+        studiesWithoutProjectType++;
+      } else {
+        if (selected?.pacAirEau) projectCounts.pacAirEau++;
+        if (selected?.pacAirAir) projectCounts.pacAirAir++;
+        if (selected?.photovoltaique) projectCounts.photovoltaique++;
+        if (selected?.isolation) projectCounts.isolation++;
+        if (selected?.ite) projectCounts.ite++;
+        if (selected?.menuiseries) projectCounts.menuiseries++;
+        if (selected?.vmc) projectCounts.vmc++;
+        if (selected?.thermodynamique) projectCounts.thermodynamique++;
+        if (selected?.poele) projectCounts.poele++;
+        if (selected?.multiplus) projectCounts.multiplus++;
+        if (selected?.ecsSolaire) projectCounts.ecsSolaire++;
+        if (selected?.ssc) projectCounts.ssc++;
+        if (selected?.autreProduit) projectCounts.autreProduit++;
+
+        if (selectedEntries.length > 1) {
+          projectCounts.multiProduits++;
+        }
+      }
+
+      const surface = toNumber(client?.surfaceHabitable);
+      if (surface && surface > 0) {
+        totalSurface += surface;
+        surfaceCount++;
+      }
+
+      const year = toNumber(client?.anneeConstruction);
+      if (year && year > 1800 && year <= new Date().getFullYear()) {
+        totalYear += year;
+        yearCount++;
+      }
+
+      inc(heatingCounts, client?.typeChauffage ?? "");
+      inc(aerationCounts, client?.typeAeration ?? "");
+      inc(energyClassCounts, bilan?.classeEnergetique ?? "");
+
+      const missingTechnicalData =
+        !client?.surfaceHabitable?.trim() ||
+        !client?.anneeConstruction?.trim() ||
+        !client?.typeChauffage?.trim() ||
+        !client?.typeAeration?.trim();
+
+      if (missingTechnicalData) {
+        incompleteTechnicalStudies++;
+      }
+
+      const existing = rankingMap.get(study.user_id) ?? {
+        userId: study.user_id,
+        name: profileMap.get(study.user_id) ?? "Inconnu",
+        total: 0,
+        last7Days: 0,
+        last30Days: 0,
+      };
+
+      existing.total += 1;
+      if (createdAt >= sevenDaysAgo) existing.last7Days += 1;
+      if (createdAt >= thirtyDaysAgo) existing.last30Days += 1;
+
+      rankingMap.set(study.user_id, existing);
+    }
+
+    const ranking = Array.from(rankingMap.values()).sort((a, b) => {
+      if (b.total !== a.total) return b.total - a.total;
+      if (b.last30Days !== a.last30Days) return b.last30Days - a.last30Days;
+      return b.last7Days - a.last7Days;
+    });
+
+    const inactiveProfiles = ranking.filter((item) => item.last30Days === 0);
+
+    return {
+      projectCounts,
+      avgSurface: surfaceCount > 0 ? Math.round(totalSurface / surfaceCount) : null,
+      avgYear: yearCount > 0 ? Math.round(totalYear / yearCount) : null,
+      dominantHeating: getDominantEntry(heatingCounts),
+      dominantAeration: getDominantEntry(aerationCounts),
+      dominantEnergyClass: getDominantEntry(energyClassCounts),
+      ranking,
+      inactiveProfiles,
+      studiesWithoutClient,
+      studiesWithoutProjectType,
+      incompleteTechnicalStudies,
+    };
+  }, [allStudies, profiles, profileMap]);
 
   return (
     <div className="space-y-6">
@@ -78,6 +269,184 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       </div>
 
       <AdminActivityChart studies={allStudies} />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <Wrench className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Répartition des projets</h2>
+                <p className="text-sm text-muted-foreground">Produits les plus étudiés</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>PAC air/eau</span>
+                <span className="font-semibold">{stats.projectCounts.pacAirEau}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>PAC air/air</span>
+                <span className="font-semibold">{stats.projectCounts.pacAirAir}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>Photovoltaïque</span>
+                <span className="font-semibold">{stats.projectCounts.photovoltaique}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>Isolation</span>
+                <span className="font-semibold">{stats.projectCounts.isolation}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>ITE</span>
+                <span className="font-semibold">{stats.projectCounts.ite}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>Menuiseries</span>
+                <span className="font-semibold">{stats.projectCounts.menuiseries}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>VMC</span>
+                <span className="font-semibold">{stats.projectCounts.vmc}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between">
+                <span>Autre produit</span>
+                <span className="font-semibold">{stats.projectCounts.autreProduit}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex justify-between col-span-2">
+                <span>Études multi-produits</span>
+                <span className="font-semibold">{stats.projectCounts.multiProduits}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <Home className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Données techniques</h2>
+                <p className="text-sm text-muted-foreground">Tendances globales des études</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="rounded-lg border p-3 flex items-center justify-between">
+                <span className="text-sm">Surface habitable moyenne</span>
+                <span className="font-semibold">
+                  {stats.avgSurface ? `${stats.avgSurface} m²` : "Non renseigné"}
+                </span>
+              </div>
+              <div className="rounded-lg border p-3 flex items-center justify-between">
+                <span className="text-sm">Année de construction moyenne</span>
+                <span className="font-semibold">
+                  {stats.avgYear ?? "Non renseigné"}
+                </span>
+              </div>
+              <div className="rounded-lg border p-3 flex items-center justify-between">
+                <span className="text-sm">Chauffage dominant</span>
+                <span className="font-semibold">{stats.dominantHeating}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex items-center justify-between">
+                <span className="text-sm">Aération dominante</span>
+                <span className="font-semibold">{stats.dominantAeration}</span>
+              </div>
+              <div className="rounded-lg border p-3 flex items-center justify-between">
+                <span className="text-sm">Classe énergétique dominante</span>
+                <span className="font-semibold">{stats.dominantEnergyClass}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <Card>
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Classement production</h2>
+                <p className="text-sm text-muted-foreground">Basé sur le nombre d'études</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              {stats.ranking.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Aucune donnée disponible</p>
+              ) : (
+                stats.ranking.slice(0, 8).map((item, index) => (
+                  <div
+                    key={item.userId}
+                    className="rounded-lg border p-3 flex items-center justify-between"
+                  >
+                    <div>
+                      <p className="text-sm font-medium">
+                        #{index + 1} — {item.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        7 j : {item.last7Days} · 30 j : {item.last30Days}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-lg font-bold text-foreground">{item.total}</p>
+                      <p className="text-xs text-muted-foreground">études</p>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-5 space-y-4">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-primary" />
+              <div>
+                <h2 className="text-lg font-semibold text-foreground">Alertes utiles</h2>
+                <p className="text-sm text-muted-foreground">Points de vigilance</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <div className="rounded-lg border p-3">
+                <p className="text-sm text-muted-foreground">Commerciaux inactifs sur 30 jours</p>
+                <p className="text-2xl font-bold">{stats.inactiveProfiles.length}</p>
+              </div>
+
+              <div className="rounded-lg border p-3">
+                <p className="text-sm text-muted-foreground">Études sans nom client</p>
+                <p className="text-2xl font-bold">{stats.studiesWithoutClient}</p>
+              </div>
+
+              <div className="rounded-lg border p-3">
+                <p className="text-sm text-muted-foreground">Études sans produit sélectionné</p>
+                <p className="text-2xl font-bold">{stats.studiesWithoutProjectType}</p>
+              </div>
+
+              <div className="rounded-lg border p-3">
+                <p className="text-sm text-muted-foreground">Études avec données techniques incomplètes</p>
+                <p className="text-2xl font-bold">{stats.incompleteTechnicalStudies}</p>
+              </div>
+
+              {stats.inactiveProfiles.length > 0 && (
+                <div className="rounded-lg border p-3">
+                  <p className="text-sm font-medium mb-2">Profils inactifs</p>
+                  <div className="space-y-1">
+                    {stats.inactiveProfiles.slice(0, 5).map((profile) => (
+                      <p key={profile.userId} className="text-sm text-muted-foreground">
+                        {profile.name}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       {/* Dernières études */}
       <div>
@@ -100,8 +469,7 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
                 <Card key={study.id} className="hover:shadow-md transition-shadow">
                   <CardContent className="p-4 space-y-2">
                     <p className="font-medium text-foreground truncate text-sm">
-                      {study.client_name || "Client non renseigné"}
-                    </p>
+                      {study.client_name || "Client non renseigné"}                    </p>
                     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                       <Clock className="h-3.5 w-3.5 shrink-0" />
                       <span>{date} à {time}</span>

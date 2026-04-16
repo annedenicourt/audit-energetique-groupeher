@@ -319,6 +319,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       {/* COMPTE CEE  et MPR */}
       <SectionCard title="Compte Prime EDF & MaPrimeRénov'">
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime EDF</h3>
+        {groupErrors.comptePrimeEDF && (
+          <p className="my-2 text-sm text-destructive flex items-center gap-1">
+            <TriangleAlert className="h-4 w-4" />
+            {REQUIRED_GROUPS.find((group) => group.key === "comptePrimeEDF")?.message}
+          </p>
+        )}
         <div className="mb-3 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             {/* <div className="underline">Prime CEE déduite</div> */}
@@ -326,12 +332,15 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             <FormInput type="number" label="Montant Prime EDF" name="montantPrimeEDF" value={formDossier.montantPrimeEDF} onChange={(v) => update("montantPrimeEDF", v)} suffix="€" readonly={true} />
           </div>
           <div className="md:col-span-2">
-            {/* <div className="underline">Compte Prime CEE EDF</div> */}
-            <CheckboxField label="Compte Prime CEE EDF" checked={formDossier.compteCeeEdf} onChange={(v) => update("compteCeeEdf", v)} />
-            <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormInput label="Mail" name="mailPrimeEDF" value={formDossier.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" />
-              <FormInput label="MDP" name="mdpPrimeEDF" type="password" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} />
-            </div>
+            <CheckboxField label="Création compte Prime CEE EDF" checked={formDossier.compteCeeEdf} onChange={(v) => update("compteCeeEdf", v)} />
+            {/* <div className="underline">Créer compte Prime CEE EDF</div> */}
+            {formDossier.compteCeeEdf &&
+              <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormInput label="Mail" name="mailPrimeEDF" value={formDossier.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mailPrimeEDF === ""} />
+                <FormInput label="MDP" name="mdpPrimeEDF" type="password" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mdpPrimeEDF === ""} />
+              </div>
+            }
+
           </div>
         </div>
         <h3 className="font-semibold text-lime-600 mb-2">Compte Prime Rénov</h3>
@@ -341,10 +350,11 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             <FormInput type="number" label="Montant Prime Rénov" name="montantPrimeRenov" value={formDossier.montantPrimeRenov} onChange={(v) => update("montantPrimeRenov", v)} suffix="€" readonly={formDossier.nonEligibleMpr || formDossier.montantPrimeRenov !== ""} />
           </div>
           <div className="md:col-span-2">
-            <div className="underline">Compte MaPrimeRenov'</div>
+            <CheckboxField label="Création compte MaPrimeRenov'" checked={formDossier.compteMPR} onChange={(v) => update("compteMPR", v)} />
+            {/* <div className="underline">Créer compte MaPrimeRenov'</div> */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormInput label="Mail" name="mailPrimeRenov" value={formDossier.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={formDossier.nonEligibleMpr} />
-              <FormInput label="MDP" name="mdpPrimeRenov" type="password" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} />
+              <FormInput label="Mail" name="mailPrimeRenov" value={formDossier.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mailPrimeRenov === ""} />
+              <FormInput label="MDP" name="mdpPrimeRenov" type="password" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mdpPrimeRenov === ""} />
             </div>
           </div>
         </div>

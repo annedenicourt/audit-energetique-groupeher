@@ -30,6 +30,12 @@ export const REQUIRED_GROUPS: RequiredGroup[] = [
     fields: ["proprietaireOccupant", "proprietaireBailleur", "residSecondaire", "sci"],
     message: "Veuillez sélectionner au moins un statut de propriétaire.",
   },
+  {
+    key: "comptePrimeEDF",
+    label: "Compte prime EDF",
+    fields: ["primeCeeDeduite", "compteCeeEdf"],
+    message: "Veuillez sélectionner au moins une option.",
+  },
   { 
     key: "structure", 
     label: "Structure Maison", 
