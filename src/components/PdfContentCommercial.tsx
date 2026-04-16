@@ -130,7 +130,7 @@ const PdfContentCommercial: React.FC<PdfContentCommercialProps> = ({ data }) => 
   }, []);
 
   return (
-    <div className="" ref={containerRef}>
+    <div className="print" ref={containerRef}>
       <div className="a4-page flex flex-col justify-between space-y-1">
         {/* Client */}
         <SectionCard title="Client" icon={User}>

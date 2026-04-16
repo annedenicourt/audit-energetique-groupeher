@@ -87,10 +87,10 @@ const FormLayout: React.FC<FormLayoutProps> = ({
       toast.success("Données enregistrées avec succès !", {
         position: "top-center",
       });
-      localStorage.removeItem("simulation_form");
+      /* localStorage.removeItem("simulation_form");
       localStorage.removeItem("dossier_form");
       localStorage.removeItem("current_study_id");
-      localStorage.removeItem("current_dossier_id");
+      localStorage.removeItem("current_dossier_id"); */
 
       setTimeout(() => {
         window.location.reload();
@@ -120,6 +120,8 @@ const FormLayout: React.FC<FormLayoutProps> = ({
   const resetApp = () => {
     localStorage.removeItem("simulation_form");
     localStorage.removeItem("dossier_form");
+    localStorage.removeItem("current_study_id");
+    localStorage.removeItem("current_dossier_id");
     window.location.reload();
   }
 

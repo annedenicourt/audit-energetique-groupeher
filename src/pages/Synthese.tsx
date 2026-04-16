@@ -6,7 +6,7 @@ import { saveStudy } from "@/utils/saveStudy";
 import html2pdf from "html2pdf.js";
 import { DossierFormData } from "@/types/dossierFormData";
 import { saveDossier } from "@/utils/saveDossier";
-import { Check, FileCheck, X, AlertTriangle, Info } from "lucide-react";
+import { Check, FileCheck, X, AlertTriangle, Info, Save, FolderPlus } from "lucide-react";
 import AppModal from "@/components/Modal";
 import PdfContentDossier from "@/components/PdfContentDossier";
 import PdfContentCommercial from "@/components/PdfContentCommercial";
@@ -15,6 +15,7 @@ import {
   REQUIRED_GROUPS,
   CONDITIONAL_FIELDS,
 } from "@/hooks/useDossierValidation";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 
 const Synthese: React.FC = () => {
@@ -40,9 +41,12 @@ const Synthese: React.FC = () => {
   });
 
   const { groupErrors, fieldErrors } = useDossierValidation(formDossier, formSim);
+  console.log(formSim)
+
+  console.log(formDossier)
 
 
-  const downloadPdfGeneric = async () => {
+  /* const downloadPdfGeneric = async () => {
     setIsSaving(true);
     document.body.classList.add("exporting");
 
@@ -127,11 +131,83 @@ const Synthese: React.FC = () => {
       document.body.classList.remove("exporting");
       setIsSaving(false);
     }
+  }; */
+
+
+  const downloadPdfGeneric = async () => {
+    setIsSaving(true);
+    document.body.classList.add("exporting");
+
+    try {
+      const dataStudy = localStorage.getItem("simulation_form");
+      const studyPayload = dataStudy ? JSON.parse(dataStudy) : null;
+      const existingStudyId = localStorage.getItem("current_study_id");
+      let savedStudyId: string | null = existingStudyId;
+
+      if (studyPayload) {
+        const resStudy = await saveStudy(studyPayload, existingStudyId);
+        if (!resStudy.success) {
+          toast.error(`Sauvegarde étude échouée : ${resStudy.error}`);
+          return;
+        }
+        savedStudyId = resStudy.studyId ?? null;
+      }
+
+      const dataDossier = localStorage.getItem("dossier_form");
+      const dossierPayload = dataDossier ? JSON.parse(dataDossier) : null;
+      const existingDossierId = localStorage.getItem("current_dossier_id");
+
+      if (dossierPayload) {
+        const resDossier = await saveDossier(
+          dossierPayload,
+          existingDossierId,
+          savedStudyId
+        );
+
+        if (!resDossier.success) {
+          toast.error(`Sauvegarde dossier échouée : ${resDossier.error}`);
+          return;
+        }
+      }
+
+      if (!studyPayload && !dossierPayload) {
+        toast.error("Aucune donnée à exporter");
+        return;
+      }
+
+      //toast.success("Données sauvegardées");
+
+      // fermer la modale avant window.print() sinon imprime la modale
+      setIsModalOpen(false);
+      const originalTitle = document.title;
+      document.title = `Dossier_liaison_${formDossier.nomClient}`;
+
+      // Wait for render then print
+      setTimeout(() => {
+        window.print();
+        document.title = originalTitle;
+      }, 400);
+
+    } catch (err) {
+      console.error("[downloadPdfGeneric] Erreur", err);
+      toast.error("Erreur lors de la sauvegarde");
+    } finally {
+      document.body.classList.remove("exporting");
+      setIsSaving(false);
+    }
   };
+
+  const handleReset = () => {
+    localStorage.removeItem("simulation_form");
+    localStorage.removeItem("current_study_id");
+    localStorage.removeItem("dossier_form");
+    localStorage.removeItem("current_dossier_id");
+    navigate("/")
+  }
 
   return (
     <div className="w-[50rem] md:w-full md:max-w-5xl mx-auto px-4 py-8">
-      <div className="mb-4">
+      <div className="no-print mb-4">
         <button
           onClick={() => navigate("/", { replace: true, state: { step: 11 } })}
           className="text-sm text-muted-foreground hover:text-primary"
@@ -139,7 +215,7 @@ const Synthese: React.FC = () => {
           ← Retour Simulateur
         </button>
       </div>
-      <div className="mt-8 flex items-center justify-between">
+      <div className="no-print mt-8 flex items-center justify-between">
         <div className="flex items-center">
           <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "etude" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("etude") }}>
             Synthèse simulateur
@@ -148,14 +224,38 @@ const Synthese: React.FC = () => {
             Synthèse dossier de liaison
           </div>
         </div>
-        <button
-          className="nav-button nav-button--primary px-6"
-          disabled={isSaving}
-          onClick={() => setIsModalOpen(true)}
-        >
-          <FileCheck className="w-5 h-5" />
-          Valider et sauvegarder le dossier
-        </button>
+        <div>
+          <button
+            className="nav-button nav-button--primary px-6 mr-3"
+            disabled={isSaving}
+            onClick={() => setIsModalOpen(true)}
+          >
+            <Save className="w-5 h-5" />
+            Sauvegarder le dossier
+          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <div className="nav-button border border-slate-100 bg-green-100 px-6 cursor-pointer">
+                <FolderPlus className="w-5 h-5" />
+                Nouveau dossier
+              </div>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-center">Voulez-vous vraiment ouvrir un nouveau dossier ?</AlertDialogTitle>
+                <AlertDialogDescription className="text-center">
+                  N'oubliez pas de sauvegarder votre dossier en cours avant de commencer un nouveau
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleReset()}>
+                  Oui, je commence un nouveau dossier
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </div>
 
       {pdfMode === "etude" ? (
@@ -184,15 +284,37 @@ const Synthese: React.FC = () => {
         </div>
       )}
 
-      <div className="mt-4 flex justify-center">
+      <div className="no-print mt-4 flex justify-center">
         <button
-          className="nav-button nav-button--primary px-6"
+          className="nav-button nav-button--primary px-6 mr-3"
           disabled={isSaving}
           onClick={() => setIsModalOpen(true)}
         >
           <FileCheck className="w-5 h-5" />
-          Valider et sauvegarder le dossier
+          Sauvegarder le dossier
         </button>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <div className="nav-button border border-slate-100 bg-green-100 px-6 cursor-pointer">
+              <FolderPlus className="w-5 h-5" />
+              Nouveau dossier
+            </div>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="text-center">Voulez-vous vraiment ouvrir un nouveau dossier ?</AlertDialogTitle>
+              <AlertDialogDescription className="text-center">
+                N'oubliez pas de sauvegarder votre dossier en cours avant de commencer un nouveau
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogAction onClick={() => handleReset()}>
+                Oui, je commence un nouveau dossier
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
 
 

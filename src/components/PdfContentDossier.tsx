@@ -73,7 +73,7 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
     .filter((k) => simulData?.dimensionnement?.selectedSections[k])
 
   return (
-    <div ref={pagesRef}>
+    <div ref={pagesRef} className="print">
       <div className="a4-page flex flex-col justify-between">
         <div className="space-y-1">
           {/* Infos RDV */}
@@ -190,8 +190,8 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
               <SummaryRow label="Sous-sol" value={data.sousSol ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
               <SummaryRow label="Vide sanitaire" value={data.videSanitaire ? DisplayTrue : groupErrors?.structure ? DisplayWarning : ""} />
               <SummaryRow label="Vide sanitaire accessible" value={data.videSanitaireAccessible ? DisplayTrue : ""} />
-              <SummaryRow label="Type de mur" value={data.typeMur ? DisplayTrue : DisplayFalse} />
-              <SummaryRow label="Épaisseur mur (en cm)" value={data.epaisseurMur ? DisplayTrue : DisplayFalse} />
+              <SummaryRow label="Type de mur" value={data.typeMur ? data.typeMur : ""} />
+              <SummaryRow label="Épaisseur mur (en cm)" value={data.epaisseurMur ? data.epaisseurMur : ""} />
               <div className="my-4 font-medium text-green-500">Combles</div>
               <SummaryRow label="Combles perdus" value={data.comblePerdu ? DisplayTrue : groupErrors?.combles ? DisplayWarning : ""} />
               <SummaryRow label="Combles aménagés" value={data.combleAmenage ? DisplayTrue : groupErrors?.combles ? DisplayWarning : ""} />
@@ -244,8 +244,8 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
             {/* Électricité */}
             <SectionCard title="Électricité" icon={Zap}>
               <div className="grid gap-x-8">
-                <SummaryRow label="Monophasé" value={data.monophase ? DisplayTrue : DisplayWarning} />
-                <SummaryRow label="Triphasé" value={data.triphase ? DisplayTrue : DisplayWarning} />
+                <SummaryRow label="Monophasé" value={data.monophase ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Triphasé" value={data.triphase ? DisplayTrue : DisplayFalse} />
                 <SummaryRow label="Installation aux normes" value={data.installationAuxNormes ? data.installationAuxNormes : DisplayWarning} />
                 <SummaryRow label="Ampérage disjoncteur général" value={data.amperageDisjoncteur ? `${data.amperageDisjoncteur} A` : DisplayWarning} />
                 <SummaryRow label="Ampérage max" value={data.amperageMax ? `${data.amperageMax} A` : DisplayWarning} />
@@ -279,8 +279,8 @@ const PdfContentDossier: React.FC<PdfContentDossierProps> = ({ data, selectedOpt
                   <SummaryRow label="Passage liaisons autres" value={data.passageLiaisonsAutresTexte} />
                 }
                 <SummaryRow label="Tranchée à faire" value={data.trancheeAFairePac} />
-                <SummaryRow label="Sol" value={data.typePosePacSol ? DisplayTrue : DisplayFalse} />
-                <SummaryRow label="Mur" value={data.typePosePacMur ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Pose au sol" value={data.typePosePacSol ? DisplayTrue : DisplayFalse} />
+                <SummaryRow label="Pose au mur" value={data.typePosePacMur ? DisplayTrue : DisplayFalse} />
                 <SummaryRow label="Hauteur local PAC" value={data.hauteurLocalPac} />
                 <SummaryRow label="Lève groupe PAC" value={data.leveGroupePac ? DisplayTrue : DisplayFalse} />
                 <SummaryRow label="Nacelle PAC" value={data.nacellePac ? DisplayTrue : DisplayFalse} />

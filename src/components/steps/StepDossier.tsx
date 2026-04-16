@@ -336,8 +336,8 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             {/* <div className="underline">Créer compte Prime CEE EDF</div> */}
             {formDossier.compteCeeEdf &&
               <div className=" grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormInput label="Mail" name="mailPrimeEDF" value={formDossier.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mailPrimeEDF === ""} />
-                <FormInput label="MDP" name="mdpPrimeEDF" type="password" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mdpPrimeEDF === ""} />
+                <FormInput label="Mail" name="mailPrimeEDF" value={formDossier.mailPrimeEDF} onChange={(v) => update("mailPrimeEDF", v)} type="email" readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mailPrimeEDF === "" && formDossier.compteCeeEdf} />
+                <FormInput label="MDP" name="mdpPrimeEDF" type="password" value={formDossier.mdpPrimeEDF} onChange={(v) => update("mdpPrimeEDF", v)} readonly={formDossier.primeCeeDeduite} isMissing={formDossier.mdpPrimeEDF === "" && formDossier.compteCeeEdf} />
               </div>
             }
 
@@ -352,10 +352,12 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
           <div className="md:col-span-2">
             <CheckboxField label="Création compte MaPrimeRenov'" checked={formDossier.compteMPR} onChange={(v) => update("compteMPR", v)} />
             {/* <div className="underline">Créer compte MaPrimeRenov'</div> */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormInput label="Mail" name="mailPrimeRenov" value={formDossier.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mailPrimeRenov === ""} />
-              <FormInput label="MDP" name="mdpPrimeRenov" type="password" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mdpPrimeRenov === ""} />
-            </div>
+            {formDossier.compteMPR &&
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormInput label="Mail" name="mailPrimeRenov" value={formDossier.mailPrimeRenov} onChange={(v) => update("mailPrimeRenov", v)} type="email" readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mailPrimeRenov === "" && formDossier.compteMPR} />
+                <FormInput label="MDP" name="mdpPrimeRenov" type="password" value={formDossier.mdpPrimeRenov} onChange={(v) => update("mdpPrimeRenov", v)} readonly={formDossier.nonEligibleMpr} isMissing={formDossier.mdpPrimeRenov === "" && formDossier.compteMPR} />
+              </div>
+            }
           </div>
         </div>
         <h3 className="font-semibold text-lime-600 mb-2">Si le client n'a pas d'adresse mail, ne pas oubliez de lui communiquer</h3>
