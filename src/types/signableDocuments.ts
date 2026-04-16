@@ -4,7 +4,7 @@ export type DocumentCategory =
   | "juridique"
   | "commercial"
   | "administratif"
-  | "parrainage"
+  | "remise"
   | "technique";
 
 export type DocumentContext = "dossier" | "bibliotheque" | "both";
@@ -19,7 +19,12 @@ export type SignableDocumentId =
   | "attestationFioul"
   | "pouvoir"
   | "attestationRenonciation"
-  | "formulaireAccompagnateur";
+  | "formulaireAccompagnateur"
+  | "formulaireAmbassadeur"
+  | "formulairePanneauChantier"
+  | "formulaireParrainage"
+  | "formulaireRegroupement"
+  | "formulaireAchatGroupe";
 
 export type SignaturePosition = {
   pageIndex: number;
@@ -66,7 +71,7 @@ export const SIGNABLE_DOCUMENTS: SignableDocumentConfig[] = [
     enabled: true,
     tags: ["MPR", "mandat"],
 
-    pdfPath: "/pdf/mandat_mpr.pdf",
+    pdfPath: "/pdf/mandat_mpr_prerempli.pdf",
     signaturePosition: { pageIndex: 1, x: 10, y: 70, width: 180, height: 60 },
     pdfFieldMapping: {
       "Nom": "nomClient",
@@ -183,7 +188,7 @@ export const SIGNABLE_DOCUMENTS: SignableDocumentConfig[] = [
       "adresse": "adresseInstallation",
       "code postal et ville": "codePostalVille",
       "nom du client": "fullNameClient",
-      "fait à": "villeFiscale",
+      "ville": "ville",
       "date": "date"
     }
   },
@@ -196,13 +201,111 @@ export const SIGNABLE_DOCUMENTS: SignableDocumentConfig[] = [
     signTarget: "client",
     prefilled: true,
     enabled: true,
-    tags: ["retractation", "renonciation"],
+    tags: ["accompagnement", "protocole"],
 
     pdfPath: "/pdf/formulaire_accompagnateur.pdf",
     signaturePosition: { pageIndex: 0, x: 320, y: 100, width: 200, height: 80 },
-    commercialSignaturePosition: { pageIndex: 0, x: 40, y: 100, width: 200, height: 80 },
+    //commercialSignaturePosition: { pageIndex: 0, x: 40, y: 100, width: 200, height: 80 },
     pdfFieldMapping: {
+      "nom_accompagnateur_her": "conseiller",
       "nom_client": "fullNameClient",
+      "telephone_client": "telephone",
+      "nom_accompagnateur_her 2": "conseiller",
+      "date": "date"
+    }
+  },
+  {
+    id: "formulaireAmbassadeur",
+    label: "Formulaire Ambassadeur HER",
+    description: "Formulaire pour devenir ambassadeur HER et obtenir des avantages",
+    category: "remise",
+    context: "bibliotheque",
+    signTarget: "client",
+    prefilled: true,
+    enabled: true,
+    tags: ["reunion", "remise", "ambassadeur"],
+
+    pdfPath: "/pdf/formulaire_reunion_v2.pdf",
+    signaturePosition: { pageIndex: 0, x: 380, y: 8, width: 150, height: 60 },
+    pdfFieldMapping: {
+      "Nom_accompagnateur 1": "conseiller",
+      "Nom_hote 1": "fullNameClient",
+      "date": "date"
+    }
+  },
+  {
+    id: "formulairePanneauChantier",
+    label: "Formulaire panneau de chantier",
+    description: "Formulaire pour obtenir des avantages en acceptant d'apposer un panneau de chantier",
+    category: "remise",
+    context: "bibliotheque",
+    signTarget: "client",
+    prefilled: true,
+    enabled: true,
+    tags: ["remise", "panneau", "chantier"],
+
+    pdfPath: "/pdf/formulaire_panneau.pdf",
+    signaturePosition: { pageIndex: 0, x: 380, y: 55, width: 150, height: 60 },
+    pdfFieldMapping: {
+      "Nom_client": "fullNameClient",
+      "ville": "ville",
+      "date": "date"
+    }
+  },
+  {
+    id: "formulaireRegroupement",
+    label: "Formulaire regroupement de chantier",
+    description: "Formulaire pour obtenir des avantages en choisissant une date flexible",
+    category: "remise",
+    context: "bibliotheque",
+    signTarget: "client",
+    prefilled: true,
+    enabled: true,
+    tags: ["flexible", "remise", "regroupement"],
+
+    pdfPath: "/pdf/formulaire_regroupement_chantier.pdf",
+    signaturePosition: { pageIndex: 0, x: 380, y: 55, width: 150, height: 60 },
+    pdfFieldMapping: {
+      "Nom_client": "fullNameClient",
+      "ville": "ville",
+      "date": "date"
+    }
+  },
+  {
+    id: "formulaireAchatGroupe",
+    label: "Formulaire achat groupé",
+    description: "Formulaire pour obtenir des avantages en choisissant l'achat groupé",
+    category: "remise",
+    context: "bibliotheque",
+    signTarget: "client",
+    prefilled: true,
+    enabled: true,
+    tags: ["remise", "achat", "groupé"],
+
+    pdfPath: "/pdf/formulaire_achats_groupes.pdf",
+    signaturePosition: { pageIndex: 0, x: 380, y: 55, width: 150, height: 60 },
+    pdfFieldMapping: {
+      "Nom_client": "fullNameClient",
+      "ville": "ville",
+      "date": "date"
+    }
+  },
+  {
+    id: "formulaireParrainage",
+    label: "Formulaire Parrainage HER",
+    description: "Formulaire pour parrainer un proche et gagner des chèques-cadeaux",
+    category: "remise",
+    context: "bibliotheque",
+    signTarget: "aucune",
+    prefilled: true,
+    enabled: true,
+    tags: ["parrainage", "remise"],
+
+    pdfPath: "/pdf/formulaire_parrainage.pdf",
+    signaturePosition: { pageIndex: 0, x: 380, y: 8, width: 150, height: 60 },
+    pdfFieldMapping: {
+      "Nom_accompagnateur 1": "conseiller",
+      "Nom_hote 1": "fullNameClient",
       "date": "date"
     }
   },

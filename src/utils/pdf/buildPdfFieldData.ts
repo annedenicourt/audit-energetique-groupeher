@@ -4,6 +4,7 @@ export type PdfFieldData = {
   fullNameClient: string;
   nomClient: string;
   prenomClient: string;
+  conseiller: string;
   adresseInstallation: string;
   codePostal: string;
   ville: string;
@@ -32,6 +33,7 @@ export const buildPdfFieldData = (formData: DossierFormData): PdfFieldData => {
     fullNameClient: fullName,
     nomClient,
     prenomClient,
+    conseiller: formData.conseiller,
     adresseInstallation: formData.adresseInstallation ?? "",
     codePostal: formData.codePostal ?? "",
     ville: formData.ville ?? "",

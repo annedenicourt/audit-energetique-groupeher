@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Search, PenTool, Download, Eye, Filter, FolderOpen, User, Users, ShieldCheck } from "lucide-react";
+import { Search, PenTool, Eye, Filter, FolderOpen } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,37 +10,24 @@ import MySignatureView from "../signature/MySignatureView";
 import SignatureFlow from "../signature/SignatureFlow";
 import { useAuth } from "@/contexts/AuthContext";
 import { getSignaturePublicUrl } from "@/utils/saveUserSignature";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
 type DocumentCategory =
   | "juridique"
   | "commercial"
   | "administratif"
-  | "parrainage"
+  | "remise"
   | "technique";
-
-type SignTarget = "client" | "commercial" | "aucune" | "client_et_commercial";
-
-
-interface Profile {
-  id: string;
-  display_name: string | null;
-  role: string;
-  signature_path: string | null;
-}
-
-interface Props {
-  profiles: Profile[];
-}
 
 const AdminLibraryView = () => {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
-  //const [contextFilter, setContextFilter] = useState<string>("all");
-  //const [signFilter, setSignFilter] = useState<string>("all");
   const [showSignatureFlow, setShowSignatureFlow] = useState<boolean>(false);
   const [selectedDocumentId, setSelectedDocumentId] = useState<SignableDocumentId>();
   const [signatureDataUrl, setSignatureDataUrl] = useState<string>("");
   const [signatureVersion, setSignatureVersion] = useState(0);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [previewPath, setPreviewPath] = useState<string>("");
   const { profile } = useAuth()
 
   const signatureCommercialUrl = profile?.signature_path
@@ -52,39 +39,27 @@ const AdminLibraryView = () => {
     juridique: "Juridique",
     commercial: "Commercial",
     administratif: "Administratif",
-    parrainage: "Parrainage",
+    remise: "Remise",
     technique: "Technique",
   };
 
-  const getSignLabel = (signTarget: SignTarget) => {
-    switch (signTarget) {
-      case "client":
-        return "Signature client";
+  const getCategoryColor = (category: DocumentCategory) => {
+    switch (category) {
+      case "juridique":
+        return "bg-yellow-200 text-primary";
       case "commercial":
-        return "Signature commercial";
-      case "client_et_commercial":
-        return "Client + commercial";
+        return "bg-green-500";
+      case "administratif":
+        return "bg-orange-200 text-primary";
+      case "remise":
+        return "bg-green-200 text-primary";
       default:
-        return "Sans signature";
-    }
-  }
-
-  const getSignIcon = (signTarget: SignTarget) => {
-    switch (signTarget) {
-      case "client":
-        return <User className="h-4 w-4" />;
-      case "commercial":
-        return <PenTool className="h-4 w-4" />;
-      case "client_et_commercial":
-        return <Users className="h-4 w-4" />;
-      default:
-        return <ShieldCheck className="h-4 w-4" />;
+        return "bg-background";
     }
   }
 
   const handleSignatureComplete = useCallback((signedDocId: SignableDocumentId) => {
-/*       update(signedDocId as keyof DossierFormData, true as DossierFormData[keyof DossierFormData]);
- */      setShowSignatureFlow(false);
+    setShowSignatureFlow(false);
   }, []);
 
   const libraryDocuments = SIGNABLE_DOCUMENTS.filter(
@@ -102,21 +77,14 @@ const AdminLibraryView = () => {
       const matchesCategory =
         categoryFilter === "all" || doc.category === categoryFilter;
 
-      /* const matchesContext =
-        contextFilter === "all" || doc.context === contextFilter; */
-
-      /* const matchesSign =
-        signFilter === "all" || doc.signTarget === signFilter; */
-
       return matchesSearch && matchesCategory /* && matchesContext && matchesSign; */
     });
   }, [libraryDocuments, search, categoryFilter]);
 
-  /* const handlePreview = (doc: SignableDocumentConfig) => {
+  const handlePreview = (doc: SignableDocumentConfig) => {
     setOpenPreview(true)
     setPreviewPath(doc.pdfPath)
-    console.log("Preview document:", doc.id);
-  }; */
+  };
 
   const handleOpenSignatureFlow = (doc: SignableDocumentConfig) => {
     setSelectedDocumentId(doc.id);
@@ -153,7 +121,7 @@ const AdminLibraryView = () => {
               <SelectItem value="juridique">Juridique</SelectItem>
               <SelectItem value="commercial">Commercial</SelectItem>
               <SelectItem value="administratif">Administratif</SelectItem>
-              <SelectItem value="parrainage">Parrainage</SelectItem>
+              <SelectItem value="remise">Remise</SelectItem>
               <SelectItem value="technique">Technique</SelectItem>
             </SelectContent>
           </Select>
@@ -194,30 +162,22 @@ const AdminLibraryView = () => {
                 </div>
 
                 <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">{categoryLabels[doc.category]}</Badge>
-                  {/* <Badge variant="outline">{contextLabels[doc.context]}</Badge> */}
-                  {/* <Badge variant={doc.prefilled ? "default" : "secondary"}>
-                    {doc.prefilled ? "Prérempli" : "Vierge"}
-                  </Badge> */}
-                  {/*  <Badge variant="outline" className="flex items-center gap-1">
-                    {getSignIcon(doc.signTarget)}
-                    {getSignLabel(doc.signTarget)}
-                  </Badge> */}
+                  <Badge className={getCategoryColor(doc.category)}>{categoryLabels[doc.category]}</Badge>
                 </div>
               </CardHeader>
 
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  {/* <Button
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => handlePreview(doc)}
-                    className="flex items-center gap-2 text-xs"
+                    className="flex items-center gap-2 text-xs hover:bg-orange-500"
                   >
                     <Eye className="h-4 w-4" />
-                    Aperçu
-                  </Button> */}
-                  {/* <Dialog open={openPreview} onOpenChange={(value) => !value && setOpenPreview(false)}>
+                    Voir / Télécharger
+                  </Button>
+                  <Dialog open={openPreview} onOpenChange={(value) => !value && setOpenPreview(false)}>
                     <DialogContent className="w-[95vw] max-w-5xl">
                       <DialogHeader>
                         <DialogTitle>Aperçu</DialogTitle>
@@ -226,17 +186,13 @@ const AdminLibraryView = () => {
 
                       <div className="border border-input rounded-md bg-background min-h-[70vh] overflow-hidden">
                         <iframe
-                          src={`${previewPath}#toolbar=0&navpanes=0&scrollbar=0`}
-                          //title={""}
+                          //src={`${previewPath}#toolbar=0&navpanes=0&scrollbar=0`}
+                          src={`${previewPath}#&navpanes=0&scrollbar=0`}
                           className="w-full h-[70vh] border-0"
                         />
                       </div>
                     </DialogContent>
-                  </Dialog> */}
-                  <a href={doc.pdfPath} download title="Télécharger" className="px-2 py-1 flex items-center gap-2 bg-background font-medium text-xs border rounded-md">
-                    <Download className="h-4 w-4" />
-                    Télécharger
-                  </a>
+                  </Dialog>
                   {doc.signTarget !== "aucune" && (
                     <Button
                       size="sm"
@@ -244,7 +200,7 @@ const AdminLibraryView = () => {
                       className="flex items-center gap-2 text-xs"
                     >
                       <PenTool className="h-4 w-4" />
-                      Signer
+                      Remplir et signer
                     </Button>
                   )}
                 </div>
@@ -271,7 +227,6 @@ const AdminLibraryView = () => {
         signatureDataUrl={signatureDataUrl}
         setSignatureDataUrl={setSignatureDataUrl}
         commercialSignatureUrl={signatureCommercialUrl}
-      //fieldData={buildPdfFieldData(formDossier)}
       />
     </div>
   );

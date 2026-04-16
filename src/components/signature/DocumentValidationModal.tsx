@@ -110,7 +110,7 @@ const DocumentValidationModal: React.FC<DocumentValidationModalProps> = ({
             className="h-10 object-contain"
           />
         </div>
-        {commercialSignatureUrl && (
+        {/* {commercialSignatureUrl && (
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium text-muted-foreground">Signature commercial :</span>
             <img
@@ -119,7 +119,7 @@ const DocumentValidationModal: React.FC<DocumentValidationModalProps> = ({
               className="h-10 object-contain"
             />
           </div>
-        )}
+        )} */}
 
         <div className="border border-input rounded-md bg-background min-h-[600px] overflow-hidden">
           {loadingPreview && (

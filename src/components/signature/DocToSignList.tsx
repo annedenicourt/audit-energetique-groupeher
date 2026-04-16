@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { PenTool, Download, FolderOpen } from "lucide-react";
+import { PenTool, FolderOpen, Eye } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SIGNABLE_DOCUMENTS, SignableDocumentConfig, SignableDocumentId } from "@/types/signableDocuments";
@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getSignaturePublicUrl } from "@/utils/saveUserSignature";
 import { defaultDossierFormData, DossierFormData } from "@/types/dossierFormData";
 import { buildPdfFieldData } from "@/utils/pdf/buildPdfFieldData";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 
 
 const DocToSignList = () => {
@@ -15,6 +16,8 @@ const DocToSignList = () => {
   const [selectedDocumentId, setSelectedDocumentId] = useState<SignableDocumentId>();
   const [signatureDataUrl, setSignatureDataUrl] = useState<string>("");
   const [signatureVersion, setSignatureVersion] = useState(0);
+  const [openPreview, setOpenPreview] = useState<boolean>(false);
+  const [previewPath, setPreviewPath] = useState<string>("");
   const { profile } = useAuth()
 
   const signatureCommercialUrl = profile?.signature_path
@@ -41,6 +44,11 @@ const DocToSignList = () => {
   const handleOpenSignatureFlow = (doc: SignableDocumentConfig) => {
     setSelectedDocumentId(doc.id);
     setShowSignatureFlow(true)
+  };
+
+  const handlePreview = (doc: SignableDocumentConfig) => {
+    setOpenPreview(true)
+    setPreviewPath(doc.pdfPath)
   };
 
   return (
@@ -81,9 +89,31 @@ const DocToSignList = () => {
 
               <CardContent className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  <a href={doc.pdfPath} download title="Télécharger" className="px-2 py-1 flex items-center gap-2 bg-background font-medium text-xs border rounded-md">
-                    <Download className="h-4 w-4" />
-                  </a>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handlePreview(doc)}
+                    className="flex items-center gap-2 text-xs hover:bg-orange-500"
+                  >
+                    <Eye className="h-4 w-4" />
+                    Voir / Télécharger
+                  </Button>
+                  <Dialog open={openPreview} onOpenChange={(value) => !value && setOpenPreview(false)}>
+                    <DialogContent className="w-[95vw] max-w-5xl">
+                      <DialogHeader>
+                        <DialogTitle>Aperçu</DialogTitle>
+                        <DialogDescription></DialogDescription>
+                      </DialogHeader>
+
+                      <div className="border border-input rounded-md bg-background min-h-[70vh] overflow-hidden">
+                        <iframe
+                          //src={`${previewPath}#toolbar=0&navpanes=0&scrollbar=0`}
+                          src={`${previewPath}#&navpanes=0&scrollbar=0`}
+                          className="w-full h-[70vh] border-0"
+                        />
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   {doc.signTarget !== "aucune" && (
                     <Button
                       size="sm"
@@ -91,7 +121,7 @@ const DocToSignList = () => {
                       className="flex items-center gap-2 text-xs"
                     >
                       <PenTool className="h-4 w-4" />
-                      Signer
+                      Remplir et signer
                     </Button>
                   )}
                 </div>
