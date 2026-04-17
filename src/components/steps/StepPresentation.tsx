@@ -24,7 +24,7 @@ const StepPresentation = () => {
   };
 
   return (
-    <div className="">
+    <div className="text-center">
       {/* Page title */}
       <div className="mb-4 flex flex-row items-center gap-x-3">
         <h2 className="mr-4 text-2xl font-display font-bold text-foreground">
@@ -51,8 +51,7 @@ const StepPresentation = () => {
           </a>
         </button>
       </div>
-      <div
-        className=""
+      <button
         onClick={() => setIsModalOpen(true)}
       >
         <img
@@ -61,7 +60,7 @@ const StepPresentation = () => {
           className="w-full h-[60vh] object-contain"
           loading="lazy"
         />
-      </div>
+      </button>
 
       <AppModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Aperçu">
         {isModalOpen && (

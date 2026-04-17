@@ -2,7 +2,7 @@ import { FormData } from "@/types/formData";
 
 const toNumber = (v?: string): number => {
   const n = Number(v);
-  return isNaN(n) ? 0 : n;
+  return Number.isNaN(n) ? 0 : n;
 };
 
 /*Aide disponible MPR*/

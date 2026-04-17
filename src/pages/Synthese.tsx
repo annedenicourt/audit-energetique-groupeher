@@ -213,12 +213,26 @@ const Synthese: React.FC = () => {
       </div>
       <div className="no-print mt-8 flex items-center justify-between">
         <div className="flex items-center">
-          <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "etude" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("etude") }}>
+          <button
+            type="button"
+            onClick={() => setPdfMode("etude")}
+            className={`p-4 rounded-t-lg border-x border-t border-orange-100 ${pdfMode === "etude"
+              ? "bg-orange-100 font-bold"
+              : "bg-white text-slate-400"
+              }`}
+          >
             Synthèse simulateur
-          </div>
-          <div className={`p-4 rounded-t-lg cursor-pointer border-x border-t border-orange-100 ${pdfMode === "dossier" ? "bg-orange-100 font-bold" : "bg-white text-slate-400"}`} onClick={() => { setPdfMode("dossier") }}>
+          </button>
+          <button
+            type="button"
+            onClick={() => setPdfMode("dossier")}
+            className={`p-4 rounded-t-lg border-x border-t border-orange-100 ${pdfMode === "dossier"
+              ? "bg-orange-100 font-bold"
+              : "bg-white text-slate-400"
+              }`}
+          >
             Synthèse dossier de liaison
-          </div>
+          </button>
         </div>
         <div>
           <button

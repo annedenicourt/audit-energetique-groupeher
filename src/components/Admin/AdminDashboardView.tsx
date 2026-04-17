@@ -59,44 +59,98 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
     };
   };
 
-  const commerciaux = profiles.filter((p) => p.role === "commercial");
+  //const commerciaux = profiles.filter((p) => p.role === "commercial");
+
+  const PROJECT_KEYS = [
+    "pacAirEau",
+    "pacAirAir",
+    "photovoltaique",
+    "isolation",
+    "ite",
+    "menuiseries",
+    "vmc",
+    "thermodynamique",
+    "poele",
+    "multiplus",
+    "ecsSolaire",
+    "ssc",
+    "autreProduit",
+  ] as const;
+
+  type ProjectKey = (typeof PROJECT_KEYS)[number];
+
+  const createProjectCounts = () => ({
+    pacAirEau: 0,
+    pacAirAir: 0,
+    photovoltaique: 0,
+    isolation: 0,
+    ite: 0,
+    menuiseries: 0,
+    vmc: 0,
+    thermodynamique: 0,
+    poele: 0,
+    multiplus: 0,
+    ecsSolaire: 0,
+    ssc: 0,
+    autreProduit: 0,
+    multiProduits: 0,
+    nonRenseigne: 0,
+  });
+
+  const getSelectedProjectKeys = (
+    selected?: Partial<Record<ProjectKey, boolean>>
+  ): ProjectKey[] => PROJECT_KEYS.filter((key) => selected?.[key]);
+
+  const updateRanking = (
+    rankingMap: Map<
+      string,
+      {
+        userId: string;
+        name: string;
+        total: number;
+        last7Days: number;
+        last30Days: number;
+      }
+    >,
+    study: { user_id: string; created_at: string },
+    profileMap: Map<string, string>,
+    sevenDaysAgo: Date,
+    thirtyDaysAgo: Date
+  ) => {
+    const createdAt = new Date(study.created_at);
+
+    const item = rankingMap.get(study.user_id) ?? {
+      userId: study.user_id,
+      name: profileMap.get(study.user_id) ?? "Inconnu",
+      total: 0,
+      last7Days: 0,
+      last30Days: 0,
+    };
+
+    item.total += 1;
+    if (createdAt >= sevenDaysAgo) item.last7Days += 1;
+    if (createdAt >= thirtyDaysAgo) item.last30Days += 1;
+
+    rankingMap.set(study.user_id, item);
+  };
 
   const stats = useMemo(() => {
     const now = new Date();
+    const currentYear = now.getFullYear();
     const sevenDaysAgo = new Date(now);
     sevenDaysAgo.setDate(now.getDate() - 7);
-
     const thirtyDaysAgo = new Date(now);
     thirtyDaysAgo.setDate(now.getDate() - 30);
 
-    const projectCounts = {
-      pacAirEau: 0,
-      pacAirAir: 0,
-      photovoltaique: 0,
-      isolation: 0,
-      ite: 0,
-      menuiseries: 0,
-      vmc: 0,
-      thermodynamique: 0,
-      poele: 0,
-      multiplus: 0,
-      ecsSolaire: 0,
-      ssc: 0,
-      autreProduit: 0,
-      multiProduits: 0,
-      nonRenseigne: 0,
-    };
-
+    const projectCounts = createProjectCounts();
     const heatingCounts: Record<string, number> = {};
     const aerationCounts: Record<string, number> = {};
     const energyClassCounts: Record<string, number> = {};
 
     let totalSurface = 0;
     let surfaceCount = 0;
-
     let totalYear = 0;
     let yearCount = 0;
-
     let studiesWithoutClient = 0;
     let studiesWithoutProjectType = 0;
     let incompleteTechnicalStudies = 0;
@@ -122,54 +176,37 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       });
     });
 
-    for (const study of allStudies) {
-      console.log(allStudies)
-      const createdAt = new Date(study.created_at);
+    allStudies.forEach((study) => {
       const payload = study.payload as unknown as FormData | null;
       const client = payload?.client;
       const bilan = payload?.bilan;
-      const dimensionnement = payload?.dimensionnement;
+      const selectedKeys = getSelectedProjectKeys(
+        payload?.dimensionnement?.selectedSections
+      );
 
-      if (!study.client_name?.trim()) {
-        studiesWithoutClient++;
-      }
+      if (!study.client_name?.trim()) studiesWithoutClient++;
 
-      const selected = dimensionnement?.selectedSections;
-      const selectedEntries = selected
-        ? Object.entries(selected).filter(([, value]) => value)
-        : [];
-
-      if (selectedEntries.length === 0) {
+      if (selectedKeys.length === 0) {
         projectCounts.nonRenseigne++;
         studiesWithoutProjectType++;
       } else {
-        if (selected?.pacAirEau) projectCounts.pacAirEau++;
-        if (selected?.pacAirAir) projectCounts.pacAirAir++;
-        if (selected?.photovoltaique) projectCounts.photovoltaique++;
-        if (selected?.isolation) projectCounts.isolation++;
-        if (selected?.ite) projectCounts.ite++;
-        if (selected?.menuiseries) projectCounts.menuiseries++;
-        if (selected?.vmc) projectCounts.vmc++;
-        if (selected?.thermodynamique) projectCounts.thermodynamique++;
-        if (selected?.poele) projectCounts.poele++;
-        if (selected?.multiplus) projectCounts.multiplus++;
-        if (selected?.ecsSolaire) projectCounts.ecsSolaire++;
-        if (selected?.ssc) projectCounts.ssc++;
-        if (selected?.autreProduit) projectCounts.autreProduit++;
+        selectedKeys.forEach((key) => {
+          projectCounts[key]++;
+        });
 
-        if (selectedEntries.length > 1) {
+        if (selectedKeys.length > 1) {
           projectCounts.multiProduits++;
         }
       }
 
       const surface = toNumber(client?.surfaceHabitable);
-      if (surface && surface > 0) {
+      if (surface > 0) {
         totalSurface += surface;
         surfaceCount++;
       }
 
       const year = toNumber(client?.anneeConstruction);
-      if (year && year > 1800 && year <= new Date().getFullYear()) {
+      if (year > 1800 && year <= currentYear) {
         totalYear += year;
         yearCount++;
       }
@@ -188,28 +225,14 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
         incompleteTechnicalStudies++;
       }
 
-      const existing = rankingMap.get(study.user_id) ?? {
-        userId: study.user_id,
-        name: profileMap.get(study.user_id) ?? "Inconnu",
-        total: 0,
-        last7Days: 0,
-        last30Days: 0,
-      };
-
-      existing.total += 1;
-      if (createdAt >= sevenDaysAgo) existing.last7Days += 1;
-      if (createdAt >= thirtyDaysAgo) existing.last30Days += 1;
-
-      rankingMap.set(study.user_id, existing);
-    }
+      updateRanking(rankingMap, study, profileMap, sevenDaysAgo, thirtyDaysAgo);
+    });
 
     const ranking = Array.from(rankingMap.values()).sort((a, b) => {
       if (b.total !== a.total) return b.total - a.total;
       if (b.last30Days !== a.last30Days) return b.last30Days - a.last30Days;
       return b.last7Days - a.last7Days;
     });
-
-    const inactiveProfiles = ranking.filter((item) => item.last30Days === 0);
 
     return {
       projectCounts,
@@ -219,7 +242,7 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       dominantAeration: getDominantEntry(aerationCounts),
       dominantEnergyClass: getDominantEntry(energyClassCounts),
       ranking,
-      inactiveProfiles,
+      inactiveProfiles: ranking.filter((item) => item.last30Days === 0),
       studiesWithoutClient,
       studiesWithoutProjectType,
       incompleteTechnicalStudies,
@@ -452,7 +475,13 @@ const AdminDashboardView: React.FC<Props> = ({ studyCount, profileCount, recentS
       <div>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-foreground ">Dernières études réalisées</h2>
-          <div className="text-sm font-semibold hover:underline cursor-pointer" onClick={() => setView("documents")}>Voir tous les documents</div>
+          <button
+            type="button"
+            onClick={() => setView("documents")}
+            className="text-sm font-semibold underline-offset-4 hover:underline bg-transparent border-0 p-0 cursor-pointer"
+          >
+            Voir tous les documents
+          </button>
         </div>
         {recentStudies.length === 0 ? (
           <Card>

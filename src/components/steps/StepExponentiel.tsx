@@ -168,7 +168,7 @@ const StepExponentiel: React.FC<StepExponentielProps> = ({ data, consommation10A
             />
           </div>
           <div className="p-4 bg-green-500/10 rounded-lg border border-primary/20">
-            <label className="form-label text-primary mb-2 block">
+            <label htmlFor="economiesRealisees10Ans" className="form-label text-primary mb-2 block">
               Économies totales sur 10 ans
             </label>
             <FormInput

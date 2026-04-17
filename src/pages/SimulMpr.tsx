@@ -34,14 +34,14 @@ const SimulMpr = () => {
   const result = useMemo(() => {
     if (!typeTravaux || !rfr || !nbPersonnes) return null;
     return computeMpr({
-      nbPersonnes: Math.max(1, parseInt(nbPersonnes) || 1),
-      rfr: parseFloat(rfr) || 0,
-      ageLogement: parseFloat(ageLogement) || 0,
+      nbPersonnes: Math.max(1, Number.parseInt(nbPersonnes) || 1),
+      rfr: Number.parseFloat(rfr) || 0,
+      ageLogement: Number.parseFloat(ageLogement) || 0,
       typeTravaux: typeTravaux as TypeTravauxMpr,
-      quantite: needQuantite ? (parseFloat(quantite) || 0) : undefined,
-      cee: parseFloat(cee) || 0,
-      mpr: parseFloat(mpr) || 0,
-      replaceFioul
+      quantite: needQuantite ? (Number.parseFloat(quantite) || 0) : undefined,
+      cee: Number.parseFloat(cee) || 0,
+      mpr: Number.parseFloat(mpr) || 0,
+      replaceFioul,
     });
   }, [typeTravaux, rfr, nbPersonnes, ageLogement, needQuantite, quantite, cee, mpr, replaceFioul]);
 

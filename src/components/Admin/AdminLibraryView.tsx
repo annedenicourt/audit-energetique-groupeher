@@ -188,6 +188,7 @@ const AdminLibraryView = () => {
                         <iframe
                           //src={`${previewPath}#toolbar=0&navpanes=0&scrollbar=0`}
                           src={`${previewPath}#&navpanes=0&scrollbar=0`}
+                          title={doc.label}
                           className="w-full h-[70vh] border-0"
                         />
                       </div>

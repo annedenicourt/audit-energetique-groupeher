@@ -597,11 +597,12 @@ const StepDimensionnement: React.FC<StepDimensionnementProps> = ({ data, onChang
                       />
                     </div>
                     <div className="form-field">
-                      <label className="form-label">Matière</label>
+                      <label htmlFor="matiere" className="form-label">Matière</label>
                       <select
                         value={fenetres[0].matiere}
                         onChange={(e) => updateFenetre(0, "matiere", e.target.value)}
                         className="form-select"
+                        name="matiere"
                       >
                         <option value="">Sélectionner</option>
                         {fenetreMatiereOptions.map((option) => (
