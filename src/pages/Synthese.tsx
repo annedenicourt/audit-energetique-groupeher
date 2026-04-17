@@ -41,10 +41,6 @@ const Synthese: React.FC = () => {
   });
 
   const { groupErrors, fieldErrors } = useDossierValidation(formDossier, formSim);
-  console.log(formSim)
-
-  console.log(formDossier)
-
 
   /* const downloadPdfGeneric = async () => {
     setIsSaving(true);
@@ -248,7 +244,7 @@ const Synthese: React.FC = () => {
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
+                <AlertDialogCancel className="hover:bg-orange-500">Annuler</AlertDialogCancel>
                 <AlertDialogAction onClick={() => handleReset()}>
                   Oui, je commence un nouveau dossier
                 </AlertDialogAction>
@@ -308,7 +304,7 @@ const Synthese: React.FC = () => {
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Annuler</AlertDialogCancel>
+              <AlertDialogCancel className="hover:bg-orange-500">Annuler</AlertDialogCancel>
               <AlertDialogAction onClick={() => handleReset()}>
                 Oui, je commence un nouveau dossier
               </AlertDialogAction>

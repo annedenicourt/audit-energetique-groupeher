@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Plus, Trash2, TriangleAlert, PenLine } from "lucide-react";
+import { Plus, Trash2, TriangleAlert, PenLine, Info, InfoIcon } from "lucide-react";
 import { FormData } from "@/types/formData";
 import {
   DossierFormData,
@@ -21,6 +21,7 @@ import type { SignableDocumentConfig, SignableDocumentId } from "@/types/signabl
 import { buildPdfFieldData } from "@/utils/pdf/buildPdfFieldData";
 import { useAuth } from "@/contexts/AuthContext";
 import { getSignaturePublicUrl } from "@/utils/saveUserSignature";
+import { PopoverInfo } from "../PopoverInfo";
 
 interface CheckboxFieldProps {
   label: string;
@@ -559,7 +560,6 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
         </SectionCard>
       }
 
-
       {/* BTD */}
       {simulData?.dimensionnement?.selectedSections.thermodynamique &&
         <SectionCard title="Ballon Thermodynamique">
@@ -645,7 +645,7 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
       }
 
       {/* PV ou SSC */}
-      {simulData?.dimensionnement?.selectedSections.photovoltaique || simulData?.dimensionnement?.selectedSections.ssc &&
+      {(simulData?.dimensionnement?.selectedSections.photovoltaique || simulData?.dimensionnement?.selectedSections.ssc) &&
         <SectionCard title="PV ou SSC">
           <h3 className="font-semibold text-lime-600 mb-2">Type de pose</h3>
           <div className="flex flex-wrap gap-6 mb-4">
@@ -653,8 +653,28 @@ const StepDossier: React.FC<StepDossierProps> = ({ simulData, onValidationChange
             <CheckboxField label="Toiture" checked={formDossier.pvTypePoseToiture} onChange={(v) => update("pvTypePoseToiture", v)} />
             <CheckboxField label="Murale SSC" checked={formDossier.pvTypePoseMuraleSsc} onChange={(v) => update("pvTypePoseMuraleSsc", v)} />
           </div>
-
-          <h3 className="font-semibold text-lime-600 mb-2">Format de pose</h3>
+          <h3 className="flex items-center gap-1 font-semibold text-lime-600 mb-2">
+            Format de pose
+            <PopoverInfo icon={InfoIcon} iconColor={"text-lime-600"} side={"right"}>
+              <div>
+                <div>
+                  <div className="text-sm font-medium"> Orientation verticale (panneau solaire en portrait)</div>
+                  <div className="text-xs">
+                    Les panneaux solaires photovoltaïques sont placés à la verticale, leur hauteur étant supérieure à leur largeur.
+                    La configuration verticale est particulièrement adaptée aux espaces restreints en hauteur.
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm font-medium"> Orientation horizontale (panneau solaire en paysage)</div>
+                  <div className="text-xs">
+                    L’orientation horizontale des panneaux signifie que leur côté le plus long est positionné à l’horizontale.
+                    Pour les toits plats ou les grandes surfaces ouvertes telles que les fermes solaires, l’orientation horizontale assure une bonne répartition des panneaux,
+                    minimisant les espaces vides.
+                  </div>
+                </div>
+              </div>
+            </PopoverInfo>
+          </h3>
           <div className="flex flex-wrap gap-6 mb-4">
             <CheckboxField label="Portrait" checked={formDossier.pvFormatPortrait} onChange={(v) => update("pvFormatPortrait", v)} />
             <CheckboxField label="Paysage" checked={formDossier.pvFormatPaysage} onChange={(v) => update("pvFormatPaysage", v)} />

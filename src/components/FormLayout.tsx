@@ -267,48 +267,65 @@ const FormLayout: React.FC<FormLayoutProps> = ({
       {/* Navigation footer */}
       <footer className="fixed bottom-0 left-0 right-0 bg-card border-t border-border py-4 px-6 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="ghost" className="text-muted-foreground gap-2 hover:bg-orange-500">
-                <Trash2 className="h-4 w-4" />
-                Réinitialiser
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Réinitialiser le dossier ?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Toutes les données locales du formulaire seront supprimées.
-                  Cette action est irréversible.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Annuler</AlertDialogCancel>
-                <AlertDialogAction onClick={() => resetApp()}>
-                  Oui, réinitialiser
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-          <Button
-            variant="outline"
-            className="gap-2"
-            disabled={isSaving}
-            onClick={handleSaveToDb}
-          >
-            <Save className="h-4 w-4" />
-            {isSaving ? "Enregistrement…" : "Enregistrer"}
-          </Button>
-          <button
-            onClick={onPrevious}
-            disabled={!canGoPrevious}
-            className="nav-button nav-button--secondary disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <ChevronLeft className="w-5 h-5" />
-            <span className="hidden sm:inline">Précédent</span>
-          </button>
+          <div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" className="mr-2 text-muted-foreground gap-2 hover:bg-orange-500">
+                  <Trash2 className="h-4 w-4" />
+                  Réinitialiser
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Réinitialiser le dossier ?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Toutes les données locales du formulaire seront supprimées.
+                    Cette action est irréversible.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Annuler</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => resetApp()}>
+                    Oui, réinitialiser
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            <Button
+              variant="outline"
+              className="gap-2"
+              disabled={isSaving}
+              onClick={handleSaveToDb}
+            >
+              <Save className="h-4 w-4" />
+              {isSaving ? "Enregistrement…" : "Enregistrer"}
+            </Button>
+          </div>
+          <div className="flex">
+            <button
+              onClick={onPrevious}
+              disabled={!canGoPrevious}
+              className="nav-button nav-button--secondary mr-2 disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <ChevronLeft className="w-5 h-5" />
+              <span className="hidden sm:inline">Précédent</span>
+            </button>
+            <button
+              onClick={() =>
+                checkStep()
+              }
+              //disabled={!canGoNext}
+              className="nav-button nav-button--primary disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <span className="hidden sm:inline">
+                {currentStep === 9 ? "Monter le dossier" : currentStep === 11 ? "Aperçu avant validation" : "Suivant"}
+              </span>
+              <ChevronRight className="w-5 h-5" />
+            </button>
+          </div>
 
-          <div className="flex items-center gap-1.5">
+
+          {/* <div className="flex items-center gap-1.5">
             {steps.map((step) => (
               <div
                 key={step.id}
@@ -320,20 +337,9 @@ const FormLayout: React.FC<FormLayoutProps> = ({
                   }`}
               />
             ))}
-          </div>
+          </div> */}
 
-          <button
-            onClick={() =>
-              checkStep()
-            }
-            //disabled={!canGoNext}
-            className="nav-button nav-button--primary disabled:opacity-40 disabled:cursor-not-allowed"
-          >
-            <span className="hidden sm:inline">
-              {currentStep === 9 ? "Monter le dossier" : currentStep === 11 ? "Aperçu avant validation" : "Suivant"}
-            </span>
-            <ChevronRight className="w-5 h-5" />
-          </button>
+
         </div>
       </footer>
 
